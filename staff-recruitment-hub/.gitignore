@@ -1,0 +1,19 @@
+# Git Ignore
+.vs/
+.vscode/
+.github/
+bin/
+obj/
+node_modules/
+_/
+src/SRB_WebPortal/wwwroot/css/output.css
+net10.0/
+
+# Production
+appsettings.Development.json
+.env
+
+# Develop
+analyst.md
+*.dev.md
+.DS_Store

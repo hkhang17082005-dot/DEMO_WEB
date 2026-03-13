@@ -1,0 +1,4 @@
+# Prettierrc Ignore
+node_modules/
+obj/
+bin/

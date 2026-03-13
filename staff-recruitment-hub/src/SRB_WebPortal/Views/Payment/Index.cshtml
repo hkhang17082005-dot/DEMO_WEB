@@ -1,0 +1,35 @@
+@{
+    ViewData["Title"] = "Thanh toán";
+}
+
+<h2>Thanh toán</h2>
+
+<form asp-controller="Payment" asp-action="CreatePayment" method="post">
+   <div>
+      <label>Chọn số tiền:</label><br />
+      <input type="radio" name="Amount" value="50000" /> 50.000 VND <br />
+      <input type="radio" name="Amount" value="100000" /> 100.000 VND <br />
+      <input type="radio" name="Amount" value="200000" /> 200.000 VND <br />
+   </div>
+
+   <br />
+
+   <div>
+      <label>Hoặc nhập số tiền:</label>
+      <input type="number" name="CustomAmount" />
+   </div>
+
+   <br />
+
+   <div>
+      <label>Chọn phương thức thanh toán:</label><br />
+      <input type="radio" name="Method" value="Visa" /> Visa<br />
+      <input type="radio" name="Method" value="Bank" /> Bank<br />
+      <input type="radio" name="Method" value="VnPay" /> VNPay<br />
+      <input type="radio" name="Method" value="Momo" checked /> Momo<br />
+   </div>
+
+   <br />
+
+   <button type="submit">Thanh toán</button>
+</form>

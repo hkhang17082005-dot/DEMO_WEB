@@ -1,0 +1,17 @@
+{
+   "name": "srb_webportal",
+   "version": "1.0.0",
+   "description": "",
+   "main": "index.js",
+   "scripts": {
+      "wdev": "dotnet watch run --no-launch-browser --no-https"
+   },
+   "keywords": [],
+   "author": "",
+   "license": "ISC",
+   "type": "commonjs",
+   "dependencies": {
+      "@tailwindcss/cli": "4.1.18",
+      "tailwindcss": "^4.1.18"
+   }
+}

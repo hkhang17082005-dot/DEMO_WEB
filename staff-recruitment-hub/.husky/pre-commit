@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "[Husky] Checking Code Before Committing..."
+dotnet build --no-restore
+
+echo "[Husky] Check Code Format..."
+# dotnet format --verify-no-changes

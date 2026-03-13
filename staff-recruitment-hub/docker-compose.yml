@@ -1,0 +1,62 @@
+version: '3.9'
+
+services:
+   redis-production:
+      image: redis:latest
+      ports:
+         - '6379:6379'
+
+   nginx:
+      image: nginx:latest
+      ports:
+         - '8080:80'
+      volumes:
+         - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      depends_on:
+         - api1
+         - api2
+
+   sqlserver:
+      image: ${SQL_IMAGE}
+      container_name: sql-db
+      environment:
+         - ACCEPT_EULA=Y
+         - MSSQL_SA_PASSWORD=${SQL_PASSWORD}
+         - MSSQL_PID=Developer
+      ports:
+         - '1433:1433'
+      volumes:
+         - mssql-data:/var/opt/mssql
+
+   api1:
+      build:
+         context: .
+         dockerfile: src/Dockerfile
+      container_name: api1
+      environment:
+         - ASPNETCORE_HTTP_PORTS=8000
+         - ConnectionStrings__ConnectionDatabase=Server=sqlserver;Database=SRH_Database;User ID=sa;Password=${SQL_PASSWORD};TrustServerCertificate=True;
+         - RedisConnection=redis-production:6379,abortConnect=false,connectTimeout=5000
+      depends_on:
+         - sqlserver
+         - redis-production
+      expose:
+         - '8000'
+
+   api2:
+      build:
+         context: .
+         dockerfile: src/Dockerfile
+      container_name: api2
+      environment:
+         - ASPNETCORE_HTTP_PORTS=8000
+         - ConnectionStrings__ConnectionDatabase=Server=sqlserver;Database=SRH_Database;User ID=sa;Password=${SQL_PASSWORD};TrustServerCertificate=True;
+         - ConnectionStrings__RedisConnection=redis-production:6379,abortConnect=false,connectTimeout=5000
+      depends_on:
+         - sqlserver
+         - redis-production
+      expose:
+         - '8000'
+
+volumes:
+   mssql-data:

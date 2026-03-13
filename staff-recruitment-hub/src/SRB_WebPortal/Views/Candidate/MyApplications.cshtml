@@ -1,0 +1,39 @@
+@{
+    ViewData["Title"] = "Lịch sử ứng tuyển";
+}
+
+<div class="min-h-screen bg-gray-50">
+    @await Component.InvokeAsync("Header")
+
+    <main class="container mx-auto py-10 px-4">
+        <h2 class="text-2xl font-bold mb-6">Việc làm bạn đã ứng tuyển</h2>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <table class="w-full text-left">
+                <thead class="bg-gray-50 border-b">
+                    <tr>
+                        <th class="p-4 font-semibold text-gray-600">Vị trí</th>
+                        <th class="p-4 font-semibold text-gray-600">Ngày nộp</th>
+                        <th class="p-4 font-semibold text-gray-600">Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody id="applicationList">
+                    <tr class="border-b last:border-0">
+                        <td class="p-4">
+                            <p class="font-bold">Software Engineer</p>
+                            <p class="text-sm text-gray-400">Công ty ABC</p>
+                        </td>
+                        <td class="p-4 text-gray-500">10/03/2026</td>
+                        <td class="p-4">
+                            <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-bold">Đang
+                                chờ</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+    @section Scripts {
+        <script src="~/js/candidate.js"></script>
+    }

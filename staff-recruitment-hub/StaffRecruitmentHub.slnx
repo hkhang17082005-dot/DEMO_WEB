@@ -1,0 +1,4 @@
+<Solution>
+   <Project Path="src/SRB_ViewModel/SRB_ViewModel.csproj" Id="6402714e-2ed7-4134-9904-646e24fce2a2" />
+   <Project Path="src/SRB_WebPortal/SRB_WebPortal.csproj" Id="97c595aa-e814-4d0c-a05a-11fae74c82ef" />
+</Solution>

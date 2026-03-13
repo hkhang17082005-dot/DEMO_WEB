@@ -1,0 +1,37 @@
+@{
+    ViewData["Title"] = "Tin tuyển dụng của tôi";
+}
+
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+        <h2 class="text-xl font-bold text-gray-800">Danh sách tin đã đăng</h2>
+        <a href="/Business/PostJob"
+               class="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition">
+            + Đăng tin mới
+        </a>
+    </div>
+
+    <div class="overflow-x-auto">
+        <table class="w-full text-left">
+            <thead class="bg-gray-50 text-gray-600 text-sm uppercase">
+                <tr>
+                    <th class="px-6 py-4">Vị trí tuyển dụng</th>
+                    <th class="px-6 py-4">Ngày đăng</th>
+                    <th class="px-6 py-4">Trạng thái</th>
+                    <th class="px-6 py-4">Hành động</th>
+                </tr>
+            </thead>
+            <tbody id="jobListTable" class="divide-y divide-gray-100">
+                <tr>
+                    <td colspan="4" class="px-6 py-10 text-center text-gray-400 animate-pulse">
+                        Đang tải danh sách công việc...
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/business.js"></script>
+}

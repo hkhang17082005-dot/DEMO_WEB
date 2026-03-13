@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+echo "[Husky] Running Unit Tests..."
+dotnet test ./src/SRB_WebPortal.Tests/SRB_WebPortal.Tests.csproj --no-build --verbosity quiet

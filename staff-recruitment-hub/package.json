@@ -1,0 +1,20 @@
+{
+   "name": "staff-recruitment-hub",
+   "version": "1.0.0",
+   "main": "index.js",
+   "scripts": {
+      "prepare": "husky",
+      "wdev": "cd ./src/SRB_WebPortal && dotnet watch run --no-launch-browser --no-https",
+      "wdevfe": "cd ./src/SRB_WebPortal && npx @tailwindcss/cli -i ./wwwroot/css/input.css -o ./wwwroot/css/output.css --watch",
+      "updateDatabase": "dotnet ef database update --project ./src/SRB_ViewModel --startup-project ./src/SRB_WebPortal -v",
+      "build": "dotnet build --no-restore -p:SkipTailwind=true",
+      "build:all": "dotnet build --no-restore"
+   },
+   "keywords": [],
+   "author": "",
+   "license": "ISC",
+   "description": "",
+   "devDependencies": {
+      "husky": "^9.1.7"
+   }
+}

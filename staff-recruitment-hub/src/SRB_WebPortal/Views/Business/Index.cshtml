@@ -1,0 +1,22 @@
+@{
+   ViewData["Title"] = "Business Dashboard";
+}
+<div class="min-h-screen bg-gray-50">
+   @await Component.InvokeAsync("Header") <main class="container mx-auto py-8">
+   <h1 class="text-2xl font-bold mb-6">Dashboard: <span id="companyName" class="animate-pulse">Đang tải...</span>
+   </h1>
+   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="p-6 bg-white shadow rounded-lg border-l-4 border-blue-500">
+         <h2 class="font-bold">Tin tuyển dụng</h2>
+         <a href="/Business/MyJobs" class="text-blue-500 hover:underline text-sm">Xem tất cả</a>
+      </div>
+      <div class="p-6 bg-white shadow rounded-lg border-l-4 border-green-500">
+         <h2 class="font-bold">Thông tin công ty</h2>
+         <a href="/Business/Profile" class="text-green-500 hover:underline text-sm">Chỉnh sửa hồ sơ</a>
+      </div>
+   </div>
+</main>
+</div>
+@section Scripts {
+   <script src="~/js/business.js"></script>
+}

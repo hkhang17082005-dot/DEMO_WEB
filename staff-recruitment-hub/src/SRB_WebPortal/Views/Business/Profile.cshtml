@@ -1,0 +1,21 @@
+@{
+    ViewData["Title"] = "Hồ sơ doanh nghiệp";
+}
+<div class="min-h-screen bg-gray-50">
+    @await Component.InvokeAsync("Header")
+    <main class="container mx-auto py-8 max-w-2xl">
+        <div class="bg-white p-8 rounded-xl shadow-md">
+            <h2 class="text-xl font-bold border-b pb-4 mb-4">Cập nhật thông tin</h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Tên doanh nghiệp hiển thị</label>
+                    <div id="companyName" class="mt-1 p-2 bg-gray-100 rounded font-semibold text-blue-700">Đang tải...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+@section Scripts {
+    <script src="~/js/business.js"></script>
+}
