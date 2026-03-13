@@ -20,6 +20,10 @@ namespace SRB_WebPortal.Controllers.routes
          // Trang chỉnh sửa thông tin công ty
          return View();
       }
+      public IActionResult PostJob()
+      {
+         return View();
+      }
 
       public IActionResult MyJobs()
       {
