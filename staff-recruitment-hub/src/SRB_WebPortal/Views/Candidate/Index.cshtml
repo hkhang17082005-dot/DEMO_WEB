@@ -1,46 +1,58 @@
-@* @{
-   ViewData["Title"] = "Giới thiệu";
+@{
+    ViewData["Title"] = "Candidate Dashboard";
 }
 
-<div class="bg-blue-50 p-10 rounded-xl shadow-lg">
-   <h1 class="text-3xl font-bold text-blue-700">Đây là trang Candidate</h1>
-   <p class="mt-4 text-gray-600">Đã chạy Router thành công!</p>
-</div>
-
- *@
-
-
- @{ ViewData["Title"] = "Candidate Dashboard"; }
-
-<div class="min-h-screen bg-gray-50">
-    @await Component.InvokeAsync("Header")
-
-    <main class="container mx-auto py-10 px-4">
-        <h1 class="text-3xl font-extrabold text-gray-900 mb-8">Xin chào, Ứng viên!</h1>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
-                <div class="text-blue-600 mb-4">🔍</div>
-                <h3 class="font-bold text-xl mb-2">Khám phá việc làm</h3>
-                <p class="text-gray-500 text-sm mb-6">Tìm kiếm hàng ngàn cơ hội phù hợp với năng lực của bạn.</p>
-                <a href="/" class="text-blue-600 font-bold hover:underline">Tìm việc ngay &rarr;</a>
-            </div>
-
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
-                <div class="text-green-600 mb-4">📄</div>
-                <h3 class="font-bold text-xl mb-2">Hồ sơ cá nhân</h3>
-                <p class="text-gray-500 text-sm mb-6">Cập nhật thông tin và CV để nhà tuyển dụng dễ dàng tìm thấy bạn.</p>
-                <a href="/Candidate/Profile" class="text-green-600 font-bold hover:underline">Quản lý hồ sơ</a>
-            </div>
-
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
-                <div class="text-purple-600 mb-4">🕒</div>
-                <h3 class="font-bold text-xl mb-2">Việc làm đã nộp</h3>
-                <p class="text-gray-500 text-sm mb-6">Theo dõi trạng thái các đơn ứng tuyển của bạn.</p>
-                <a href="/Candidate/MyApplications" class="text-purple-600 font-bold hover:underline">Xem lịch sử</a>
+<div class="bg-white border-b shadow-sm mb-6">
+    <div class="container mx-auto px-4 flex gap-8">
+        <a href="/Candidate/Index" class="py-4 font-bold border-b-2 border-blue-600 text-blue-600">Tổng quan</a>
+        <a href="/Candidate/Profile" class="py-4 font-semibold text-gray-500 hover:text-blue-600 transition">Hồ sơ cá
+            nhân</a>
+            <a href="/Candidate/MyApplications" class="py-4 font-semibold text-gray-500 hover:text-blue-600 transition">Việc
+                làm đã nộp</a>
             </div>
         </div>
-    </main>
 
-    @await Component.InvokeAsync("Footer")
-</div>
+        <main class="container mx-auto pb-12 px-4">
+            <h1 class="text-3xl font-extrabold text-gray-900 mb-8">Xin chào, <span class="text-blue-600">Ứng viên</span>! 👋
+            </h1>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div
+                    class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition flex flex-col justify-between">
+                    <div>
+                        <div class="text-blue-600 text-3xl mb-4">🔍</div>
+                        <h3 class="font-bold text-xl mb-2 text-gray-800">Khám phá việc làm</h3>
+                        <p class="text-gray-500 text-sm mb-6">Tìm kiếm hàng ngàn cơ hội phù hợp với năng lực của bạn.</p>
+                    </div>
+                    <a href="/" class="text-blue-600 font-bold hover:underline flex items-center gap-1 w-max">
+                        Tìm việc ngay &rarr;
+                    </a>
+                </div>
+
+                <div
+                    class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition flex flex-col justify-between">
+                    <div>
+                        <div class="text-green-600 text-3xl mb-4">📄</div>
+                        <h3 class="font-bold text-xl mb-2 text-gray-800">Hồ sơ cá nhân</h3>
+                        <p class="text-gray-500 text-sm mb-6">Cập nhật thông tin và CV để nhà tuyển dụng dễ dàng tìm thấy bạn.
+                        </p>
+                    </div>
+                    <a href="/Candidate/Profile" class="text-green-600 font-bold hover:underline flex items-center gap-1 w-max">
+                        Quản lý hồ sơ &rarr;
+                    </a>
+                </div>
+
+                <div
+                    class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition flex flex-col justify-between">
+                    <div>
+                        <div class="text-purple-600 text-3xl mb-4">🕒</div>
+                        <h3 class="font-bold text-xl mb-2 text-gray-800">Việc làm đã nộp</h3>
+                        <p class="text-gray-500 text-sm mb-6">Theo dõi trạng thái các đơn ứng tuyển của bạn.</p>
+                    </div>
+                    <a href="/Candidate/MyApplications"
+                           class="text-purple-600 font-bold hover:underline flex items-center gap-1 w-max">
+                        Xem lịch sử &rarr;
+                    </a>
+                </div>
+            </div>
+        </main>

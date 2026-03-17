@@ -2,38 +2,49 @@
     ViewData["Title"] = "Lịch sử ứng tuyển";
 }
 
-<div class="min-h-screen bg-gray-50">
-    @await Component.InvokeAsync("Header")
+<div class="bg-white border-b shadow-sm mb-6">
+    <div class="container mx-auto px-4 flex gap-8">
+        <a href="/Candidate/Index" class="py-4 font-semibold text-gray-500 hover:text-blue-600 transition">Tổng quan</a>
+        <a href="/Candidate/Profile" class="py-4 font-semibold text-gray-500 hover:text-blue-600 transition">Hồ sơ cá
+            nhân</a>
+            <a href="/Candidate/MyApplications" class="py-4 font-bold border-b-2 border-blue-600 text-blue-600">Việc làm đã
+                nộp</a>
+            </div>
+        </div>
 
-    <main class="container mx-auto py-10 px-4">
-        <h2 class="text-2xl font-bold mb-6">Việc làm bạn đã ứng tuyển</h2>
+        <main class="container mx-auto pb-12 px-4">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">Việc làm bạn đã ứng tuyển</h2>
 
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-            <table class="w-full text-left">
-                <thead class="bg-gray-50 border-b">
-                    <tr>
-                        <th class="p-4 font-semibold text-gray-600">Vị trí</th>
-                        <th class="p-4 font-semibold text-gray-600">Ngày nộp</th>
-                        <th class="p-4 font-semibold text-gray-600">Trạng thái</th>
-                    </tr>
-                </thead>
-                <tbody id="applicationList">
-                    <tr class="border-b last:border-0">
-                        <td class="p-4">
-                            <p class="font-bold">Software Engineer</p>
-                            <p class="text-sm text-gray-400">Công ty ABC</p>
-                        </td>
-                        <td class="p-4 text-gray-500">10/03/2026</td>
-                        <td class="p-4">
-                            <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-bold">Đang
-                                chờ</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-gray-50 border-b border-gray-200 text-sm uppercase">
+                            <tr>
+                                <th class="p-4 font-semibold text-gray-600">Vị trí ứng tuyển</th>
+                                <th class="p-4 font-semibold text-gray-600">Ngày nộp</th>
+                                <th class="p-4 font-semibold text-gray-600">Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody id="applicationList" class="divide-y divide-gray-100">
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="p-4">
+                                    <p class="font-bold text-gray-800">Software Engineer</p>
+                                    <p class="text-sm text-gray-500">Công ty ABC</p>
+                                </td>
+                                <td class="p-4 text-gray-500 font-medium">10/03/2026</td>
+                                <td class="p-4">
+                                    <span
+                                        class="bg-yellow-50 border border-yellow-200 text-yellow-700 px-3 py-1.5 rounded-lg text-xs font-bold inline-block">
+                                        Đang chờ duyệt
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </main>
-    </div>
-    @section Scripts {
-        <script src="~/js/candidate.js"></script>
-    }
+
+        @section Scripts {
+            <script src="~/js/candidate.js"></script>
+        }
