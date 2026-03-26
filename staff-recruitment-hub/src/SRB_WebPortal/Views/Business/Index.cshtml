@@ -1,57 +1,60 @@
 @{
-   ViewData["Title"] = "Tổng quan Doanh nghiệp";
+   ViewData["Title"] = "Bảng tin tổng quan";
+   Layout = "~/Views/Shared/_BusinessLayout.cshtml";
 }
 
-<main class="container px-4 pb-12 mx-auto">
-   <div class="flex flex-col items-start justify-between gap-4 mb-8 md:flex-row md:items-center">
-      <div>
-         <h1 class="text-3xl font-extrabold text-gray-800">
-            Xin chào, <span id="companyName" class="text-blue-600 animate-pulse">Đang tải...</span>
-         </h1>
-         <p class="mt-2 text-gray-500">Theo dõi và quản lý hiệu quả tuyển dụng của bạn tại đây.</p>
+<div class="flex justify-between items-center mb-8">
+   <div>
+      <h1 class="text-2xl font-bold text-gray-800">Chào buổi sáng, HR!</h1>
+      <p class="text-gray-500 mt-1">Dưới đây là hiệu quả tuyển dụng của bạn trong 30 ngày qua.</p>
+   </div>
+   <a href="/Business/PostJob"
+      class="bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-lg font-semibold shadow-md shadow-green-200 transition flex items-center gap-2">
+      <i class="fa-solid fa-pen-to-square"></i> Đăng tin mới
+   </a>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+   <div
+      class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm relative overflow-hidden group hover:shadow-md transition">
+      <div
+         class="absolute -right-4 -top-4 w-20 h-20 bg-blue-50 rounded-full opacity-50 group-hover:scale-110 transition duration-300">
       </div>
-      <a href="/Business/PostJob"
-         class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg shadow font-semibold transition flex items-center gap-2">
-         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-         </svg>
-         Đăng tin mới ngay
-      </a>
+      <p class="text-sm font-semibold text-gray-500 mb-1">Tin đang hiển thị</p>
+      <h3 class="text-3xl font-bold text-gray-800">5</h3>
+      <div class="mt-4 text-sm text-blue-600 font-medium flex items-center gap-1">
+         <span>Chi tiết</span> <i class="fa-solid fa-arrow-right text-xs"></i>
+      </div>
    </div>
 
-   <div class="grid grid-cols-1 gap-6 mb-10 md:grid-cols-2">
+   <div
+      class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm relative overflow-hidden group hover:shadow-md transition">
       <div
-         class="flex items-center justify-between p-6 transition bg-white border border-gray-100 shadow-sm hover:shadow-md rounded-xl">
-         <div>
-            <p class="text-sm font-medium tracking-wide text-gray-500 uppercase">Tin đang tuyển</p>
-            <h2 class="mt-2 text-4xl font-bold text-gray-800" id="totalJobsCount">0</h2>
-         </div>
-         <div class="p-4 text-blue-600 rounded-full bg-blue-50">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                     d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
-               </path>
-            </svg>
-         </div>
+         class="absolute -right-4 -top-4 w-20 h-20 bg-green-50 rounded-full opacity-50 group-hover:scale-110 transition duration-300">
       </div>
-
-      <div
-         class="flex items-center justify-between p-6 transition bg-white border border-gray-100 shadow-sm hover:shadow-md rounded-xl">
-         <div>
-            <p class="text-sm font-medium tracking-wide text-gray-500 uppercase">Hồ sơ ứng viên mới</p>
-            <h2 class="mt-2 text-4xl font-bold text-gray-800" id="totalApplicationsCount">0</h2>
-         </div>
-         <div class="p-4 rounded-full bg-emerald-50 text-emerald-600">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                     d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
-               </path>
-            </svg>
-         </div>
+      <p class="text-sm font-semibold text-gray-500 mb-1">CV tiếp nhận mới</p>
+      <h3 class="text-3xl font-bold text-gray-800">24</h3>
+      <div class="mt-4 text-sm text-green-600 font-medium flex items-center gap-1">
+         <i class="fa-solid fa-arrow-trend-up"></i> <span>+12% so với tuần trước</span>
       </div>
    </div>
-</main>
 
-@section Scripts {
-   <script src="~/js/business.js"></script>
-}
+   <div
+      class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm relative overflow-hidden group hover:shadow-md transition">
+      <div
+         class="absolute -right-4 -top-4 w-20 h-20 bg-orange-50 rounded-full opacity-50 group-hover:scale-110 transition duration-300">
+      </div>
+      <p class="text-sm font-semibold text-gray-500 mb-1">Sắp lịch phỏng vấn</p>
+      <h3 class="text-3xl font-bold text-gray-800">8</h3>
+   </div>
+    
+   <div
+      class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm relative overflow-hidden group hover:shadow-md transition">
+      <div
+         class="absolute -right-4 -top-4 w-20 h-20 bg-red-50 rounded-full opacity-50 group-hover:scale-110 transition duration-300">
+      </div>
+      <p class="text-sm font-semibold text-gray-500 mb-1">Dịch vụ đang dùng</p>
+      <h3 class="text-xl font-bold text-gray-800 mt-2">Gói Cơ Bản</h3>
+      <a href="#" class="mt-4 inline-block text-sm text-red-600 font-medium hover:underline">Nâng cấp ngay</a>
+   </div>
+</div>

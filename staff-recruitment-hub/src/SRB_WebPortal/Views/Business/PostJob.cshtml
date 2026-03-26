@@ -1,170 +1,86 @@
 @{
-   ViewData["Title"] = "Đăng tin tuyển dụng";
+   ViewData["Title"] = "Tạo Chiến Dịch Tuyển Dụng Mới";
+   Layout = "~/Views/Shared/_BusinessLayout.cshtml";
 }
 
-<div class="container max-w-4xl p-6 mx-auto">
-   <div class="flex items-center justify-between mb-6">
-      <h2 class="text-3xl font-bold text-gray-800">Đăng tin tuyển dụng mới</h2>
-      <a href="/Business/MyJobs" class="flex items-center text-blue-600 transition duration-200 hover:text-blue-800">
-         <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18">
-            </path>
-         </svg>
-         Quay lại danh sách
-      </a>
-   </div>
+<a href="/Business/MyJobs"
+   class="text-gray-500 hover:text-green-600 transition flex items-center gap-2 text-sm font-medium mb-6">
+   <i class="fa-solid fa-arrow-left"></i> Quay lại danh sách
+</a>
 
-   <div class="p-8 bg-white border border-gray-100 shadow-lg rounded-xl">
-      <form id="postJobForm" class="space-y-6">
-         <div>
-            <label class="block mb-2 text-sm font-semibold text-gray-700">
-               Tiêu đề công việc
-               <span class="text-red-500">*</span>
-            </label>
-            <input type="text" id="Title" name="Title" required
-                   class="w-full px-4 py-3 transition border border-gray-300 rounded-lg shadow-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                   placeholder="VD: Lập trình viên .NET Core / Chuyên viên Marketing">
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8 max-w-4xl mx-auto">
+   <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b border-gray-100 pb-4">Thông tin chiến dịch</h2>
+    
+   <form class="space-y-6">
+      <div>
+         <label class="block text-sm font-bold text-gray-700 mb-2">Chức danh tuyển dụng <span
+            class="text-red-500">*</span></label>
+            <input type="text" placeholder="VD: Lập trình viên Backend .NET"
+                   class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition">
          </div>
 
-         <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-               <label class="block mb-2 text-sm font-semibold text-gray-700">Số lượng cần tuyển</label>
-               <input type="number" id="Quantity" name="Quantity" min="1"
-                      class="w-full px-4 py-3 transition border border-gray-300 rounded-lg shadow-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="VD: 5">
+               <label class="block text-sm font-bold text-gray-700 mb-2">Ngành nghề</label>
+               <select class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:ring-2 focus:ring-green-500">
+                  <option>IT - Phần mềm</option>
+                  <option>Marketing / Truyền thông</option>
+                  <option>Kinh doanh / Bán hàng</option>
+               </select>
             </div>
+            
             <div>
-               <label class="block mb-2 text-sm font-semibold text-gray-700">Mức lương</label>
-               <input type="text" id="SalaryRange" name="SalaryRange"
-                      class="w-full px-4 py-3 transition border border-gray-300 rounded-lg shadow-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="VD: 15 - 20 Triệu / Thỏa thuận">
+               <label class="block text-sm font-bold text-gray-700 mb-2">Khu vực làm việc</label>
+               <select class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:ring-2 focus:ring-green-500">
+                  <option>TP. Hồ Chí Minh</option>
+                  <option>Hà Nội</option>
+                  <option>Đà Nẵng</option>
+               </select>
             </div>
-         </div>
 
-         <div>
-            <label class="block mb-2 text-sm font-semibold text-gray-700">
-               Địa điểm làm việc
-               <span class="text-red-500">*</span>
-            </label>
-            <input type="text" id="Location" name="Location" required
-                   class="w-full px-4 py-3 transition border border-gray-300 rounded-lg shadow-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                   placeholder="VD: Tòa nhà ABC, Quận 1, TP.HCM">
-         </div>
+            <div>
+               <label class="block text-sm font-bold text-gray-700 mb-2">Mức lương (VND)</label>
+               <div class="flex items-center gap-2">
+                  <input type="number" placeholder="Từ"
+                         class="w-1/2 border border-gray-300 rounded-lg p-3 outline-none focus:ring-2 focus:ring-green-500">
+                  <span class="text-gray-400">-</span>
+                  <input type="number" placeholder="Đến"
+                         class="w-1/2 border border-gray-300 rounded-lg p-3 outline-none focus:ring-2 focus:ring-green-500">
+               </div>
+            </div>
 
-         <div>
-            <label class="block mb-2 text-sm font-semibold text-gray-700">
-               Mô tả công việc
-               <span class="text-red-500">*</span>
-            </label>
-            <textarea id="Description" name="Description" required rows="5"
-                   class="w-full px-4 py-3 transition border border-gray-300 rounded-lg shadow-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="- Phát triển tính năng mới...&#10;- Bảo trì hệ thống cũ...">
-            </textarea>
-         </div>
+            <div>
+               <label class="block text-sm font-bold text-gray-700 mb-2">Hạn nhận hồ sơ <span
+                  class="text-red-500">*</span></label>
+                  <input type="date"
+                         class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:ring-2 focus:ring-green-500 text-gray-600">
+               </div>
+            </div>
 
-         <div>
-            <label class="block mb-2 text-sm font-semibold text-gray-700">Yêu cầu ứng viên</label>
-            <textarea id="Requirements" name="Requirements" rows="4"
-                   class="w-full px-4 py-3 transition border border-gray-300 rounded-lg shadow-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="- Có ít nhất 1 năm kinh nghiệm...&#10;- Tinh thần trách nhiệm cao...">
-            </textarea>
-         </div>
+            <div class="pt-4">
+               <label class="block text-sm font-bold text-gray-700 mb-2">Mô tả chi tiết công việc</label>
+               <div class="bg-gray-50 border border-gray-200 rounded-t-lg p-2 flex gap-2">
+                  <button type="button" class="p-2 hover:bg-gray-200 rounded"><i
+                     class="fa-solid fa-bold text-gray-600"></i></button>
+                     <button type="button" class="p-2 hover:bg-gray-200 rounded"><i
+                        class="fa-solid fa-italic text-gray-600"></i></button>
+                        <button type="button" class="p-2 hover:bg-gray-200 rounded"><i
+                           class="fa-solid fa-list-ul text-gray-600"></i></button>
+                        </div>
+                        <textarea rows="6" placeholder="- Viết các yêu cầu công việc tại đây..."
+                                  class="w-full border-x border-b border-gray-300 rounded-b-lg p-4 outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"></textarea>
+                        <p class="text-xs text-gray-500 mt-2">Gợi ý: Trình bày rõ ràng thành các gạch đầu dòng sẽ thu hút ứng viên hơn.
+                        </p>
+                     </div>
 
-         <div id="errorMessage"
-              class="items-center hidden p-4 mt-4 text-sm text-red-600 border border-red-200 rounded-lg bg-red-50">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                     d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            <span id="errorText"></span>
-         </div>
-
-         <div class="flex justify-end pt-6 mt-6 border-t border-gray-100">
-            <button type="button" onclick="window.location.href='/Business/MyJobs'"
-                    class="px-6 py-3 mr-4 font-semibold text-gray-700 transition duration-200 bg-gray-100 rounded-lg hover:bg-gray-200">
-               Hủy bỏ
-            </button>
-            <button type="submit" id="submitBtn"
-                    class="flex items-center justify-center px-8 py-3 font-semibold text-white transition duration-200 bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 min-w-40">
-               <span id="btnText">Đăng Tin Ngay</span>
-               <div id="btnSpinner" class="hidden w-5 h-5 ml-2 border-b-2 border-white rounded-full animate-spin"></div>
-            </button>
-         </div>
-      </form>
-   </div>
-</div>
-
-@section Scripts {
-   <script>
-      document.getElementById('postJobForm').addEventListener('submit', async function (e) {
-         e.preventDefault(); // Ngăn trình duyệt tự reload trang
-
-         // Trỏ các phần tử DOM
-         const btn = document.getElementById('submitBtn');
-         const btnText = document.getElementById('btnText');
-         const btnSpinner = document.getElementById('btnSpinner');
-         const errorMessage = document.getElementById('errorMessage');
-         const errorText = document.getElementById('errorText');
-
-         // Gom dữ liệu từ Form
-         const formData = {
-            title: document.getElementById('Title').value.trim(),
-            quantity: document.getElementById('Quantity').value ? parseInt(document.getElementById('Quantity').value) : null,
-            salaryRange: document.getElementById('SalaryRange').value.trim(),
-            location: document.getElementById('Location').value.trim(),
-            description: document.getElementById('Description').value.trim(),
-            requirements: document.getElementById('Requirements').value.trim()
-         };
-
-         // Kích hoạt trạng thái "Đang xử lý"
-         btn.disabled = true;
-         btn.classList.add('opacity-75', 'cursor-not-allowed');
-         btnText.textContent = 'Đang xử lý...';
-         btnSpinner.classList.remove('hidden');
-         errorMessage.classList.add('hidden');
-
-         try {
-            // LƯU Ý: Chỉnh sửa lại URL này cho đúng với API Post của bạn (ví dụ: '/api/post' hoặc '/api/business/post-job')
-            // Đổi từ fetch('/api/post', ...) thành fetch('/api/post/create', ...)
-            const response = await fetch('/api/post/create', {
-               method: 'POST',
-               headers: {
-                  'Content-Type': 'application/json'
-               },
-               body: JSON.stringify(formData)
-            });
-
-            // Nếu phiên đăng nhập bị lỗi hoặc hết hạn
-            if (response.status === 401) {
-               window.location.href = '/Login';
-               return;
-            }
-
-            const result = await response.json();
-
-            // Xử lý kết quả trả về
-            if (response.ok && result.isSuccess !== false) {
-               // Nếu dùng thư viện SweetAlert2 thì thay alert bằng Swal.fire sẽ đẹp hơn nhiều
-               alert('Đăng tin tuyển dụng thành công!');
-
-               // Chuyển hướng "mượt mà" về trang danh sách việc làm
-               window.location.href = '/Business/MyJobs';
-            } else {
-               // Báo lỗi từ server
-               errorText.textContent = result.message || 'Có lỗi xảy ra khi lưu dữ liệu. Vui lòng kiểm tra lại.';
-               errorMessage.classList.remove('hidden');
-            }
-         } catch (error) {
-            console.error('Lỗi Call API:', error);
-            errorText.textContent = 'Lỗi kết nối máy chủ. Vui lòng kiểm tra mạng và thử lại.';
-            errorMessage.classList.remove('hidden');
-         } finally {
-            // 4. Tắt trạng thái Loading dù thành công hay thất bại
-            btn.disabled = false;
-            btn.classList.remove('opacity-75', 'cursor-not-allowed');
-            btnText.textContent = 'Đăng Tin Ngay';
-            btnSpinner.classList.add('hidden');
-         }
-      });
-   </script>
-}
+                     <div class="flex justify-end gap-4 pt-6 border-t border-gray-100">
+                        <button type="button"
+                                class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-bold hover:bg-gray-50 transition">Lưu
+                           Nháp</button>
+                           <button type="button"
+                                   class="px-8 py-3 bg-green-600 text-white rounded-lg font-bold shadow-md shadow-green-200 hover:bg-green-700 transition">
+                              <i class="fa-solid fa-paper-plane mr-2"></i> Đăng Chiến Dịch
+                           </button>
+                        </div>
+                     </form>
+                  </div>

@@ -1,50 +1,72 @@
 @{
-   ViewData["Title"] = "Quản lý tin tuyển dụng";
+   ViewData["Title"] = "Quản lý chiến dịch tuyển dụng";
+   Layout = "~/Views/Shared/_BusinessLayout.cshtml";
 }
 
-<main class="container mx-auto px-4 pb-12">
-   <div class="flex justify-between items-center mb-6">
-      <div>
-         <h2 class="text-2xl font-bold text-gray-800">Tin tuyển dụng của bạn</h2>
-         <p class="text-gray-500 text-sm mt-1">Quản lý, chỉnh sửa hoặc xóa các tin tuyển dụng đang hiển thị.</p>
-      </div>
+<div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 flex items-center justify-between gap-4">
+   <div class="flex-1 relative">
+      <i class="fa-solid fa-magnifying-glass absolute left-4 top-3 text-gray-400"></i>
+      <input type="text" placeholder="Tìm kiếm theo tiêu đề chiến dịch..."
+             class="w-full pl-11 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:bg-white outline-none transition text-sm">
+   </div>
+   <div class="flex gap-3">
+      <select
+         class="border border-gray-200 bg-gray-50 text-gray-700 py-2.5 px-4 rounded-lg outline-none text-sm focus:ring-2 focus:ring-green-500">
+         <option>Trạng thái: Tất cả</option>
+         <option>Đang hiển thị</option>
+         <option>Đã đóng</option>
+      </select>
       <a href="/Business/PostJob"
-         class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow font-medium transition flex items-center gap-2">
-         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-         </svg>
-         Đăng tin mới
+         class="bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-lg font-medium shadow-sm transition">
+         Tạo chiến dịch mới
       </a>
    </div>
+</div>
 
-   <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-      <div class="overflow-x-auto">
-         <table class="w-full text-left text-sm text-gray-600">
-            <thead class="bg-gray-50 text-gray-700 font-semibold border-b">
-               <tr>
-                  <th scope="col" class="px-6 py-4">Chức danh / Vị trí</th>
-                  <th scope="col" class="px-6 py-4">Hình thức</th>
-                  <th scope="col" class="px-6 py-4">Mức lương</th>
-                  <th scope="col" class="px-6 py-4 text-center">Trạng thái</th>
-                  <th scope="col" class="px-6 py-4 text-right">Thao tác</th>
-               </tr>
-            </thead>
-            <tbody id="jobsTableBody" class="divide-y divide-gray-100">
-               <tr>
-                  <td colspan="5" class="px-6 py-8 text-center text-gray-500">
-                     <div class="flex justify-center items-center gap-2">
-                        <div class="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin">
-                        </div>
-                        Đang tải dữ liệu...
-                     </div>
-                  </td>
-               </tr>
-            </tbody>
-         </table>
+<div class="space-y-4">
+   <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:border-green-400 transition overflow-hidden">
+      <div class="p-5 flex justify-between items-start gap-6">
+            
+         <div class="flex-1">
+            <div class="flex items-center gap-3 mb-2">
+               <span
+                  class="px-2.5 py-1 bg-green-100 text-green-700 text-[11px] font-bold rounded-full uppercase tracking-wide">Đang
+                  hiển thị</span>
+                  <span class="text-xs text-gray-400"><i class="fa-regular fa-clock mr-1"></i> Cập nhật 2 giờ trước</span>
+               </div>
+               <h3 class="text-lg font-bold text-gray-800 hover:text-green-600 transition cursor-pointer mb-2">
+                  C#.NET Backend Developer (Middle/Senior)
+               </h3>
+               <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600">
+                  <span><i class="fa-solid fa-location-dot mr-1 text-gray-400"></i> Quận 1, TP. HCM</span>
+                  <span><i class="fa-solid fa-sack-dollar mr-1 text-gray-400"></i> 15 - 25 Triệu</span>
+                  <span class="text-red-500 font-medium"><i class="fa-regular fa-calendar-xmark mr-1"></i> Hạn nộp:
+                     30/04/2026</span>
+                  </div>
+               </div>
+
+               <div class="flex gap-4">
+                  <div class="bg-gray-50 border border-gray-100 rounded-lg p-3 text-center min-w-[90px]">
+                     <p class="text-2xl font-bold text-gray-700">145</p>
+                     <p class="text-[11px] text-gray-500 font-medium mt-1">LƯỢT XEM</p>
+                  </div>
+                
+                  <a href="/Business/CVList?jobId=1"
+                     class="bg-green-50 border border-green-100 rounded-lg p-3 text-center min-w-[90px] cursor-pointer hover:bg-green-100 transition group">
+                     <p class="text-2xl font-bold text-green-600 group-hover:scale-110 transition">12</p>
+                     <p class="text-[11px] text-green-700 font-bold mt-1 uppercase">CV Ứng tuyển</p>
+                  </a>
+               </div>
+            
+               <div class="relative">
+                  <button class="text-gray-400 hover:text-gray-700 p-2"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+               </div>
+            </div>
+        
+            <div class="bg-gray-50 px-5 py-3 border-t border-gray-100 text-sm flex gap-6">
+               <span class="text-gray-600"><span class="font-bold text-gray-800">5</span> CV mới</span>
+               <span class="text-gray-600"><span class="font-bold text-gray-800">3</span> Đang phỏng vấn</span>
+               <span class="text-gray-600"><span class="font-bold text-gray-800">4</span> Đã loại</span>
+            </div>
+         </div>
       </div>
-   </div>
-</main>
-
-@section Scripts {
-   <script src="~/js/business.js"></script>
-}

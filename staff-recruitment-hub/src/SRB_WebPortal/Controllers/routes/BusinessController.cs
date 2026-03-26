@@ -38,6 +38,18 @@ public class BusinessController : Controller
       return View();
    }
 
+   public IActionResult CVList(int jobId = 1)
+   {
+      // Trang xem danh sách những người đã nộp vào 1 Job
+      return View();
+   }
+
+   public IActionResult ReviewCV(int id = 1)
+   {
+      // Trang chi tiết chia đôi màn hình để duyệt 1 CV
+      return View();
+   }
+
    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
    public IActionResult Error()
    {
