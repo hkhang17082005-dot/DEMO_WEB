@@ -1,0 +1,122 @@
+﻿@{
+    ViewData["Title"] = "Liên hệ";
+}
+
+<div class="min-h-screen bg-gray-50">
+
+    <!-- Hero -->
+    <section class="py-16 bg-linear-to-br from-green-600 to-emerald-700">
+        <div class="max-w-6xl px-6 mx-auto text-center">
+            <span class="inline-block px-4 py-2 mb-4 text-xs font-bold tracking-widest text-white uppercase rounded-full bg-white/20">
+                📬 Liên hệ với chúng tôi
+            </span>
+            <h1 class="mb-4 text-4xl font-black text-white md:text-5xl">Chúng tôi luôn lắng nghe</h1>
+            <p class="max-w-xl mx-auto text-lg text-green-100">
+                Bạn có câu hỏi hoặc cần hỗ trợ? Đội ngũ của chúng tôi sẵn sàng giúp đỡ bạn 24/7.
+            </p>
+        </div>
+    </section>
+
+    <div class="max-w-6xl px-6 mx-auto py-14">
+        <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
+
+            <!-- Contact Info -->
+            <div class="space-y-5">
+                <h2 class="mb-6 text-xl font-bold text-gray-900">Thông tin liên hệ</h2>
+
+                <div class="flex items-start gap-4 p-5 transition bg-white border border-gray-100 shadow-sm rounded-2xl hover:shadow-md">
+                    <div class="flex items-center justify-center w-12 h-12 text-xl bg-green-100 rounded-xl shrink-0">📍</div>
+                    <div>
+                        <p class="text-sm font-bold text-gray-900">Địa chỉ</p>
+                        <p class="mt-1 text-sm text-gray-500">123 Nguyễn Văn Linh, Quận 7,<br>TP. Hồ Chí Minh</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-4 p-5 transition bg-white border border-gray-100 shadow-sm rounded-2xl hover:shadow-md">
+                    <div class="flex items-center justify-center w-12 h-12 text-xl bg-blue-100 rounded-xl shrink-0">📞</div>
+                    <div>
+                        <p class="text-sm font-bold text-gray-900">Điện thoại</p>
+                        <p class="mt-1 text-sm text-gray-500">+84 (028) 1234 5678<br>Thứ 2 - Thứ 6: 8:00 - 17:00</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-4 p-5 transition bg-white border border-gray-100 shadow-sm rounded-2xl hover:shadow-md">
+                    <div class="flex items-center justify-center w-12 h-12 text-xl bg-purple-100 rounded-xl shrink-0">✉️</div>
+                    <div>
+                        <p class="text-sm font-bold text-gray-900">Email</p>
+                        <p class="mt-1 text-sm text-gray-500">support@zeion.vn<br>hr@zeion.vn</p>
+                    </div>
+                </div>
+
+                <div class="p-5 bg-white border border-gray-100 shadow-sm rounded-2xl">
+                    <p class="mb-3 text-sm font-bold text-gray-900">Theo dõi chúng tôi</p>
+                    <div class="flex gap-3">
+                        <a href="#" class="flex items-center justify-center w-10 h-10 text-sm text-white transition bg-blue-600 rounded-xl hover:bg-blue-700">f</a>
+                        <a href="#" class="flex items-center justify-center w-10 h-10 text-sm text-white transition bg-sky-400 rounded-xl hover:bg-sky-500">t</a>
+                        <a href="#" class="flex items-center justify-center w-10 h-10 text-sm text-white transition bg-blue-700 rounded-xl hover:bg-blue-800">in</a>
+                        <a href="#" class="flex items-center justify-center w-10 h-10 text-sm text-white transition bg-red-500 rounded-xl hover:bg-red-600">yt</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="p-8 bg-white border border-gray-100 shadow-sm md:col-span-2 rounded-3xl">
+                <h2 class="mb-6 text-xl font-bold text-gray-900">Gửi tin nhắn cho chúng tôi</h2>
+
+                <div class="grid grid-cols-1 gap-5 mb-5 md:grid-cols-2">
+                    <div>
+                        <label class="text-sm font-semibold text-gray-700 mb-1.5 block">Họ và tên *</label>
+                        <input type="text" placeholder="Nguyễn Văn A"
+                               class="w-full px-4 py-3 text-sm transition border border-gray-200 rounded-xl focus:outline-none focus:border-green-400 focus:ring-1 focus:ring-green-400" />
+                    </div>
+                    <div>
+                        <label class="text-sm font-semibold text-gray-700 mb-1.5 block">Email *</label>
+                        <input type="email" placeholder="example@email.com"
+                               class="w-full px-4 py-3 text-sm transition border border-gray-200 rounded-xl focus:outline-none focus:border-green-400 focus:ring-1 focus:ring-green-400" />
+                    </div>
+                </div>
+
+                <div class="mb-5">
+                    <label class="text-sm font-semibold text-gray-700 mb-1.5 block">Số điện thoại</label>
+                    <input type="tel" placeholder="0912 345 678"
+                           class="w-full px-4 py-3 text-sm transition border border-gray-200 rounded-xl focus:outline-none focus:border-green-400 focus:ring-1 focus:ring-green-400" />
+                </div>
+
+                <div class="mb-5">
+                    <label class="text-sm font-semibold text-gray-700 mb-1.5 block">Chủ đề *</label>
+                    <select class="w-full px-4 py-3 text-sm text-gray-600 transition border border-gray-200 rounded-xl focus:outline-none focus:border-green-400 focus:ring-1 focus:ring-green-400">
+                        <option value="">Chọn chủ đề...</option>
+                        <option>Hỗ trợ tài khoản</option>
+                        <option>Tư vấn tìm việc</option>
+                        <option>Hợp tác doanh nghiệp</option>
+                        <option>Báo cáo lỗi</option>
+                        <option>Khác</option>
+                    </select>
+                </div>
+
+                <div class="mb-6">
+                    <label class="text-sm font-semibold text-gray-700 mb-1.5 block">Nội dung *</label>
+                    <textarea rows="5" placeholder="Nhập nội dung tin nhắn của bạn..."
+                              class="w-full px-4 py-3 text-sm transition border border-gray-200 resize-none rounded-xl focus:outline-none focus:border-green-400 focus:ring-1 focus:ring-green-400"></textarea>
+                </div>
+
+                <button class="w-full py-4 text-sm font-bold text-white transition-all bg-green-600 shadow-md hover:bg-green-700 rounded-xl hover:shadow-lg">
+                    📨 Gửi tin nhắn
+                </button>
+
+                <p class="mt-4 text-xs text-center text-gray-400">Chúng tôi sẽ phản hồi trong vòng 24 giờ làm việc</p>
+            </div>
+        </div>
+
+        <!-- Map placeholder -->
+        <div class="mt-10 overflow-hidden bg-white border border-gray-100 shadow-sm rounded-3xl">
+            <div class="flex items-center justify-center h-64 bg-linear-to-br from-green-100 to-emerald-50">
+                <div class="text-center">
+                    <div class="mb-3 text-5xl">🗺️</div>
+                    <p class="font-medium text-gray-500">Bản đồ vị trí văn phòng</p>
+                    <p class="mt-1 text-sm text-gray-400">123 Nguyễn Văn Linh, Quận 7, TP.HCM</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

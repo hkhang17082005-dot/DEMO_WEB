@@ -36,14 +36,9 @@ namespace SRB_WebPortal.Services
       public static string RefreshToken(string sessionId) => $"session:{sessionId}:refreshToken";
    }
 
-   public class RedisService : IRedisService
+   public class RedisService(IDistributedCache cache) : IRedisService
    {
-      private readonly IDistributedCache _cache;
-
-      public RedisService(IDistributedCache cache)
-      {
-         _cache = cache;
-      }
+      private readonly IDistributedCache _cache = cache;
 
       // Lưu dữ liệu vào Cache
       public async Task SetAsync<T>(string key, T value, TimeSpan? expiration = null)

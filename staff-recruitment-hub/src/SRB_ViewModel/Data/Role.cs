@@ -1,3 +1,5 @@
+namespace SRB_ViewModel.Data;
+
 public static class RoleTypes
 {
    public const string SYSTEM = "SYSTEM";

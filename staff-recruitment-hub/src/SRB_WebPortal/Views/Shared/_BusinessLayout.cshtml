@@ -1,0 +1,26 @@
+@{
+   Layout = "_Layout";
+}
+
+<div class="mb-6 bg-white border-b shadow-sm">
+   <div class="container flex gap-8 px-4 mx-auto">
+      <a href="/Business/Index"
+         class="py-4 font-semibold @(ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "border-b-2 border-blue-600 text-blue-600 font-bold" : "text-gray-500 hover:text-blue-600")">
+         Tổng quan
+      </a>
+      <a href="/Business/MyJobs"
+         class="py-4 font-semibold @(ViewContext.RouteData.Values["Action"]?.ToString() == "MyJobs" ? "border-b-2 border-blue-600 text-blue-600 font-bold" : "text-gray-500 hover:text-blue-600")">
+         Quản lý tin tuyển dụng
+      </a>
+      <a href="/Business/Profile"
+         class="py-4 font-semibold @(ViewContext.RouteData.Values["Action"]?.ToString() == "Profile" ? "border-b-2 border-blue-600 text-blue-600 font-bold" : "text-gray-500 hover:text-blue-600")">
+         Hồ sơ công ty
+      </a>
+   </div>
+</div>
+
+<main class="container px-4 pb-12 mx-auto">
+   @RenderBody()
+</main>
+
+@RenderSection("Scripts", required: false)

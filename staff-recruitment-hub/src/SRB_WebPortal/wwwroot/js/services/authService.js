@@ -15,6 +15,13 @@ const authService = {
       });
    },
 
+   createProfile: (profileData) => {
+      return apiClient.request('/auth/create-profile', {
+         method: 'POST',
+         body: profileData,
+      });
+   },
+
    getUserInfo: () => {
       return apiClient.request('/auth/me');
    },

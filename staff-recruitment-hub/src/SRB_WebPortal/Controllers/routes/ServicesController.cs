@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace SRB_WebPortal.Controllers.routes
+namespace SRB_WebPortal.Controllers.routes;
+
+public class ServicesController : Controller
 {
-   public class ServicesController : Controller
+   public IActionResult Index()
    {
-      public IActionResult Index()
-      {
-         return View();
-      }
+      return View();
    }
 }
+

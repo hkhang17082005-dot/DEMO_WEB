@@ -1,14 +1,13 @@
-namespace SRB_WebPortal.Controllers.apis.post
+namespace SRB_WebPortal.Controllers.apis.post;
+
+public static class PostModule
 {
-   public static class PostModule
+   public static IServiceCollection AddPostModule(this IServiceCollection services)
    {
-      public static IServiceCollection AddPostModule(this IServiceCollection services)
-      {
-         services.AddScoped<AuthGuard>();
+      services.AddScoped<IPostRepository, PostRepository>();
 
-         services.AddScoped<PostService>();
+      services.AddScoped<IPostService, PostService>();
 
-         return services;
-      }
+      return services;
    }
 }

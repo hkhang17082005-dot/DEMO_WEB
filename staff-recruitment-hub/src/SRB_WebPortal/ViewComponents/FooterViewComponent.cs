@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace SRB_WebPortal.ViewComponents
+namespace SRB_WebPortal.ViewComponents;
+
+public class FooterViewComponent : ViewComponent
 {
-   public class FooterViewComponent : ViewComponent
+   public async Task<IViewComponentResult> InvokeAsync()
    {
-      public async Task<IViewComponentResult> InvokeAsync()
-      {
-         return View();
-      }
+      return View();
    }
 }
+

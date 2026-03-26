@@ -1,21 +1,40 @@
 using System.Diagnostics;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
-using SRB_WebPortal.Models;
-using SRB_ViewModel;
-using System.Linq;
 using Microsoft.EntityFrameworkCore;
+
+using SRB_ViewModel;
+using SRB_WebPortal.Models;
+
 namespace SRB_WebPortal.Controllers
 {
    public class HomeController(ILogger<HomeController> logger, DatabaseContext context) : Controller
    {
       private readonly ILogger<HomeController> _logger = logger;
       private readonly DatabaseContext _context = context;
+
       public IActionResult Index()
       {
          var jobs = _context.Jobs
-                .Include(j => j.Location)
-                .ToList();
+             .Include(j => j.Location)
+             .ToList();
+
          ViewBag.Locations = _context.Locations.ToList();
+
+         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+         if (userId != null)
+         {
+            ViewBag.SavedJobs = _context.SavedJobs
+                .Where(x => x.UserId == userId)
+                .Select(x => x.JobID)
+                .ToList();
+         }
+         else
+         {
+            ViewBag.SavedJobs = new List<int>();
+         }
+
          return View(jobs);
       }
 

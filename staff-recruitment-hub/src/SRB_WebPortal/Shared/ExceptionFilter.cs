@@ -1,4 +1,4 @@
-using SRB_WebPortal.Shared;
+namespace SRB_WebPortal.Shared;
 
 class ExceptionFilter(RequestDelegate next, ILogger<ExceptionFilter> logger)
 {

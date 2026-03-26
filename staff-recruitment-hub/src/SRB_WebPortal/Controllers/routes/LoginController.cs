@@ -1,20 +1,26 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+
 using SRB_WebPortal.Models;
+using SRB_WebPortal.Controllers.apis.auth;
 
-namespace SRB_WebPortal.Controllers.routes
+namespace SRB_WebPortal.Controllers.routes;
+
+public class LoginController : Controller
 {
-   public class LoginController : Controller
+   public IActionResult Index()
    {
-      public IActionResult Index()
+      if (HttpContext.Items["SessionLogin"] is TokenPayload)
       {
-         return View();
+         return RedirectToAction("Index", "Home");
       }
 
-      [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-      public IActionResult Error()
-      {
-         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-      }
+      return View();
+   }
+
+   [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+   public IActionResult Error()
+   {
+      return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
    }
 }

@@ -1,0 +1,10 @@
+@{
+   Layout = "_DashboardLayout";
+}
+
+<div class="mb-8">
+   <h1 class="text-3xl font-extrabold text-slate-800">Nguyen Quang Hung Ne</h1>
+   <p class="text-slate-500 mt-1">Dưới đây là báo cáo nhanh về tình hình hệ thống hôm nay.</p>
+</div>
+
+@await Html.PartialAsync("./_StatsCards.cshtml")

@@ -1,21 +1,18 @@
-const keywordInput = document.getElementById("jobSearch");
-const locationSelect = document.getElementById("locationFilter");
-const jobList = document.getElementById("jobList");
+const keywordInput = document.getElementById('jobSearch');
+const locationSelect = document.getElementById('locationFilter');
+const jobList = document.getElementById('jobList');
 
 function searchJobs() {
+   const keyword = keywordInput.value;
+   const location = locationSelect.value;
 
-    const keyword = keywordInput.value;
-    const location = locationSelect.value;
+   fetch(`/Home/Search?keyword=${keyword}&locationId=${location}`)
+      .then((res) => res.json())
+      .then((data) => {
+         jobList.innerHTML = '';
 
-    fetch(`/Home/Search?keyword=${keyword}&locationId=${location}`)
-        .then(res => res.json())
-        .then(data => {
-
-            jobList.innerHTML = "";
-
-            data.forEach(job => {
-
-                const html = `
+         data.forEach((job) => {
+            const html = `
                 <div class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
 
                     <h3 class="font-semibold text-lg mb-2">
@@ -45,12 +42,10 @@ function searchJobs() {
                 </div>
                 `;
 
-                jobList.innerHTML += html;
-
-            });
-
-        });
+            jobList.innerHTML += html;
+         });
+      });
 }
 
-keywordInput.addEventListener("keyup", searchJobs);
-locationSelect.addEventListener("change", searchJobs);
+keywordInput.addEventListener('keyup', searchJobs);
+locationSelect.addEventListener('change', searchJobs);

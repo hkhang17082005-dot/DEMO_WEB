@@ -1,0 +1,123 @@
+@{
+   ViewData["Title"] = "Tải CV lên";
+}
+
+<body class="bg-gray-50">
+   <main class="max-w-4xl px-4 pt-2 pb-8 mx-auto">
+
+      <!-- Banner -->
+      <div class="flex items-center justify-between w-full p-8 bg-white rounded-lg shadow-lg">
+
+         <!-- Text bên trái -->
+         <div class="flex flex-col">
+            <h1 class="text-xl font-bold md:text-2xl">
+               Upload CV để các cơ hội việc làm tự tìm đến bạn
+            </h1>
+            <p class="mt-2 text-sm md:text-base">
+               Giảm đến 50% thời gian cần thiết để tìm được một công việc phù hợp
+            </p>
+         </div>
+
+         <!-- Ảnh bên phải -->
+         <img src="https://cdn-icons-png.flaticon.com/512/3097/3097919.png" alt="CV" class="w-24 h-24 ml-6 shrink-0">
+      </div>
+
+      <p class="mt-6 mb-6 text-center text-gray-700"> Bạn đã có sẵn CV của mình, chỉ cần tải CV lên, hệ thống sẽ tự
+         động đề xuất CV của bạn tới những nhà tuyển
+         dụng uy tín.
+         Tiết kiệm thời gian, tìm việc thông minh, nắm bắt cơ hội và làm chủ đường đua nghề nghiệp của chính mình.
+      </p>
+
+      <!-- Form -->
+      <form id="cvForm" class="flex flex-col items-center gap-4 p-6 bg-white border shadow-md rounded-xl">
+         <div id="dropZone"
+              class="flex flex-col items-center justify-center w-full p-6 transition border-2 border-gray-300 border-dashed cursor-pointer rounded-xl hover:bg-gray-50">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mb-2 text-gray-400" fill="none" viewBox="0 0 24 24"
+                 stroke="currentColor">
+               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                     d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12v8m0 0l-4-4m4 4l4-4M12 4v8" />
+            </svg>
+            <p class="text-center text-gray-600">Tải lên CV từ máy tính, chọn hoặc kéo thả</p>
+            <p class="mt-1 text-xs text-gray-400">Hỗ trợ định dạng .doc, .docx, pdf có kích thước dưới 5MB</p>
+            <input type="file" id="cvInput" name="cv" accept=".pdf,.doc,.docx" class="hidden">
+            <button type="button" onclick="document.getElementById('cvInput').click()"
+                    class="px-4 py-2 mt-2 transition bg-gray-100 rounded hover:bg-gray-200">Chọn CV</button>
+         </div>
+         <p id="fileName" class="mt-1 text-sm text-gray-500"></p>
+         <button type="submit"
+                 class="w-full py-3 mt-4 font-semibold text-white transition bg-green-600 rounded-lg hover:bg-green-500">Tải
+            CV lên</button>
+         </form>
+         <!-- Benefits Section -->
+         <div class="grid gap-6 mt-12 md:grid-cols-2">
+            <div class="flex flex-col items-center p-6 text-center bg-white border border-gray-200 shadow rounded-xl">
+               <div class="p-4 mb-4 bg-green-100 rounded-full">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24"
+                       stroke="currentColor">
+                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                           d="M9 12l2 2 4-4M7 12l2 2 4-4" />
+                  </svg>
+               </div>
+               <h3 class="mb-2 font-semibold">Nhận về các cơ hội tốt nhất</h3>
+               <p class="text-sm text-gray-600">CV của bạn sẽ được ưu tiên hiển thị với các nhà tuyển dụng đã xác thực.
+                  Nhận được lời mời với những cơ hội việc làm hấp dẫn từ các doanh nghiệp uy tín.</p>
+               </div>
+               <div class="flex flex-col items-center p-6 text-center bg-white border border-gray-200 shadow rounded-xl">
+                  <div class="p-4 mb-4 bg-orange-100 rounded-full">
+                     <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-orange-600" fill="none" viewBox="0 0 24 24"
+                          stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M11 17l-4-4m0 0l4-4m-4 4h12" />
+                     </svg>
+                  </div>
+                  <h3 class="mb-2 font-semibold">Theo dõi số liệu, tối ưu CV</h3>
+                  <p class="text-sm text-gray-600">Theo dõi số lượt xem CV. Biết chính xác nhà tuyển dụng nào quan tâm đến
+                     CV của bạn.</p>
+                  </div>
+               </div>
+            </main>
+
+            <script>
+                  const cvInput = document.getElementById('cvInput');
+                  const fileName = document.getElementById('fileName');
+                  const cvForm = document.getElementById('cvForm');
+                  const dropZone = document.getElementById('dropZone');
+
+                  // Hiển thị tên file khi chọn
+                  cvInput.addEventListener('change', () => {
+                     if (cvInput.files.length > 0) {
+                        fileName.textContent = `File đã chọn: ${cvInput.files[0].name}`;
+                     } else {
+                        fileName.textContent = '';
+                     }
+                  });
+
+                  // Xử lý submit demo
+                  cvForm.addEventListener('submit', (e) => {
+                     e.preventDefault();
+                     if (cvInput.files.length === 0) {
+                        alert('Vui lòng chọn file CV trước khi upload!');
+                        return;
+                     }
+                     alert(`File ${cvInput.files[0].name} đã sẵn sàng để upload!`);
+                  });
+
+                  // Kéo thả file
+                  dropZone.addEventListener('dragover', (e) => {
+                     e.preventDefault();
+                     dropZone.classList.add('bg-gray-50');
+                  });
+                  dropZone.addEventListener('dragleave', (e) => {
+                     dropZone.classList.remove('bg-gray-50');
+                  });
+                  dropZone.addEventListener('drop', (e) => {
+                     e.preventDefault();
+                     dropZone.classList.remove('bg-gray-50');
+                     const files = e.dataTransfer.files;
+                     if (files.length > 0) {
+                        cvInput.files = files;
+                        fileName.textContent = `File đã chọn: ${files[0].name}`;
+                     }
+                  });
+            </script>
+         </body>

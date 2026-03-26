@@ -1,7 +1,7 @@
-namespace SRB_WebPortal.Controllers.apis.post
+namespace SRB_WebPortal.Controllers.apis.post;
+
+public class PostResponse
 {
-   public class PostResponse
-   {
-      public DateTime CreatedAt { get; set; }
-   }
+   public DateTime CreatedAt { get; set; }
 }
+

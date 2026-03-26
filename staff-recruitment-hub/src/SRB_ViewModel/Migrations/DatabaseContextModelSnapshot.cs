@@ -17,35 +17,87 @@ namespace SRB_ViewModel.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.0")
+                .HasAnnotation("ProductVersion", "10.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("SRB_ViewModel.Entities.BusinessProfile", b =>
+            modelBuilder.Entity("SRB_ViewModel.Entities.Business", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("BusinessID")
+                        .IsUnicode(false)
+                        .HasColumnType("char(36)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("Address")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("CompanyName")
+                    b.Property<string>("BusinessName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("CompanySize")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("ContactEmail")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(150)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("CreatedByID")
+                        .IsRequired()
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Industry")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("IsVerified")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
                     b.Property<string>("LogoUrl")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("TaxCode")
+                        .HasMaxLength(50)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("Website")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(255)");
 
-                    b.HasKey("Id");
+                    b.HasKey("BusinessID");
 
-                    b.ToTable("BusinessProfile");
+                    b.HasIndex("CreatedByID");
+
+                    b.ToTable("Businesses");
                 });
 
             modelBuilder.Entity("SRB_ViewModel.Entities.Job", b =>
@@ -80,6 +132,44 @@ namespace SRB_ViewModel.Migrations
                     b.HasIndex("LocationID");
 
                     b.ToTable("Jobs");
+                });
+
+            modelBuilder.Entity("SRB_ViewModel.Entities.JobPost", b =>
+                {
+                    b.Property<int>("JobPostID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("JobPostID"));
+
+                    b.Property<string>("BusinessID")
+                        .IsRequired()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SalaryRange")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("JobPostID");
+
+                    b.HasIndex("BusinessID");
+
+                    b.ToTable("JobPosts");
                 });
 
             modelBuilder.Entity("SRB_ViewModel.Entities.Location", b =>
@@ -800,6 +890,33 @@ namespace SRB_ViewModel.Migrations
                         });
                 });
 
+            modelBuilder.Entity("SRB_ViewModel.Entities.SavedJob", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("JobID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JobID");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("SavedJobs");
+                });
+
             modelBuilder.Entity("SRB_ViewModel.Entities.TypeRole", b =>
                 {
                     b.Property<int>("TypeRoleID")
@@ -874,8 +991,8 @@ namespace SRB_ViewModel.Migrations
                     b.Property<string>("UserID")
                         .HasColumnType("char(36)");
 
-                    b.Property<int?>("BusinessID")
-                        .HasColumnType("int");
+                    b.Property<string>("BusinessID")
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -885,9 +1002,6 @@ namespace SRB_ViewModel.Migrations
                     b.Property<string>("HashPassword")
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
-
-                    b.Property<int>("RoleID")
-                        .HasColumnType("int");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -909,12 +1023,60 @@ namespace SRB_ViewModel.Migrations
 
                     b.HasIndex("BusinessID");
 
-                    b.HasIndex("RoleID");
-
                     b.HasIndex("Username")
                         .IsUnique();
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("SRB_ViewModel.Entities.UserProfile", b =>
+                {
+                    b.Property<int>("ProfileID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProfileID"));
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AvatarURL")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Birthday")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CVPath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Summary")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserID")
+                        .IsRequired()
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("ProfileID");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("UserProfiles");
                 });
 
             modelBuilder.Entity("SRB_ViewModel.Entities.UserRoles", b =>
@@ -942,6 +1104,17 @@ namespace SRB_ViewModel.Migrations
                     b.ToTable("UserRoles");
                 });
 
+            modelBuilder.Entity("SRB_ViewModel.Entities.Business", b =>
+                {
+                    b.HasOne("SRB_ViewModel.Entities.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedByID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("CreatedBy");
+                });
+
             modelBuilder.Entity("SRB_ViewModel.Entities.Job", b =>
                 {
                     b.HasOne("SRB_ViewModel.Entities.Location", "Location")
@@ -951,6 +1124,17 @@ namespace SRB_ViewModel.Migrations
                         .IsRequired();
 
                     b.Navigation("Location");
+                });
+
+            modelBuilder.Entity("SRB_ViewModel.Entities.JobPost", b =>
+                {
+                    b.HasOne("SRB_ViewModel.Entities.Business", "Business")
+                        .WithMany()
+                        .HasForeignKey("BusinessID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Business");
                 });
 
             modelBuilder.Entity("SRB_ViewModel.Entities.Role", b =>
@@ -983,21 +1167,44 @@ namespace SRB_ViewModel.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("SRB_ViewModel.Entities.User", b =>
+            modelBuilder.Entity("SRB_ViewModel.Entities.SavedJob", b =>
                 {
-                    b.HasOne("SRB_ViewModel.Entities.BusinessProfile", "Business")
-                        .WithMany("Employees")
-                        .HasForeignKey("BusinessID");
-
-                    b.HasOne("SRB_ViewModel.Entities.Role", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleID")
+                    b.HasOne("SRB_ViewModel.Entities.Job", "Job")
+                        .WithMany("SavedJobs")
+                        .HasForeignKey("JobID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Business");
+                    b.HasOne("SRB_ViewModel.Entities.User", "User")
+                        .WithMany("SavedJobs")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Role");
+                    b.Navigation("Job");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SRB_ViewModel.Entities.User", b =>
+                {
+                    b.HasOne("SRB_ViewModel.Entities.Business", "Business")
+                        .WithMany("Employees")
+                        .HasForeignKey("BusinessID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Business");
+                });
+
+            modelBuilder.Entity("SRB_ViewModel.Entities.UserProfile", b =>
+                {
+                    b.HasOne("SRB_ViewModel.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("SRB_ViewModel.Entities.UserRoles", b =>
@@ -1019,9 +1226,14 @@ namespace SRB_ViewModel.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SRB_ViewModel.Entities.BusinessProfile", b =>
+            modelBuilder.Entity("SRB_ViewModel.Entities.Business", b =>
                 {
                     b.Navigation("Employees");
+                });
+
+            modelBuilder.Entity("SRB_ViewModel.Entities.Job", b =>
+                {
+                    b.Navigation("SavedJobs");
                 });
 
             modelBuilder.Entity("SRB_ViewModel.Entities.Location", b =>
@@ -1048,6 +1260,8 @@ namespace SRB_ViewModel.Migrations
 
             modelBuilder.Entity("SRB_ViewModel.Entities.User", b =>
                 {
+                    b.Navigation("SavedJobs");
+
                     b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618

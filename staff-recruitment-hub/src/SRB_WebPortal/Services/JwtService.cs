@@ -36,30 +36,34 @@ namespace SRB_WebPortal.Services
       ClaimsPrincipal? ValidateToken(string token, out string failureReason);
    }
 
-   public class JwtService : IJwtService
+   public class JwtService(IOptions<JwtOptions> jwtOptions) : IJwtService
    {
-      private readonly IOptions<JwtOptions> _jwtOptions;
-
-      public JwtService(IOptions<JwtOptions> jwtOptions)
-      {
-         _jwtOptions = jwtOptions;
-      }
+      private readonly IOptions<JwtOptions> _jwtOptions = jwtOptions;
 
       public string GenerateToken(TokenPayload tokenPayload, DateTime? expires = null)
       {
          var claims = new List<Claim>
-      {
-         // Thông tin User
-         new Claim("user_id", tokenPayload.User.UserID),
-         new Claim("user_role", tokenPayload.User.RoleSlug),
-         new Claim("user_status", tokenPayload.User.Status),
+         {
+            // Thông tin User
+            new("user_id", tokenPayload.User.UserID),
+            new("username", tokenPayload.User.Username),
+            new("user_status", tokenPayload.User.Status),
+            new("user_business", tokenPayload.User?.BusinessID ?? string.Empty),
 
-         // Thông tin Token/Session
-         new Claim(JwtRegisteredClaimNames.Jti, tokenPayload.SessionID),
-         new Claim("refresh_token", tokenPayload.RefreshToken),
+            // Thông tin Token/Session
+            new(JwtRegisteredClaimNames.Jti, tokenPayload.SessionID),
+            new("refresh_token", tokenPayload.RefreshToken),
 
-         new Claim("iat", new DateTimeOffset(tokenPayload.CreatedAt).ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64)
-      };
+            new("iat", new DateTimeOffset(tokenPayload.CreatedAt).ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64)
+         };
+
+         if (tokenPayload.User?.RoleSlugs != null)
+         {
+            foreach (var role in tokenPayload.User.RoleSlugs)
+            {
+               claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+         }
 
          var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Value.SecretKey));
          var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

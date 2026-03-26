@@ -1,40 +1,43 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace SRB_WebPortal.Controllers.apis.post
+using SRB_ViewModel.Data;
+using SRB_WebPortal.Controllers.apis.auth;
+
+namespace SRB_WebPortal.Controllers.apis.post;
+
+[ApiController]
+[Route("api/[controller]")]
+public class PostController(IPostService postService) : BaseAPIController
 {
-   [Route("api/[controller]")]
-   [ApiController]
-   public class PostController(PostService postService) : Controller
+   private readonly IPostService _postService = postService;
+
+   [AuthGuard(Roles = new[] { Roles.ADMIN, Roles.SYSTEM_MANAGER })]
+   [HttpGet("health")]
+   public IActionResult Health()
    {
-      private readonly PostService _postService = postService;
+      return Ok("API Post Running");
+   }
 
-      [HttpGet("health")]
-      public IActionResult Health()
+   [HttpPost("create-post")]
+   [AuthGuard(Roles = new[] { Roles.BUSINESS_MANAGER, Roles.HIRING_MANAGER, Roles.HR_MANAGER })]
+   public async Task<IActionResult> CreatePost([FromBody] CreateJobPostDTO formData)
+   {
+      var result = await _postService.CreateNewPost(formData);
+
+      if (!result.IsSuccess)
       {
-         return Ok("API Post Running");
+         return BadRequest(result);
       }
 
-      [HttpPost("crete-post")]
-      public async Task<IActionResult> CreatePost()
-      {
-         return Ok("Create New Post Successful");
-      }
+      return Ok(result);
+   }
 
-      [HttpPost("upload-my-cv")]
-      public async Task<IActionResult> UploadMyCV([FromForm] UploadCVModel model)
-      {
-         var result = await _postService.UploadCVAsync(model.FileCV);
+   [HttpPost("upload-my-cv")]
+   public async Task<IActionResult> UploadMyCV([FromForm] UploadCVModel model)
+   {
+      var result = await _postService.UploadCVAsync(model.FileCV);
 
-         return Ok(result);
-      }
-
-      [HttpPut("update-post")]
-      [AuthGuard(Roles = new[] { "admin", "system_manager" })]
-      public async Task<IActionResult> UpdatePost()
-      {
-         var result = _postService.UpdatePost();
-
-         return Ok(result);
-      }
+      return Ok(result);
    }
 }
+

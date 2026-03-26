@@ -1,13 +1,12 @@
-namespace SRB_WebPortal.Controllers.payments
-{
-   public interface IPaymentGateway
-   {
-      string Name { get; }
-      Task<string> CreatePaymentAsync(long amount);
-   }
+namespace SRB_WebPortal.Controllers.payments;
 
-   public interface IPaymentFactory
-   {
-      IPaymentGateway GetGateway(string method);
-   }
+public interface IPaymentGateway
+{
+   string Name { get; }
+   Task<string> CreatePaymentAsync(long amount);
+}
+
+public interface IPaymentFactory
+{
+   IPaymentGateway GetGateway(string method);
 }

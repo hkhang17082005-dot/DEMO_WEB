@@ -1,11 +1,14 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+
+using SRB_ViewModel.Data;
 using SRB_WebPortal.Models;
+using SRB_WebPortal.Controllers.apis.auth;
 
 namespace SRB_WebPortal.Controllers.routes
 {
    [AuthGuard(Roles = new[] { Roles.CANDIDATE })] // Bảo mật: Chỉ Ứng viên mới vào được
-   public class Candidate : Controller
+   public class CandidateController : Controller
    {
       // 1. Trang Dashboard
       public IActionResult Index()

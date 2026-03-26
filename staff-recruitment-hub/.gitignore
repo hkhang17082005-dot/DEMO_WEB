@@ -17,3 +17,5 @@ appsettings.Development.json
 analyst.md
 *.dev.md
 .DS_Store
+
+*.dev.md

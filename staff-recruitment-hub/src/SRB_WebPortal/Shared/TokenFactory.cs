@@ -1,13 +1,10 @@
 using SRB_WebPortal.Services;
 
-public class TokenFactory
-{
-   private readonly IHashingService _hashing;
+namespace SRB_WebPortal.Shared;
 
-   public TokenFactory(IHashingService hashing)
-   {
-      _hashing = hashing;
-   }
+public class TokenFactory(IHashingService hashing)
+{
+   private readonly IHashingService _hashing = hashing;
 
    public (string raw, string hash) CreateRefreshToken()
    {

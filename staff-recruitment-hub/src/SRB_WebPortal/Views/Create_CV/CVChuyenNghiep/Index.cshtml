@@ -1,246 +1,243 @@
 @{
-    ViewData["Title"] = "Mẫu CV Chuyên Nghiệp";
+   ViewData["Title"] = "Mẫu CV Chuyên Nghiệp";
 }
 
-<script src="https://cdn.tailwindcss.com"></script>
+<div class="absolute rounded-full top-20 left-10 w-72 h-72 bg-emerald-400 opacity-20 blur-3xl -z-10"></div>
+<div class="absolute bg-purple-500 rounded-full bottom-20 right-10 w-72 h-72 opacity-20 blur-3xl -z-10"></div>
+<div class="px-4 py-8 mx-auto max-w-7xl">
 
-<div class="absolute top-20 left-10 w-72 h-72 bg-emerald-400 opacity-20 rounded-full blur-3xl -z-10"></div>
-<div class="absolute bottom-20 right-10 w-72 h-72 bg-purple-500 opacity-20 rounded-full blur-3xl -z-10"></div>
-<div class="max-w-7xl mx-auto px-4 py-8">
+   <!-- Breadcrumb -->
+   <div class="mb-4 text-sm text-gray-500">
+      <span class="font-medium text-green-600">Trang chủ</span>
+      >
+      <span>Mẫu CV theo style</span>
+      >
+      <span class="font-semibold text-gray-700">
+         Mẫu CV xin việc tiếng Việt Chuyên nghiệp chuẩn 2026
+      </span>
+   </div>
 
-    <!-- Breadcrumb -->
-    <div class="text-sm text-gray-500 mb-4">
-        <span class="text-green-600 font-medium">Trang chủ</span>
-        >
-        <span>Mẫu CV theo style</span>
-        >
-        <span class="text-gray-700 font-semibold">
-            Mẫu CV xin việc tiếng Việt Chuyên nghiệp chuẩn 2026
-        </span>
-    </div>
+   <!-- TITLE -->
+   <div class="flex items-center justify-between mb-6">
 
-    <!-- TITLE -->
-    <div class="flex justify-between items-center mb-6">
+      <div>
 
-        <div>
+         <h1 class="text-3xl font-bold text-gray-800">
+            Mẫu CV xin việc tiếng Việt
+            <span class="text-green-600">
+               Chuyên nghiệp
+            </span>
+            chuẩn 2026
+         </h1>
 
-            <h1 class="text-3xl font-bold text-gray-800">
-                Mẫu CV xin việc tiếng Việt
-                <span class="text-green-600">
-                    Chuyên nghiệp
-                </span>
-                chuẩn 2026
-            </h1>
+         <p class="max-w-2xl mt-2 text-gray-500">
+            Tuyển chọn 23 mẫu CV chuyên nghiệp (phiên bản tiếng Việt) với thiết kế tinh gọn,
+            bố cục rõ ràng, màu sắc trang nhã, phù hợp với những ứng viên muốn tạo ấn tượng về sự chỉn chu,
+            nghiêm túc và đáng tin cậy trong công việc.
+         </p>
 
-            <p class="text-gray-500 mt-2 max-w-2xl">
-                Tuyển chọn 23 mẫu CV chuyên nghiệp (phiên bản tiếng Việt) với thiết kế tinh gọn, 
-                bố cục rõ ràng, màu sắc trang nhã, phù hợp với những ứng viên muốn tạo ấn tượng về sự chỉn chu,
-                 nghiêm túc và đáng tin cậy trong công việc.
-            </p>
+      </div>
 
-        </div>
+      <!-- Robot -->
+      <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" class="w-24">
+   </div>
 
-        <!-- Robot -->
-        <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png"
-             class="w-24">
-    </div>
+   <!-- FILTER -->
+   <div class="flex flex-wrap gap-3 mb-8">
 
-    <!-- FILTER -->
-    <div class="flex flex-wrap gap-3 mb-8">
+      <a href="/Create_CV/All_CV_Style"
+         class="px-4 py-2 transition duration-300 bg-gray-200 rounded-full hover:bg-emerald-500 hover:text-white hover:-translate-y-1">
+         Tất cả
+      </a>
 
-        <a href="/Create_CV/All_CV_Style" class="px-4 py-2 bg-gray-200 rounded-full 
-        hover:bg-emerald-500 hover:text-white hover:-translate-y-1 transition duration-300">
-            Tất cả
-        </a>
+      <a href="/Create_CV/Simple_CV"
+         class="px-4 py-2 transition duration-300 bg-gray-200 rounded-full hover:bg-emerald-500 hover:text-white hover:-translate-y-1">
+         Đơn giản
+      </a>
 
-        <a href="/Create_CV/Simple_CV" class="px-4 py-2 bg-gray-200 rounded-full
-        hover:bg-emerald-500 hover:text-white hover:-translate-y-1 transition duration-300">
-            Đơn giản
-        </a>
+      <a href="/Create_CV/CVChuyenNghiep"
+         class="px-4 py-2 transition duration-300 rounded-full bg-emerald-500 hover:bg-emerald-500 hover:text-white hover:-translate-y-1">
+         Chuyên nghiệp
+      </a>
 
-        <a href="/Create_CV/CVChuyenNghiep" class="px-4 py-2 bg-emerald-500 rounded-full
-        hover:bg-emerald-500 hover:text-white hover:-translate-y-1 transition duration-300">
-            Chuyên nghiệp
-        </a>
+      <a href="/Create_CV/Modern_CV"
+         class="px-4 py-2 transition duration-300 bg-gray-200 rounded-full hover:bg-emerald-500 hover:text-white hover:-translate-y-1">
+         Hiện đại
+      </a>
 
-        <a href="/Create_CV/Modern_CV" class="px-4 py-2 bg-gray-200 rounded-full
-        hover:bg-emerald-500 hover:text-white hover:-translate-y-1 transition duration-300">
-            Hiện đại
-        </a>
-
-    </div>
+   </div>
 
 
-    <!-- TEMPLATE GRID -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+   <!-- TEMPLATE GRID -->
+   <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
 
-<!-- CARD 1 -->
-<div class="bg-white shadow rounded-xl hover:shadow-2xl hover:-translate-y-2 transition p-4">
+      <!-- CARD 1 -->
+      <div class="p-4 transition bg-white shadow rounded-xl hover:shadow-2xl hover:-translate-y-2">
 
-    <div class="relative group rounded-lg overflow-hidden">
+         <div class="relative overflow-hidden rounded-lg group">
 
-        <img src="/images/cv1.jpg"
-             class="w-full h-[450px] object-cover rounded-lg">
+            <img src="/images/cv1.jpg" class="w-full h-112.5 object-cover rounded-lg">
 
-        <!-- Hover -->
-        <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+            <!-- Hover -->
+            <div
+               class="absolute inset-0 flex items-center justify-center transition opacity-0 bg-black/50 group-hover:opacity-100">
 
-            <a href="/CV/Builder"
-               class="bg-gradient-to-r from-emerald-500 to-purple-500 text-white px-6 py-3 rounded-lg font-semibold hover:scale-105 transition">
-               Dùng mẫu
-            </a>
-
-        </div>
-
-    </div>
-
-    <!-- TAG -->
-    <div class="flex gap-2 mt-3">
-
-        <span class="bg-emerald-100 text-emerald-700 px-2 py-1 text-xs rounded-full">
-            Đơn giản
-        </span>
-
-        <span class="bg-purple-100 text-purple-700 px-2 py-1 text-xs rounded-full">
-            Chuyên nghiệp
-        </span>
-
-    </div>
-
-</div>
-        <!-- CARD 2 -->
-        <div class="bg-white shadow rounded-xl hover:shadow-2xl hover:-translate-y-2 transition p-4">
-
-            <div class="relative group rounded-lg overflow-hidden">
-
-                <img src="/images/cv2.jpg"
-                     class="w-full h-[450px] object-cover">
-
-                <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-
-                    <a href="/CV/Builder"
-                       class="bg-gradient-to-r from-emerald-500 to-purple-500 text-white px-6 py-3 rounded-lg font-semibold hover:scale-105 transition">
-                        Dùng mẫu
-                    </a>
-
-                </div>
+               <a href="/CV/Builder"
+                  class="px-6 py-3 font-semibold text-white transition rounded-lg bg-linear-to-r from-emerald-500 to-purple-500 hover:scale-105">
+                  Dùng mẫu
+               </a>
 
             </div>
 
-            <div class="flex gap-2 p-3">
+         </div>
 
-                <span class="bg-emerald-100 text-emerald-700 px-2 py-1 text-xs rounded-full">
-                    Đơn giản
-                </span>
+         <!-- TAG -->
+         <div class="flex gap-2 mt-3">
 
-                <span class="bg-purple-100 text-purple-700 px-2 py-1 text-xs rounded-full">
-                    Chuyên nghiệp
-                </span>
+            <span class="px-2 py-1 text-xs rounded-full bg-emerald-100 text-emerald-700">
+               Đơn giản
+            </span>
 
-            </div>
+            <span class="px-2 py-1 text-xs text-purple-700 bg-purple-100 rounded-full">
+               Chuyên nghiệp
+            </span>
 
-        </div>
+         </div>
 
+      </div>
+      <!-- CARD 2 -->
+      <div class="p-4 transition bg-white shadow rounded-xl hover:shadow-2xl hover:-translate-y-2">
 
-        <!-- CARD 3 -->
-        <div class="bg-white shadow rounded-xl hover:shadow-2xl hover:-translate-y-2 transition p-4">
+         <div class="relative overflow-hidden rounded-lg group">
 
-            <div class="relative group rounded-lg overflow-hidden">
+            <img src="/images/cv2.jpg" class="w-full h-112.5 object-cover">
 
-                <img src="/images/cv4.jpg"
-                     class="w-full h-[450px] object-cover">
+            <div
+               class="absolute inset-0 flex items-center justify-center transition opacity-0 bg-black/50 group-hover:opacity-100">
 
-                <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-
-                    <a href="/CV/Builder"
-                       class="bg-gradient-to-r from-emerald-500 to-purple-500 text-white px-6 py-3 rounded-lg font-semibold hover:scale-105 transition">
-                        Dùng mẫu
-                    </a>
-
-                </div>
-
-            </div>
-
-            <div class="flex gap-2 p-3">
-
-                <span class="bg-purple-100 text-purple-700 px-2 py-1 text-xs rounded-full">
-                    Chuyên nghiệp
-                </span>
-
-                <span class="bg-cyan-500 text-white px-2 py-1 text-xs rounded-full">
-                    Hiện đại
-                </span>
+               <a href="/CV/Builder"
+                  class="px-6 py-3 font-semibold text-white transition rounded-lg bg-linear-to-r from-emerald-500 to-purple-500 hover:scale-105">
+                  Dùng mẫu
+               </a>
 
             </div>
 
-        </div>
+         </div>
 
-                <!-- CARD 4 -->
-        <div class="bg-white shadow rounded-xl hover:shadow-2xl hover:-translate-y-2 transition p-4">
+         <div class="flex gap-2 p-3">
 
-            <div class="relative group rounded-lg overflow-hidden">
+            <span class="px-2 py-1 text-xs rounded-full bg-emerald-100 text-emerald-700">
+               Đơn giản
+            </span>
 
-                <img src="/images/cv3.jpg"
-                     class="w-full h-[450px] object-cover">
+            <span class="px-2 py-1 text-xs text-purple-700 bg-purple-100 rounded-full">
+               Chuyên nghiệp
+            </span>
 
-                <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+         </div>
 
-                    <a href="/CV/Builder"
-                       class="bg-gradient-to-r from-emerald-500 to-purple-500 text-white px-6 py-3 rounded-lg font-semibold hover:scale-105 transition">
-                        Dùng mẫu
-                    </a>
+      </div>
 
-                </div>
 
-            </div>
+      <!-- CARD 3 -->
+      <div class="p-4 transition bg-white shadow rounded-xl hover:shadow-2xl hover:-translate-y-2">
 
-            <div class="flex gap-2 p-3">
+         <div class="relative overflow-hidden rounded-lg group">
 
-                <span class="bg-purple-100 text-purple-700 px-2 py-1 text-xs rounded-full">
-                    Chuyên nghiệp
-                </span>
+            <img src="/images/cv4.jpg" class="w-full h-112.5 object-cover">
 
-                <span class="bg-emerald-100 text-emerald-700 px-2 py-1 text-xs rounded-full">
-                    Đơn giản
-                </span>
+            <div
+               class="absolute inset-0 flex items-center justify-center transition opacity-0 bg-black/50 group-hover:opacity-100">
 
-            </div>
-
-        </div>
-
-                <!-- CARD 5 -->
-        <div class="bg-white shadow rounded-xl hover:shadow-2xl hover:-translate-y-2 transition p-4">
-
-            <div class="relative group rounded-lg overflow-hidden">
-
-                <img src="/images/cv5.jpg"
-                     class="w-full h-[450px] object-cover">
-
-                <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-
-                    <a href="/CV/Builder"
-                       class="bg-gradient-to-r from-emerald-500 to-purple-500 text-white px-6 py-3 rounded-lg font-semibold hover:scale-105 transition">
-                        Dùng mẫu
-                    </a>
-
-                </div>
+               <a href="/CV/Builder"
+                  class="px-6 py-3 font-semibold text-white transition rounded-lg bg-linear-to-r from-emerald-500 to-purple-500 hover:scale-105">
+                  Dùng mẫu
+               </a>
 
             </div>
 
-            <div class="flex gap-2 p-3">
+         </div>
 
-                <span class="bg-purple-100 text-purple-700 px-2 py-1 text-xs rounded-full">
-                    Chuyên nghiệp
-                </span>
+         <div class="flex gap-2 p-3">
 
-                <span class="bg-cyan-500 text-white px-2 py-1 text-xs rounded-full">
-                    Hiện đại
-                </span>
+            <span class="px-2 py-1 text-xs text-purple-700 bg-purple-100 rounded-full">
+               Chuyên nghiệp
+            </span>
+
+            <span class="px-2 py-1 text-xs text-white rounded-full bg-cyan-500">
+               Hiện đại
+            </span>
+
+         </div>
+
+      </div>
+
+      <!-- CARD 4 -->
+      <div class="p-4 transition bg-white shadow rounded-xl hover:shadow-2xl hover:-translate-y-2">
+
+         <div class="relative overflow-hidden rounded-lg group">
+
+            <img src="/images/cv3.jpg" class="w-full h-112.5 object-cover">
+
+            <div
+               class="absolute inset-0 flex items-center justify-center transition opacity-0 bg-black/50 group-hover:opacity-100">
+
+               <a href="/CV/Builder"
+                  class="px-6 py-3 font-semibold text-white transition rounded-lg bg-linear-to-r from-emerald-500 to-purple-500 hover:scale-105">
+                  Dùng mẫu
+               </a>
 
             </div>
 
-        </div>
+         </div>
 
-    </div>
+         <div class="flex gap-2 p-3">
+
+            <span class="px-2 py-1 text-xs text-purple-700 bg-purple-100 rounded-full">
+               Chuyên nghiệp
+            </span>
+
+            <span class="px-2 py-1 text-xs rounded-full bg-emerald-100 text-emerald-700">
+               Đơn giản
+            </span>
+
+         </div>
+
+      </div>
+
+      <!-- CARD 5 -->
+      <div class="p-4 transition bg-white shadow rounded-xl hover:shadow-2xl hover:-translate-y-2">
+
+         <div class="relative overflow-hidden rounded-lg group">
+
+            <img src="/images/cv5.jpg" class="w-full h-112.5 object-cover">
+
+            <div
+               class="absolute inset-0 flex items-center justify-center transition opacity-0 bg-black/50 group-hover:opacity-100">
+
+               <a href="/CV/Builder"
+                  class="px-6 py-3 font-semibold text-white transition rounded-lg bg-linear-to-r from-emerald-500 to-purple-500 hover:scale-105">
+                  Dùng mẫu
+               </a>
+
+            </div>
+
+         </div>
+
+         <div class="flex gap-2 p-3">
+
+            <span class="px-2 py-1 text-xs text-purple-700 bg-purple-100 rounded-full">
+               Chuyên nghiệp
+            </span>
+
+            <span class="px-2 py-1 text-xs text-white rounded-full bg-cyan-500">
+               Hiện đại
+            </span>
+
+         </div>
+
+      </div>
+
+   </div>
 
 </div>

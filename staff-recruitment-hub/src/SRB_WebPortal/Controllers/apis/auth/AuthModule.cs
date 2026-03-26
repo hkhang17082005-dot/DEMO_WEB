@@ -1,27 +1,30 @@
 using UAParser;
 
-namespace SRB_WebPortal.Controllers.apis.auth
+using SRB_WebPortal.Shared;
+
+namespace SRB_WebPortal.Controllers.apis.auth;
+
+public static class AuthModule
 {
-   public static class AuthModule
+   public static IServiceCollection AddAuthModule(this IServiceCollection services)
    {
-      public static IServiceCollection AddAuthModule(this IServiceCollection services)
-      {
-         services.AddSingleton(Parser.GetDefault());
+      services.AddSingleton(Parser.GetDefault());
 
-         services.AddScoped<IAuthRepository, AuthRepository>();
+      services.AddScoped<IAuthRepository, AuthRepository>();
 
-         services.AddScoped<TokenFactory>();
-         services.AddScoped<AuthGuard>();
-         services.AddScoped<IAuthService, AuthService>();
+      services.AddScoped<TokenFactory>();
 
-         return services;
-      }
+      services.AddScoped<IAuthService, AuthService>();
 
-      public static IApplicationBuilder UseAuthModule(this IApplicationBuilder app)
-      {
-         app.UseMiddleware<AuthMiddleware.TokenToCookieMiddleware>();
+      return services;
+   }
 
-         return app;
-      }
+   public static IApplicationBuilder UseAuthModule(this IApplicationBuilder app)
+   {
+      app.UseMiddleware<AuthMiddleware.UserSessionMiddleware>();
+
+      app.UseMiddleware<AuthMiddleware.TokenToCookieMiddleware>();
+
+      return app;
    }
 }

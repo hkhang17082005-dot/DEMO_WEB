@@ -1,0 +1,26 @@
+@model List<SRB_ViewModel.Entities.Job>
+
+<h2 class="text-2xl font-bold mb-6">💾 Việc làm đã lưu</h2>
+
+<div class="grid md:grid-cols-3 gap-6">
+
+@foreach (var job in Model)
+{
+    <div class="bg-white p-5 rounded-xl shadow border">
+
+        <a href="/FindJobByID/GetJobById?id=@job.JobID"
+           class="font-semibold text-lg text-gray-800 hover:text-emerald-600">
+            @job.Title
+        </a>
+
+        <p class="text-gray-500 text-sm">@job.CompanyName</p>
+
+        <p class="text-emerald-600 font-bold">@job.Salary</p>
+
+        <span class="text-xs bg-gray-100 px-2 py-1 rounded">
+            @job.Location?.LocationName
+        </span>
+
+    </div>
+}
+</div>

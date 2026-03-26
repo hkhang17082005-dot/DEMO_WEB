@@ -1,7 +1,9 @@
+namespace SRB_ViewModel.Data;
+
 public static class Permissions
 {
    // Admin
-   public const string Read_Users = "READ_USER";
+   public const string READ_USERS = "READ_USER";
    public const string WRITE_USER = "WRITE_USER";
    public const string ASSIGN_ROLE = "ASSIGN_ROLE";
    public const string BAN_USER = "BAN_USER";

@@ -1,0 +1,26 @@
+@{
+   Layout = "_Layout";
+}
+
+<div class="mb-6 bg-white border-b shadow-sm">
+   <div class="container flex gap-8 px-4 mx-auto">
+      <a href="/Candidate/Index"
+         class="py-4 font-semibold @(ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "border-b-2 border-blue-600 text-blue-600 font-bold" : "text-gray-500 hover:text-blue-600")">
+         Tổng quan
+      </a>
+      <a href="/Candidate/Profile"
+         class="py-4 font-semibold @(ViewContext.RouteData.Values["Action"]?.ToString() == "Profile" ? "border-b-2 border-blue-600 text-blue-600 font-bold" : "text-gray-500 hover:text-blue-600")">
+         Hồ sơ cá nhân
+      </a>
+      <a href="/Candidate/MyApplications"
+         class="py-4 font-semibold @(ViewContext.RouteData.Values["Action"]?.ToString() == "MyApplications" ? "border-b-2 border-blue-600 text-blue-600 font-bold" : "text-gray-500 hover:text-blue-600")">
+         Việc làm đã nộp
+      </a>
+   </div>
+</div>
+
+<main class="container px-4 pb-12 mx-auto">
+   @RenderBody()
+</main>
+
+@RenderSection("Scripts", required: false)
