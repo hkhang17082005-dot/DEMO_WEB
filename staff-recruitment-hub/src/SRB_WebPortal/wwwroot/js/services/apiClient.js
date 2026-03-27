@@ -1,32 +1,45 @@
 const API_BASE_URL = 'http://localhost:8000/api';
 
 const apiClient = {
-   async request(endpoint, options = {}) {
+   async baseRequest(endpoint, config = {}) {
       const url = `${API_BASE_URL}${endpoint}`;
 
-      const headers = { ...options.headers };
-
-      if (options.body instanceof FormData) {
-         delete headers['Content-Type'];
-         delete headers['content-type'];
-      } else if (options.body && typeof options.body === 'object') {
-         headers['Content-Type'] = 'application/json';
-      }
-
-      const config = {
-         ...options,
-         headers,
-         credentials: 'include',
-      };
+      config.credentials = 'include';
 
       const response = await fetch(url, config);
 
       if (!response.ok) {
-         const error = await response.json();
-         throw new Error(error.message || error.title || 'Có lỗi xảy ra');
+         const error = await response.json().catch(() => ({}));
+
+         throw new Error(error.message || error.title || `Lỗi hệ thống (${response.status})`);
       }
 
       return response.json();
+   },
+
+   async post(endpoint, data = {}) {
+      return this.baseRequest(endpoint, {
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/json',
+         },
+         body: JSON.stringify(data),
+      });
+   },
+
+   // Chuyên gửi Form/File
+   async postForm(endpoint, formData) {
+      return this.baseRequest(endpoint, {
+         method: 'POST',
+         body: formData,
+      });
+   },
+
+   // Chuyên lấy dữ liệu [Get]
+   async get(endpoint) {
+      return this.baseRequest(endpoint, {
+         method: 'GET',
+      });
    },
 };
 

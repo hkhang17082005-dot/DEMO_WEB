@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.HttpOverrides;
 
 using SRB_WebPortal.Shared;
 using SRB_WebPortal.Extensions;
-using SRB_WebPortal.Controllers;
 using SRB_WebPortal.Controllers.apis.auth;
 
 var builder = WebApplication.CreateBuilder(args);

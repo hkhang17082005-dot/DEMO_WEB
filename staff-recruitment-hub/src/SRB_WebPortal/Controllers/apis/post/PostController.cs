@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 
 using SRB_ViewModel.Data;
+using SRB_WebPortal.Shared;
 using SRB_WebPortal.Controllers.apis.auth;
 
 namespace SRB_WebPortal.Controllers.apis.post;
@@ -22,7 +23,14 @@ public class PostController(IPostService postService) : BaseAPIController
    [AuthGuard(Roles = new[] { Roles.BUSINESS_MANAGER, Roles.HIRING_MANAGER, Roles.HR_MANAGER })]
    public async Task<IActionResult> CreatePost([FromBody] CreateJobPostDTO formData)
    {
-      var result = await _postService.CreateNewPost(formData);
+      if (IsManagerMissingBusiness(out var error)) return error;
+
+      if (string.IsNullOrEmpty(CurrentUserID) || CurrentBusinessID != formData.BusinessID)
+      {
+         return Unauthorized(BaseResponse.Unauthorized("Không tìm thấy Thông tin cần thiết!"));
+      }
+
+      var result = await _postService.CreateNewPost(formData, CurrentUserID);
 
       if (!result.IsSuccess)
       {

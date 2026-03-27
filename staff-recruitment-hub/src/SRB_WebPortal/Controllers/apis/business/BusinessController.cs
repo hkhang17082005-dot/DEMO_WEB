@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SRB_ViewModel.Data;
 using SRB_WebPortal.Extensions;
 using SRB_WebPortal.Controllers.apis.auth;
+using SRB_WebPortal.Consts;
 
 namespace SRB_WebPortal.Controllers.apis.business;
 
@@ -22,14 +23,14 @@ public class BusinessController(BusinessService businessService) : BaseAPIContro
    [HttpGet("profile")]
    public async Task<IActionResult> GetProfile()
    {
-      var session = HttpContext.GetItem<SessionInfo>("SessionInfo"); // Lấy session từ Redis
+      var tokenPayload = HttpContext.GetItem<TokenPayload>(ServerKey.CONTEXT_ITEM_TOKEN_INFO);
 
-      if (session is null)
+      if (tokenPayload is null)
       {
          return RedirectToAction("Index");
       }
 
-      var result = await _businessService.GetProfile(session.Payload.User.UserID);
+      var result = await _businessService.GetProfile(tokenPayload.User.UserID);
 
       return Ok(result);
    }
@@ -37,7 +38,7 @@ public class BusinessController(BusinessService businessService) : BaseAPIContro
    [HttpGet("my-jobs")]
    public async Task<IActionResult> GetMyJobs()
    {
-      var session = HttpContext.GetItem<SessionInfo>("SessionInfo");
+      var session = HttpContext.GetItem<SessionInfo>(ServerKey.CONTEXT_ITEM_TOKEN_INFO);
 
       if (session is null)
       {
@@ -52,9 +53,9 @@ public class BusinessController(BusinessService businessService) : BaseAPIContro
    [HttpPost("register")]
    public async Task<IActionResult> RegisterBusiness([FromBody] RegisterBusinessDTO fromData)
    {
-      if (string.IsNullOrEmpty(CurrentUserId)) return Unauthorized("Không tìm thấy Thông tin cần thiết!");
+      if (string.IsNullOrEmpty(CurrentUserID)) return Unauthorized("Không tìm thấy Thông tin cần thiết!");
 
-      var result = await _businessService.RegisterBusiness(fromData, CurrentUserId);
+      var result = await _businessService.RegisterBusiness(fromData, CurrentUserID);
 
       return HandleResult(result);
    }

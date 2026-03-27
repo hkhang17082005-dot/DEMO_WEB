@@ -2,34 +2,30 @@ using System.Net;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Microsoft.Extensions.Options;
-using Microsoft.EntityFrameworkCore;
 
-using SRB_ViewModel;
 using SRB_ViewModel.Data;
 using SRB_WebPortal.Utils;
 using SRB_WebPortal.Consts;
 using SRB_WebPortal.Shared;
 using SRB_WebPortal.Configs;
 using SRB_WebPortal.Services;
-using SRB_ViewModel.Entities;
 
 namespace SRB_WebPortal.Controllers.apis.auth;
 
 public interface IAuthService
 {
-   Task<List<User>> Health();
+   Task<BaseResponse> Health();
    Task<BaseResponse<AuthResponse>> Login(LoginModelDTO model, DeviceInfo? deviceInfo);
    Task<BaseResponse> Logout(string? sessionId, string? refreshToken);
    Task<BaseResponse> Register(RegisterModelDTO model, DeviceInfo? deviceInfo);
    Task<BaseResponse<AuthResponse>> RefreshSession(DeviceInfo? deviceInfo, string? sessionId, string? refreshToken);
-   Task<BaseResponse> GetMe();
+   Task<BaseResponse<UserMeResponse>> GetMe(string userID);
    Task HandleCreateProfileAsync(CreateProfileDTO formData, string UserID);
 }
 
 public class AuthService(
    IRedisService redisService,
    IJwtService jwtService,
-   DatabaseContext context,
    IHashingService hashingService,
    IAuthRepository authRepository,
    IHttpContextAccessor httpContextAccessor,
@@ -40,7 +36,6 @@ public class AuthService(
 {
    private readonly IRedisService _redisService = redisService;
    private readonly IJwtService _jwtService = jwtService;
-   private readonly DatabaseContext _context = context;
    private readonly IHashingService _hashingService = hashingService;
    private readonly IAuthRepository _authRepository = authRepository;
    private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
@@ -48,9 +43,9 @@ public class AuthService(
    private readonly TokenFactory _tokenFactory = tokenFactory;
    private readonly Cloudinary _cloudinary = cloudinary;
 
-   public async Task<List<User>> Health()
+   public async Task<BaseResponse> Health()
    {
-      return await _context.Users.ToListAsync();
+      return BaseResponse.Success("API Auth is Running!");
    }
 
    public async Task<BaseResponse<AuthResponse>> Login(LoginModelDTO model, DeviceInfo? deviceInfo)
@@ -159,21 +154,6 @@ public class AuthService(
       return BaseResponse.Success("Đăng ký thành công");
    }
 
-   private async Task SetNewSession(
-      string sessionID, UserPayload userPayload, DeviceInfo? deviceInfo)
-   {
-      var (tokenPayload, refreshToken) = await CreateSession(userPayload, sessionID, deviceInfo);
-
-      var expConfigExpAccessToken = _jwtOptions.Value.EXP_ACCESS_TOKEN;
-      var expiresAccessToken = DateTime.UtcNow.Add(TimeUtil.ParseExpTime(expConfigExpAccessToken));
-
-      var AccessToken = _jwtService.GenerateToken(tokenPayload, expiresAccessToken);
-
-      _httpContextAccessor.HttpContext?.Items.Add("SetSessionID", tokenPayload.SessionID);
-      _httpContextAccessor.HttpContext?.Items.Add("SetRefreshToken", refreshToken);
-      _httpContextAccessor.HttpContext?.Items.Add("SetAccessToken", AccessToken);
-   }
-
    private async Task<(TokenPayload payload, string rawRefreshToken)> CreateSession(
       UserPayload userPayload,
       string? sessionId = null,
@@ -255,10 +235,8 @@ public class AuthService(
          );
       }
 
-      var roleSlugs = userRefresh.UserRoles?
-         .Select(ur => ur.Role.RoleSlug)
-         .Where(slug => !string.IsNullOrEmpty(slug))
-         .ToArray() ?? [];
+
+      var roleSlugs = await _authRepository.GetUserRoleSlugs(userRefresh.UserID);
 
       if (roleSlugs is null)
       {
@@ -273,7 +251,8 @@ public class AuthService(
          UserID = userRefresh.UserID,
          Username = userRefresh.Username,
          RoleSlugs = roleSlugs,
-         Status = userRefresh.Status.ToString()
+         Status = userRefresh.Status.ToString(),
+         BusinessID = userRefresh.BusinessID
       };
 
       var (rawRefresh, hashRefresh) = _tokenFactory.CreateRefreshToken();
@@ -306,6 +285,21 @@ public class AuthService(
       return BaseResponse<AuthResponse>.Success(response, "Refresh Session Success");
    }
 
+   private async Task SetNewSession(
+      string sessionID, UserPayload userPayload, DeviceInfo? deviceInfo)
+   {
+      var (tokenPayload, refreshToken) = await CreateSession(userPayload, sessionID, deviceInfo);
+
+      var expConfigExpAccessToken = _jwtOptions.Value.EXP_ACCESS_TOKEN;
+      var expiresAccessToken = DateTime.UtcNow.Add(TimeUtil.ParseExpTime(expConfigExpAccessToken));
+
+      var AccessToken = _jwtService.GenerateToken(tokenPayload, expiresAccessToken);
+
+      _httpContextAccessor.HttpContext?.Items.Add("SetSessionID", tokenPayload.SessionID);
+      _httpContextAccessor.HttpContext?.Items.Add("SetRefreshToken", refreshToken);
+      _httpContextAccessor.HttpContext?.Items.Add("SetAccessToken", AccessToken);
+   }
+
    private async Task SetCacheAuthentication(
       string userId,
       string sessionId,
@@ -327,9 +321,19 @@ public class AuthService(
       );
    }
 
-   public async Task<BaseResponse> GetMe()
+   public async Task<BaseResponse<UserMeResponse>> GetMe(string userID)
    {
-      return BaseResponse.Success("API Get Me Successful");
+      var userMe = await _authRepository.GetMe(userID);
+
+      if (userMe == null)
+      {
+         return BaseResponse<UserMeResponse>.Failure(
+            "Người dùng không tồn tại hoặc dữ liệu không hợp lệ!",
+            HttpStatusCode.BadRequest
+         );
+      }
+
+      return BaseResponse<UserMeResponse>.Success(userMe, "Lấy thông tin người dùng thành công");
    }
 
    public async Task HandleCreateProfileAsync(CreateProfileDTO formData, string UserID)
@@ -359,7 +363,9 @@ public class AuthService(
                File = new FileDescription(formData.CVFile.FileName, formData.CVFile.OpenReadStream()),
                Folder = CloudinaryKey.FOLDER_PROFILE_CV
             };
+
             var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+
             cvURL = uploadResult.SecureUrl.ToString();
          }
 
@@ -370,9 +376,8 @@ public class AuthService(
       }
       catch (Exception ex)
       {
-         // Log lỗi upload
-         // _logger.LogError($"Lỗi khi xử lý Profile ngầm: {ex.Message}");
-         Console.WriteLine("NQHxLog: " + ex.Message);
+         Console.WriteLine("NQHxError: " + ex.Message);
+         throw;
       }
    }
 }

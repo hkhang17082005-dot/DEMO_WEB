@@ -48,7 +48,7 @@ namespace SRB_WebPortal.Services
             new("user_id", tokenPayload.User.UserID),
             new("username", tokenPayload.User.Username),
             new("user_status", tokenPayload.User.Status),
-            new("user_business", tokenPayload.User?.BusinessID ?? string.Empty),
+            new("user_business", tokenPayload.User.BusinessID ?? string.Empty),
 
             // Thông tin Token/Session
             new(JwtRegisteredClaimNames.Jti, tokenPayload.SessionID),

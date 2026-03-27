@@ -1,181 +1,180 @@
 @{
-    ViewData["Title"] = "Tạo CV";
+   ViewData["Title"] = "Tạo CV";
 }
 
 <div class="min-h-screen p-6 bg-linear-to-br from-indigo-100 via-purple-100 to-pink-100">
 
-    <div class="mx-auto max-w-7xl">
+   <div class="mx-auto max-w-7xl">
 
-        <!-- HEADER -->
-        <div class="flex items-center justify-between mb-6">
-            <h1 class="text-3xl font-bold text-indigo-600">CV BUILDER PRO</h1>
-            <div class="flex gap-3">
-                <button onclick="previewCV()" class="px-4 py-2 bg-gray-200 rounded-lg">Xem trước</button>
-                <button onclick="saveCV()" class="px-4 py-2 text-white bg-green-600 rounded-lg">Lưu CV</button>
-            </div>
-        </div>
+      <!-- HEADER -->
+      <div class="flex items-center justify-between mb-6">
+         <h1 class="text-3xl font-bold text-indigo-600">CV BUILDER PRO</h1>
+         <div class="flex gap-3">
+            <button onclick="previewCV()" class="px-4 py-2 bg-gray-200 rounded-lg">Xem trước</button>
+            <button onclick="saveCV()" class="px-4 py-2 text-white bg-green-600 rounded-lg">Lưu CV</button>
+         </div>
+      </div>
 
-        <div class="grid gap-8 lg:grid-cols-2">
+      <div class="grid gap-8 lg:grid-cols-2">
 
-            <!-- FORM -->
-            <div class="p-6 bg-white shadow-xl rounded-3xl">
+         <!-- FORM -->
+         <div class="p-6 bg-white shadow-xl rounded-3xl">
 
-                <h2 class="mb-4 text-lg font-semibold">Thông tin cá nhân</h2>
+            <h2 class="mb-4 text-lg font-semibold">Thông tin cá nhân</h2>
 
-                <input id="name" class="w-full p-3 mb-3 border rounded-xl" placeholder="Họ và tên">
-                <input id="job" class="w-full p-3 mb-3 border rounded-xl" placeholder="Vị trí">
-                <input id="email" class="w-full p-3 mb-3 border rounded-xl" placeholder="Email">
-                <input id="phone" class="w-full p-3 mb-3 border rounded-xl" placeholder="SĐT">
+            <input id="name" class="w-full p-3 mb-3 border rounded-xl" placeholder="Họ và tên">
+            <input id="job" class="w-full p-3 mb-3 border rounded-xl" placeholder="Vị trí">
+            <input id="email" class="w-full p-3 mb-3 border rounded-xl" placeholder="Email">
+            <input id="phone" class="w-full p-3 mb-3 border rounded-xl" placeholder="SĐT">
 
-                <textarea id="about" class="w-full p-3 mb-3 border rounded-xl" placeholder="Giới thiệu"></textarea>
+            <textarea id="about" class="w-full p-3 mb-3 border rounded-xl" placeholder="Giới thiệu"></textarea>
 
-                <h2 class="mt-4 mb-2 font-semibold">Kỹ năng</h2>
-                <textarea id="skills" class="w-full p-3 mb-3 border rounded-xl"></textarea>
+            <h2 class="mt-4 mb-2 font-semibold">Kỹ năng</h2>
+            <textarea id="skills" class="w-full p-3 mb-3 border rounded-xl"></textarea>
 
-                <h2 class="mt-4 mb-2 font-semibold">Kinh nghiệm</h2>
-                <textarea id="experience" class="w-full p-3 mb-3 border rounded-xl"></textarea>
+            <h2 class="mt-4 mb-2 font-semibold">Kinh nghiệm</h2>
+            <textarea id="experience" class="w-full p-3 mb-3 border rounded-xl"></textarea>
 
-                <h2 class="mt-4 mb-2 font-semibold">Học vấn</h2>
-                <textarea id="education" class="w-full p-3 mb-3 border rounded-xl"></textarea>
+            <h2 class="mt-4 mb-2 font-semibold">Học vấn</h2>
+            <textarea id="education" class="w-full p-3 mb-3 border rounded-xl"></textarea>
 
-                <input type="file" id="avatar" accept="image/*" class="mb-4">
+            <input type="file" id="avatar" accept="image/*" class="mb-4">
 
-                <button onclick="downloadPDF()"
-                        class="w-full py-3 text-white bg-indigo-600 rounded-xl">
-                    Xuất PDF
-                </button>
-            </div>
+            <button onclick="downloadPDF()" class="w-full py-3 text-white bg-indigo-600 rounded-xl">
+               Xuất PDF
+            </button>
+         </div>
 
-            <!-- CV PREVIEW -->
-            <div id="cv" class="p-6 bg-white shadow-xl">
+         <!-- CV PREVIEW -->
+         <div id="cv" class="p-6 bg-white shadow-xl">
 
-                <div class="flex items-center gap-4 pb-4 border-b">
-                    <img id="cvAvatar" src="https://via.placeholder.com/100" class="w-24 h-24 rounded-full">
-                    <div>
-                        <h2 id="cvName" class="text-2xl font-bold">Họ tên</h2>
-                        <p id="cvJob">Vị trí</p>
-                    </div>
-                </div>
-
-                <p class="mt-2">Email: <span id="cvEmail"></span></p>
-                <p>Phone: <span id="cvPhone"></span></p>
-
-                <h3 class="mt-4 font-bold">Giới thiệu</h3>
-                <p id="cvAbout"></p>
-
-                <h3 class="mt-4 font-bold">Kỹ năng</h3>
-                <div id="cvSkills"></div>
-
-                <h3 class="mt-4 font-bold">Kinh nghiệm</h3>
-                <ul id="cvExperience"></ul>
-
-                <h3 class="mt-4 font-bold">Học vấn</h3>
-                <ul id="cvEducation"></ul>
-
+            <div class="flex items-center gap-4 pb-4 border-b">
+               <img id="cvAvatar" src="https://via.placeholder.com/100" class="w-24 h-24 rounded-full">
+               <div>
+                  <h2 id="cvName" class="text-2xl font-bold">Họ tên</h2>
+                  <p id="cvJob">Vị trí</p>
+               </div>
             </div>
 
-        </div>
-    </div>
+            <p class="mt-2">Email: <span id="cvEmail"></span></p>
+            <p>Phone: <span id="cvPhone"></span></p>
+
+            <h3 class="mt-4 font-bold">Giới thiệu</h3>
+            <p id="cvAbout"></p>
+
+            <h3 class="mt-4 font-bold">Kỹ năng</h3>
+            <div id="cvSkills"></div>
+
+            <h3 class="mt-4 font-bold">Kinh nghiệm</h3>
+            <ul id="cvExperience"></ul>
+
+            <h3 class="mt-4 font-bold">Học vấn</h3>
+            <ul id="cvEducation"></ul>
+
+         </div>
+
+      </div>
+   </div>
 </div>
 
-@section Scripts{
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+@section Scripts {
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-<script>
+   <script>
 
-// realtime update
-document.querySelectorAll("input, textarea").forEach(el=>{
-    el.addEventListener("input", updateCV);
-});
+      // realtime update
+      document.querySelectorAll("input, textarea").forEach(el => {
+      el.addEventListener("input", updateCV);
+      });
 
-function updateList(inputId, outputId){
-    let lines = document.getElementById(inputId).value.split("\\n");
-    let ul = document.getElementById(outputId);
-    ul.innerHTML="";
-    lines.forEach(line=>{
-        if(line.trim()!==""){
-            let li=document.createElement("li");
-            li.textContent=line;
-            ul.appendChild(li);
-        }
-    });
-}
+      function updateList(inputId, outputId) {
+      let lines = document.getElementById(inputId).value.split("\\n");
+      let ul = document.getElementById(outputId);
+      ul.innerHTML = "";
+      lines.forEach(line => {
+      if (line.trim() !== "") {
+      let li = document.createElement("li");
+      li.textContent = line;
+      ul.appendChild(li);
+      }
+      });
+      }
 
-function updateSkills(){
-    let lines=document.getElementById("skills").value.split("\\n");
-    let container=document.getElementById("cvSkills");
-    container.innerHTML="";
-    lines.forEach(line=>{
-        if(line.trim()!==""){
-            let span=document.createElement("span");
-            span.textContent=line;
-            span.className="bg-indigo-100 px-2 py-1 mr-2 rounded";
-            container.appendChild(span);
-        }
-    });
-}
+      function updateSkills() {
+      let lines = document.getElementById("skills").value.split("\\n");
+      let container = document.getElementById("cvSkills");
+      container.innerHTML = "";
+      lines.forEach(line => {
+      if (line.trim() !== "") {
+      let span = document.createElement("span");
+      span.textContent = line;
+      span.className = "bg-indigo-100 px-2 py-1 mr-2 rounded";
+      container.appendChild(span);
+      }
+      });
+      }
 
-function updateCV(){
-    cvName.innerText = name.value;
-    cvJob.innerText = job.value;
-    cvEmail.innerText = email.value;
-    cvPhone.innerText = phone.value;
-    cvAbout.innerText = about.value;
+      function updateCV() {
+      cvName.innerText = name.value;
+      cvJob.innerText = job.value;
+      cvEmail.innerText = email.value;
+      cvPhone.innerText = phone.value;
+      cvAbout.innerText = about.value;
 
-    updateSkills();
-    updateList("experience","cvExperience");
-    updateList("education","cvEducation");
+      updateSkills();
+      updateList("experience", "cvExperience");
+      updateList("education", "cvEducation");
 
-    let file = avatar.files[0];
-    if(file){
-        let reader = new FileReader();
-        reader.onload = e=> cvAvatar.src = e.target.result;
-        reader.readAsDataURL(file);
-    }
-}
+      let file = avatar.files[0];
+      if (file) {
+      let reader = new FileReader();
+      reader.onload = e => cvAvatar.src = e.target.result;
+      reader.readAsDataURL(file);
+      }
+      }
 
-// PREVIEW
-function previewCV(){
-    let content = document.getElementById("cv").innerHTML;
-    let win = window.open();
+      // PREVIEW
+      function previewCV() {
+      let content = document.getElementById("cv").innerHTML;
+      let win = window.open();
 
-    win.document.write(content);
-}
+      win.document.write(content);
+      }
 
-// SAVE
-function saveCV(){
-    let data = {
-        name: name.value,
-        job: job.value,
-        email: email.value,
-        phone: phone.value,
-        about: about.value,
-        skills: skills.value,
-        experience: experience.value,
-        education: education.value
-    };
-    localStorage.setItem("cvData", JSON.stringify(data));
-    alert("Đã lưu CV");
-}
+      // SAVE
+      function saveCV() {
+      let data = {
+      name: name.value,
+      job: job.value,
+      email: email.value,
+      phone: phone.value,
+      about: about.value,
+      skills: skills.value,
+      experience: experience.value,
+      education: education.value
+      };
+      localStorage.setItem("cvData", JSON.stringify(data));
+      alert("Đã lưu CV");
+      }
 
-// LOAD
-window.onload = ()=>{
-    let data = JSON.parse(localStorage.getItem("cvData"));
-    if(data){
-        name.value=data.name||"";
-        job.value=data.job||"";
-        email.value=data.email||"";
-        phone.value=data.phone||"";
-        about.value=data.about||"";
-        skills.value=data.skills||"";
-        experience.value=data.experience||"";
-        education.value=data.education||"";
-        updateCV();
-    }
-}
+      // LOAD
+      window.onload = () => {
+      let data = JSON.parse(localStorage.getItem("cvData"));
+      if (data) {
+      name.value = data.name || "";
+      job.value = data.job || "";
+      email.value = data.email || "";
+      phone.value = data.phone || "";
+      about.value = data.about || "";
+      skills.value = data.skills || "";
+      experience.value = data.experience || "";
+      education.value = data.education || "";
+      updateCV();
+      }
+      }
 
-function downloadPDF(){
-    html2pdf().from(document.getElementById("cv")).save();
-}
-</script>
+      function downloadPDF() {
+      html2pdf().from(document.getElementById("cv")).save();
+      }
+   </script>
 }

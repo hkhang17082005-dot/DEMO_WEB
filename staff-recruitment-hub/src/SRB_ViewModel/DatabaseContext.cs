@@ -13,6 +13,7 @@ public class DatabaseContext(DbContextOptions<DatabaseContext> options) : DbCont
       modelBuilder.InitModelPermission();
       modelBuilder.InitModelUser();
       modelBuilder.InitModelBusiness();
+      modelBuilder.InitModelPost();
 
       /* Load Data */
       modelBuilder.InitCoreData();
@@ -21,6 +22,8 @@ public class DatabaseContext(DbContextOptions<DatabaseContext> options) : DbCont
    public DbSet<Role> Roles { get; set; }
 
    public DbSet<User> Users { get; set; }
+
+   public DbSet<UserRoles> UserRoles { get; set; }
 
    public DbSet<UserProfile> UserProfiles { get; set; }
 

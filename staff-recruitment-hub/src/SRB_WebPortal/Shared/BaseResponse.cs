@@ -13,6 +13,9 @@ public static class BackendSignals
    // Dấu hiệu can thiệp token
    public const string INVALID_TOKEN = "SIG_INVALID_TOKEN";
    // Token không chính xác hoặc sai
+   public const string INCOMPLETE_TOKEN_DATA = "SIG_INCOMPLETE_TOKEN_DATA";
+   // Token thiếu dữ liệu
+   public const string INTERNAL_SERVER_ERROR = "SIG_INTERNAL_SERVER_ERROR";
 }
 
 public class BaseResponse<T>

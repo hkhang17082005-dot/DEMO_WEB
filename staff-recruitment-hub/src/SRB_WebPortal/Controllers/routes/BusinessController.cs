@@ -1,9 +1,11 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
+using SRB_ViewModel.Data;
 using SRB_WebPortal.Models;
 using SRB_WebPortal.Controllers.apis.auth;
-using SRB_ViewModel.Data;
+using SRB_ViewModel;
+using SRB_ViewModel.Entities;
 
 namespace SRB_WebPortal.Controllers.routes;
 
@@ -16,6 +18,12 @@ namespace SRB_WebPortal.Controllers.routes;
    })]
 public class BusinessController : Controller
 {
+   private readonly DatabaseContext _context;
+
+   public BusinessController(DatabaseContext context)
+   {
+      _context = context;
+   }
    public IActionResult Index()
    {
       // Trang Dashboard tổng quan của Doanh nghiệp
@@ -32,8 +40,51 @@ public class BusinessController : Controller
       return View();
    }
 
+   [HttpPost]
+   public async Task<IActionResult> PostJob(CreateJobViewModel model)
+   {
+      if (!ModelState.IsValid)
+      {
+         return View(model);
+      }
+
+      // Xử lý ghép mức lương từ 2 ô Min và Max thành 1 chuỗi "SalaryRange"
+      string salaryRange = "Thỏa thuận";
+      if (model.MinSalary.HasValue || model.MaxSalary.HasValue)
+      {
+         salaryRange = $"{model.MinSalary:N0} - {model.MaxSalary:N0} VND";
+      }
+
+      // Tạo Entity mới để chuẩn bị lưu xuống SQL
+      var newJob = new JobPost
+      {
+         JobPostID = Guid.NewGuid().ToString(), // Tự phát sinh mã ngẫu nhiên
+         Title = model.Title,
+         Description = model.Description,
+         Location = model.Location,
+         SalaryRange = salaryRange,             // Lưu chuỗi lương vừa ghép
+         IsActive = true,                       // Mặc định cho tin hiển thị luôn
+         CreatedAt = DateTime.UtcNow,
+         UpdatedAt = DateTime.UtcNow,
+
+         // TẠM THỜI GẮN CỨNG ID CHO ĐẾN KHI LÀM LOGIN:
+         // Vì ID của bạn là string, nên mình gắn 1 chuỗi tạm.
+         BusinessID = "BUSS_TEMP_01",
+         CreatedByID = "USER_TEMP_01"
+      };
+
+      // Thêm vào DbContext và Lưu
+      _context.JobPosts.Add(newJob);
+      await _context.SaveChangesAsync();
+
+      // Lưu thành công -> Chuyển hướng về trang danh sách
+      return RedirectToAction("MyJobs");
+   }
+
+
    public IActionResult MyJobs()
    {
+      var mockJobs = SRB_WebPortal.Data.JobMock.GetMockJobPosts();
       // Trang quản lý danh sách tin tuyển dụng
       return View();
    }

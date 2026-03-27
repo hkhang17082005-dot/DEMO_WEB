@@ -1,13 +1,14 @@
 using UAParser;
 
 using Microsoft.Extensions.Options;
+using System.IdentityModel.Tokens.Jwt;
 
 using SRB_WebPortal.Utils;
-using SRB_WebPortal.Configs;
-using SRB_WebPortal.Services;
 using SRB_WebPortal.Shared;
+using SRB_WebPortal.Configs;
 using System.Security.Claims;
-using System.IdentityModel.Tokens.Jwt;
+using SRB_WebPortal.Services;
+using SRB_WebPortal.Consts;
 
 namespace SRB_WebPortal.Controllers.apis.auth;
 
@@ -19,6 +20,14 @@ public class AuthMiddleware
 
       public async Task InvokeAsync(HttpContext context, IJwtService jwtService)
       {
+         // Kiểm tra Attribute IsPublic
+         var endpoint = context.GetEndpoint();
+         if (endpoint?.Metadata.GetMetadata<IsPublicAttribute>() != null)
+         {
+            await next(context);
+            return;
+         }
+
          var accessToken = context.Request.Cookies["AccessToken"];
 
          if (string.IsNullOrEmpty(accessToken))
@@ -34,8 +43,14 @@ public class AuthMiddleware
             // Kiểm tra Token hợp lệ
             if (principal == null)
             {
-               await HandleUnauthorized(context, "Token không chính xác hoặc đã hết hạn!");
-
+               if (failureReason == BackendSignals.SESSION_EXPIRED)
+               {
+                  await HandleUnauthorized(context, "Phiên đăng nhập hết hạn!", BackendSignals.SESSION_EXPIRED, shouldDelete: false);
+               }
+               else
+               {
+                  await HandleUnauthorized(context, "Token không hợp lệ hoặc bị lỗi!", BackendSignals.INVALID_TOKEN);
+               }
                return;
             }
 
@@ -51,13 +66,13 @@ public class AuthMiddleware
 
             if (!hasAllRequired)
             {
-               await HandleUnauthorized(context, "Dữ liệu Token không đầy đủ!");
+               await HandleUnauthorized(context, "Dữ liệu Token không đầy đủ!", BackendSignals.INCOMPLETE_TOKEN_DATA);
 
                return;
             }
 
             // Nạp thông tin vào Items
-            context.Items["SessionLogin"] = new TokenPayload
+            context.Items[ServerKey.CONTEXT_ITEM_TOKEN_INFO] = new TokenPayload
             {
                User = new UserPayload
                {
@@ -74,20 +89,28 @@ public class AuthMiddleware
          catch (Exception ex)
          {
             Console.WriteLine($"Critical Error in Middleware: {ex.Message}");
-            await HandleUnauthorized(context, "Hệ thống gặp sự cố xác thực!");
+
+            await HandleUnauthorized(context, "Hệ thống gặp sự cố xác thực!", BackendSignals.TAMPERED_TOKEN);
             return;
          }
 
          await next(context);
       }
 
-      private static async Task HandleUnauthorized(HttpContext context, string message)
+      private static async Task HandleUnauthorized(
+         HttpContext context, string message,
+         string signal = BackendSignals.INTERNAL_SERVER_ERROR,
+         bool shouldDelete = true
+      )
       {
          if (context.Response.HasStarted) return;
 
-         // Xóa các Cookie lỗi để tránh loop
-         context.Response.Cookies.Delete("AccessToken");
-         context.Response.Cookies.Delete("SessionID");
+         if (shouldDelete)
+         {
+            context.Response.Cookies.Delete("AccessToken");
+            context.Response.Cookies.Delete("SessionID");
+            context.Response.Cookies.Delete("RefreshToken");
+         }
 
          // Kiểm tra nếu đường dẫn bắt đầu bằng /api thì trả về JSON, ngược lại Redirect
          bool isApiRequest = context.Request.Path.StartsWithSegments("/api");
@@ -96,7 +119,8 @@ public class AuthMiddleware
          {
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            await context.Response.WriteAsJsonAsync(BaseResponse.Unauthorized(message));
+
+            await context.Response.WriteAsJsonAsync(BaseResponse.Unauthorized(message, signal));
          }
          else
          {

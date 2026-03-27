@@ -6,7 +6,7 @@ namespace SRB_ViewModel.Entities;
 public class JobPost
 {
    [Key]
-   public int JobPostID { get; set; }
+   public string JobPostID { get; set; } = null!;
 
    [Required]
    public string Title { get; set; } = null!;
@@ -19,10 +19,15 @@ public class JobPost
 
    public bool IsActive { get; set; } = true;
 
-   public DateTime CreatedAt { get; set; } = DateTime.Now;
+   public string CreatedByID { get; set; } = null!;
 
-   [ForeignKey("BusinessID")]
-   public required string BusinessID { get; set; }
+   public string? UpdatedByID { get; set; }
+
+   public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+   public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+   public string BusinessID { get; set; } = null!;
 
    [ForeignKey("BusinessID")]
    public virtual Business Business { get; set; } = null!;

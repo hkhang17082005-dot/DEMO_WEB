@@ -26,6 +26,8 @@ public class User
    public virtual ICollection<SavedJob>? SavedJobs { get; set; }
 
    public virtual Business? Business { get; set; }
+
+   public virtual UserProfile? UserProfile { get; set; }
 }
 
 public enum UserStatus

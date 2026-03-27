@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SRB_ViewModel.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateEntity : Migration
+    public partial class InitialEntity : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -162,14 +162,16 @@ namespace SRB_ViewModel.Migrations
                 name: "JobPosts",
                 columns: table => new
                 {
-                    JobPostID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    JobPostID = table.Column<string>(type: "char(36)", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SalaryRange = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedByID = table.Column<string>(type: "char(36)", nullable: false),
+                    UpdatedByID = table.Column<string>(type: "char(36)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2(0)", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2(0)", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     BusinessID = table.Column<string>(type: "char(36)", nullable: false)
                 },
                 constraints: table =>
@@ -180,7 +182,7 @@ namespace SRB_ViewModel.Migrations
                         column: x => x.BusinessID,
                         principalTable: "Businesses",
                         principalColumn: "BusinessID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -465,7 +467,8 @@ namespace SRB_ViewModel.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_UserProfiles_UserID",
                 table: "UserProfiles",
-                column: "UserID");
+                column: "UserID",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserRoles_RoleID",

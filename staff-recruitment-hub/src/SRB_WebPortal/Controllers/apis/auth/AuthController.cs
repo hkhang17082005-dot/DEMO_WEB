@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 
 using SRB_ViewModel.Data;
+using SRB_WebPortal.Consts;
 using SRB_WebPortal.Extensions;
 
 namespace SRB_WebPortal.Controllers.apis.auth;
@@ -73,18 +74,11 @@ public class AuthController(IAuthService authService, IServiceScopeFactory servi
       return Ok(result);
    }
 
+   [IsPublic]
    [HttpPut("refresh")]
    public async Task<IActionResult> RefreshSession()
    {
-      // var deviceInfo = HttpContext.GetItem<DeviceInfo>("UserDeviceInfo");
-      var deviceInfo = new DeviceInfo
-      {
-         OS = "Mac OS",
-         Browser = "PostMan",
-         Version = "11.83.5",
-         Device = "MacBook Air",
-         IPAdress = "127.0.0.1"
-      };
+      var deviceInfo = HttpContext.GetItem<DeviceInfo>("UserDeviceInfo");
 
       var sessionId = Request.Cookies[CookieKeys.SessionId];
       var refreshToken = Request.Cookies[CookieKeys.RefreshToken];
@@ -102,22 +96,24 @@ public class AuthController(IAuthService authService, IServiceScopeFactory servi
    [HttpGet("me")]
    public async Task<IActionResult> GetMe()
    {
-      var result = _authService.GetMe();
+      if (string.IsNullOrEmpty(CurrentUserID)) return Unauthorized("Không tìm thấy Thông tin cần thiết!");
 
-      return Ok(result);
+      var result = await _authService.GetMe(CurrentUserID);
+
+      return HandleResult(result);
    }
 
    [IgnoreAntiforgeryToken]
    [HttpPost("create-profile")]
-   public IActionResult CreateProfile([FromForm] CreateProfileDTO formData)
+   public IActionResult CreateProfile([FromBody] CreateProfileDTO formData)
    {
       if (!ModelState.IsValid)
          return BadRequest(ModelState);
 
-      if (HttpContext.Items["SessionLogin"] is not TokenPayload session)
+      if (HttpContext.Items[ServerKey.CONTEXT_ITEM_TOKEN_INFO] is not TokenPayload tokenPayload)
          return Unauthorized();
 
-      string userID = session.User.UserID;
+      string userID = tokenPayload.User.UserID;
 
       _ = Task.Run(async () =>
       {

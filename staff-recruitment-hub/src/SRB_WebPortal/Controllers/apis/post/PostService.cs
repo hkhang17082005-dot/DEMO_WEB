@@ -1,15 +1,14 @@
 using System.Net;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
-using SRB_ViewModel;
-using SRB_ViewModel.Entities;
+
 using SRB_WebPortal.Shared;
 
 namespace SRB_WebPortal.Controllers.apis.post;
 
 public interface IPostService
 {
-   Task<BaseResponse> CreateNewPost(CreateJobPostDTO formData);
+   Task<BaseResponse> CreateNewPost(CreateJobPostDTO formData, string createdByID);
    Task<BaseResponse> UploadCVAsync(IFormFile file);
 }
 
@@ -19,9 +18,9 @@ public class PostService(IPostRepository postRepository, Cloudinary cloudinary) 
 
    private readonly Cloudinary _cloudinary = cloudinary;
 
-   public async Task<BaseResponse> CreateNewPost(CreateJobPostDTO formData)
+   public async Task<BaseResponse> CreateNewPost(CreateJobPostDTO formData, string createdByID)
    {
-      await _postRepository.CreateNewJobPost(formData);
+      await _postRepository.CreateNewJobPost(formData, createdByID);
 
       return BaseResponse.Success("Tạo thành công!");
    }

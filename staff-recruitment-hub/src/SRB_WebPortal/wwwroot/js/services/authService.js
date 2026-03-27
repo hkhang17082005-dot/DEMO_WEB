@@ -2,28 +2,23 @@ import apiClient from './apiClient.js';
 
 const authService = {
    login: (credentials) => {
-      return apiClient.request('/auth/login', {
-         method: 'POST',
-         body: JSON.stringify(credentials),
-      });
+      return apiClient.post('/auth/login', credentials);
    },
 
    register: (userData) => {
-      return apiClient.request('/auth/register', {
-         method: 'POST',
-         body: JSON.stringify(userData),
-      });
+      return apiClient.post('/auth/register', userData);
    },
 
    createProfile: (profileData) => {
-      return apiClient.request('/auth/create-profile', {
-         method: 'POST',
-         body: profileData,
-      });
+      // Nếu profileData là Object JSON
+      return apiClient.post('/auth/create-profile', profileData);
+
+      // FormData chứa file/ảnh
+      // return apiClient.postForm('/auth/create-profile', profileData);
    },
 
    getUserInfo: () => {
-      return apiClient.request('/auth/me');
+      return apiClient.get('/auth/me');
    },
 };
 

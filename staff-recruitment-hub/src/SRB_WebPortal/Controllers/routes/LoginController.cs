@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using SRB_WebPortal.Models;
 using SRB_WebPortal.Controllers.apis.auth;
+using SRB_WebPortal.Consts;
 
 namespace SRB_WebPortal.Controllers.routes;
 
@@ -10,7 +11,7 @@ public class LoginController : Controller
 {
    public IActionResult Index()
    {
-      if (HttpContext.Items["SessionLogin"] is TokenPayload)
+      if (HttpContext.Items[ServerKey.CONTEXT_ITEM_TOKEN_INFO] is TokenPayload)
       {
          return RedirectToAction("Index", "Home");
       }

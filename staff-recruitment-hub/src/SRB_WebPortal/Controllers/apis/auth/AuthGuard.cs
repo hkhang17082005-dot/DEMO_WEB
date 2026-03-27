@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
+using SRB_WebPortal.Consts;
 using SRB_WebPortal.Shared;
 using SRB_WebPortal.Services;
 
@@ -17,11 +18,11 @@ public class AuthGuardAttribute : ActionFilterAttribute
 
    public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
    {
+      // Kiểm tra Attribute IsPublic
       var endpoint = context.HttpContext.GetEndpoint();
       if (endpoint?.Metadata.GetMetadata<IsPublicAttribute>() != null)
       {
          await next();
-
          return;
       }
 
@@ -38,7 +39,8 @@ public class AuthGuardAttribute : ActionFilterAttribute
          return;
       }
 
-      if (httpContext.Items["SessionLogin"] is not TokenPayload currentSession)
+      var rawData = httpContext.Items[ServerKey.CONTEXT_ITEM_TOKEN_INFO];
+      if (rawData is not TokenPayload tokenPayload)
       {
          context.Result = isApiRequest
             ? new JsonResult(BaseResponse.Unauthorized("Vui lòng đăng nhập!")) { StatusCode = 401 }
@@ -47,7 +49,7 @@ public class AuthGuardAttribute : ActionFilterAttribute
          return;
       }
 
-      if (isManagerBusinessRequest && string.IsNullOrEmpty(currentSession.User.BusinessID))
+      if (isManagerBusinessRequest && string.IsNullOrEmpty(tokenPayload.User.BusinessID))
       {
          context.Result = new RedirectResult("/Business/RegisterBusiness");
 
@@ -57,7 +59,7 @@ public class AuthGuardAttribute : ActionFilterAttribute
       var redisService = httpContext.RequestServices.GetRequiredService<IRedisService>();
 
       var cookieSessionID = httpContext.Request.Cookies["SessionID"];
-      if (string.IsNullOrEmpty(cookieSessionID) || cookieSessionID != currentSession.SessionID)
+      if (string.IsNullOrEmpty(cookieSessionID) || cookieSessionID != tokenPayload.SessionID)
       {
          context.Result = new JsonResult(BaseResponse.Unauthorized("Phiên đăng nhập không hợp lệ!"))
          {
@@ -70,23 +72,29 @@ public class AuthGuardAttribute : ActionFilterAttribute
       // Kiểm tra có yêu cầu phân quyền
       if (Roles.Length > 0)
       {
-         var userRoles = currentSession.User.RoleSlugs;
+         var userRoles = tokenPayload.User.RoleSlugs;
 
          // Kiểm tra xem User có sở hữu Role nào nằm trong danh sách cho phép không
          bool hasAccess = userRoles.Any(userRole => Roles.Contains(userRole, StringComparer.OrdinalIgnoreCase));
 
          if (!hasAccess)
          {
-            context.Result = new JsonResult(BaseResponse.Forbidden("Bạn không có quyền truy cập!"))
-            {
-               StatusCode = StatusCodes.Status403Forbidden
-            };
+            var shareRepository = context.HttpContext.RequestServices.GetRequiredService<IShareRepository>();
+            bool isHasRoleInDatabase = await shareRepository.IsHasRole(tokenPayload.User.UserID, Roles);
 
-            return;
+            if (!isHasRoleInDatabase)
+            {
+               context.Result = new JsonResult(BaseResponse.Forbidden("Bạn không có quyền truy cập!"))
+               {
+                  StatusCode = StatusCodes.Status403Forbidden
+               };
+
+               return;
+            }
          }
       }
 
-      var sessionKey = RedisCacheKeys.SessionInfo(currentSession.User.UserID, currentSession.SessionID);
+      var sessionKey = RedisCacheKeys.SessionInfo(tokenPayload.User.UserID, tokenPayload.SessionID);
       var sessionInfoCache = await redisService.GetAsync<SessionInfo>(sessionKey);
 
       if (sessionInfoCache is null)
@@ -99,7 +107,7 @@ public class AuthGuardAttribute : ActionFilterAttribute
          return;
       }
 
-      httpContext.Items["SessionInfo"] = sessionInfoCache;
+      httpContext.Items[ServerKey.CONTEXT_ITEM_SESSION_LOGIN] = sessionInfoCache;
 
       await next();
    }

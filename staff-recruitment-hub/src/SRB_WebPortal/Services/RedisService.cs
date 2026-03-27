@@ -28,14 +28,6 @@ namespace SRB_WebPortal.Services
       Task RemoveAsync(string key);
    }
 
-   public static class RedisCacheKeys
-   {
-      public const string SystemPrefix = "system";
-      public static string RoleKey(string roleName) => $"{SystemPrefix}:role:{roleName}";
-      public static string SessionInfo(string userId, string sessionId) => $"user:{userId}:session:{sessionId}:info";
-      public static string RefreshToken(string sessionId) => $"session:{sessionId}:refreshToken";
-   }
-
    public class RedisService(IDistributedCache cache) : IRedisService
    {
       private readonly IDistributedCache _cache = cache;

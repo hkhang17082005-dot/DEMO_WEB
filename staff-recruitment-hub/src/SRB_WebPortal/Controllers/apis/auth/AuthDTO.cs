@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+
 using SRB_ViewModel.Data;
 
 namespace SRB_WebPortal.Controllers.apis.auth;
@@ -58,4 +59,25 @@ public class CreateProfileDTO
 
    public IFormFile? CVFile { get; set; }
 
+}
+
+public class UserMeResponse
+{
+   public required string UserID { get; set; }
+
+   public required string Username { get; set; }
+
+   public required string[] RoleSlugs { get; set; }
+
+   public string? Email { get; set; }
+
+   public string? FullName { get; set; }
+
+   public string? PhoneNumber { get; set; }
+
+   public string? BusinessID { get; set; }
+
+   public string? AvatarURL { get; set; }
+
+   public string? CVvURL { get; set; }
 }

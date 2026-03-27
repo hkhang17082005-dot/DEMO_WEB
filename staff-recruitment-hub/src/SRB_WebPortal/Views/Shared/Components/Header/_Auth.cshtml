@@ -1,7 +1,8 @@
 @using SRB_ViewModel.Data
+@using SRB_WebPortal.Consts
 @using SRB_WebPortal.Controllers.apis.auth
 @{
-   TokenPayload? session = Context.Items[key: "SessionLogin"] as TokenPayload;
+   TokenPayload? session = Context.Items[key: ServerKey.CONTEXT_ITEM_TOKEN_INFO] as TokenPayload;
 
    string[]? allowedRoles = new[] {
       Roles.ADMIN,
@@ -30,7 +31,7 @@ else
       <button
          class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-gray-100 transition-all duration-200 cursor-pointer">
          <div
-            class="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-600 to-pink-500 flex items-center justify-center text-white text-xs font-bold shadow-sm">
+            class="w-8 h-8 rounded-full bg-linear-to-tr from-purple-600 to-pink-500 flex items-center justify-center text-white text-xs font-bold shadow-sm">
             @session.User.Username.Substring(0, 1).ToUpper()
          </div>
          <div class="text-left hidden sm:block">

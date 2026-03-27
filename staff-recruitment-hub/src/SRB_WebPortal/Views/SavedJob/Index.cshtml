@@ -1,26 +1,379 @@
 @model List<SRB_ViewModel.Entities.Job>
 
-<h2 class="text-2xl font-bold mb-6">💾 Việc làm đã lưu</h2>
+<section class="max-w-7xl mx-auto py-10 px-4 grid lg:grid-cols-3 gap-6">
 
-<div class="grid md:grid-cols-3 gap-6">
+    <!-- LEFT -->
+    <div class="lg:col-span-2">
+        <!--
+        <h2 class="text-2xl font-bold mb-6">
+            Danh sách <span class="text-green-600">@Model.Count</span> việc làm đã lưu
+        </h2>
+        -->
+        <h2 class="text-2xl font-bold mb-6">
+            Danh sách <span class="text-green-600">2</span> việc làm đã lưu
+        </h2>
+        <!-- DỮ LIỆU THẬT -->
+        <div class="space-y-5">
 
-@foreach (var job in Model)
-{
-    <div class="bg-white p-5 rounded-xl shadow border">
+            @foreach (var job in Model)
+            {
+                <div class="bg-white border border-green-300 rounded-2xl p-5 flex gap-4 hover:shadow-lg transition">
 
-        <a href="/FindJobByID/GetJobById?id=@job.JobID"
-           class="font-semibold text-lg text-gray-800 hover:text-emerald-600">
-            @job.Title
-        </a>
+                    <!-- LOGO -->
+                    <div class="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center text-2xl">
+                        🏢
+                    </div>
 
-        <p class="text-gray-500 text-sm">@job.CompanyName</p>
+                    <!-- CONTENT -->
+                    <div class="flex-1">
 
-        <p class="text-emerald-600 font-bold">@job.Salary</p>
+                        <!-- TITLE -->
+                        <a href="/FindJobByID/GetJobById?id=@job.JobID"
+                               class="font-semibold text-lg text-gray-800 hover:text-green-600">
+                            @job.Title
+                        </a>
 
-        <span class="text-xs bg-gray-100 px-2 py-1 rounded">
-            @job.Location?.LocationName
-        </span>
+                        <!-- COMPANY -->
+                        <p class="text-gray-500 text-sm mt-1 uppercase">
+                            @job.CompanyName
+                        </p>
 
+                        <!-- TAG -->
+                        <div class="flex gap-2 mt-2 flex-wrap text-sm">
+
+                            <span class="bg-gray-100 px-3 py-1 rounded-full">
+                                📍 @job.Location?.LocationName
+                            </span>
+
+                            <span class="bg-gray-100 px-3 py-1 rounded-full">
+                                ⏳ 1 năm
+                            </span>
+
+                        </div>
+
+                        <!-- TIME -->
+                        <p class="text-gray-400 text-sm mt-2">
+                            Đã lưu: @DateTime.Now.ToString("dd/MM/yyyy - HH:mm")
+                        </p>
+                    </div>
+
+                    <!-- RIGHT -->
+                    <div class="flex flex-col justify-between items-end">
+
+                        <!-- SALARY -->
+                        <p class="text-green-600 font-bold">
+                            @job.Salary
+                        </p>
+
+                        <div class="flex items-center gap-2">
+
+                            <!-- APPLY -->
+                            <button class="bg-green-500 text-white px-4 py-2 rounded-full hover:bg-green-600">
+                                Ứng tuyển
+                            </button>
+
+                            <!-- HEART -->
+                            <button onclick="toggleSave(event, this, @job.JobID)"
+                                    class="text-xl border rounded-full w-10 h-10 flex items-center justify-center">
+                                ❤️
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            }
+            <!-- 🔥 FAKE DATA (HIỂN THỊ THÊM) -->
+            @for (int i = 0; i < 2; i++)
+            {
+                <div class="bg-white border border-green-300 rounded-2xl p-5 flex gap-4">
+
+                    <div class="w-16 h-16 bg-gray-200 rounded-xl flex items-center justify-center">
+                        🏢
+                    </div>
+
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-lg text-gray-800">
+                            Kế toán tổng hợp / Accountant
+                        </h3>
+
+                        <p class="text-gray-500 text-sm uppercase">
+                            CÔNG TY TNHH ABC LOGISTICS
+                        </p>
+
+                        <div class="flex gap-2 mt-2 text-sm">
+                            <span class="bg-gray-100 px-3 py-1 rounded-full">Hà Nội</span>
+                            <span class="bg-gray-100 px-3 py-1 rounded-full">1 năm</span>
+                        </div>
+
+                        <p class="text-gray-400 text-sm mt-2">
+                            Đã lưu: 12/03/2026 - 20:27
+                        </p>
+                    </div>
+
+                    <div class="flex flex-col justify-between items-end">
+                        <p class="text-green-600 font-bold">9 - 12 triệu</p>
+
+                        <div class="flex gap-2">
+                            <button class="bg-green-500 text-white px-4 py-2 rounded-full">
+                                Ứng tuyển
+                            </button>
+                            <button class="text-xl border rounded-full w-10 h-10 flex items-center justify-center">
+                                ❤️
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
     </div>
-}
-</div>
+    
+    <div class="hidden lg:block">
+        <div class="relative overflow-hidden rounded-[2rem] p-8 group
+            bg-white/60 backdrop-blur-xl border border-white/40
+            shadow-[0_20px_60px_rgba(0,0,0,0.08)]">
+
+            <!-- MESH GRADIENT -->
+            <div class="absolute inset-0 -z-10">
+                <div class="absolute top-[-50px] right-[-50px] w-72 h-72 bg-emerald-300/40 rounded-full blur-[100px]">
+                </div>
+                <div class="absolute bottom-[-60px] left-[-40px] w-72 h-72 bg-green-400/30 rounded-full blur-[100px]">
+                </div>
+            </div>
+
+            <!-- CONTENT -->
+            <div class="relative z-10 flex flex-col items-center text-center">
+
+                <!-- BADGE -->
+                <span
+                    class="px-3 py-1 text-[10px] font-bold tracking-widest text-emerald-700 uppercase bg-emerald-100/70 backdrop-blur rounded-full mb-4">
+                    Top #1 Builder
+                </span>
+
+                <!-- TITLE -->
+                <h3 class="text-2xl font-extrabold text-slate-800 tracking-tight mb-2">
+                    CV
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-green-500">
+                        “Xịn”
+                    </span>
+                    Trong Tay
+                </h3>
+
+                <!-- DESC -->
+                <p class="text-slate-500 mb-8 text-sm leading-relaxed max-w-[200px]">
+                    Thiết kế tương lai, nâng tầm sự nghiệp của bạn
+                </p>
+
+                <!-- FLOATING CV -->
+                <div class="relative h-52 w-full flex items-center justify-center mb-8">
+
+                    <!-- glow -->
+                    <div class="absolute inset-0 bg-emerald-200/20 blur-2xl rounded-full"></div>
+
+                    <!-- CARD 1 -->
+                    <div class="absolute w-28 h-36 bg-white/70 backdrop-blur rounded-xl border border-white shadow-md
+                        -rotate-12 translate-x-[-25px]
+                        animate-[float_4s_ease-in-out_infinite]">
+                    </div>
+
+                    <!-- CARD 2 -->
+                    <div class="absolute w-28 h-36 bg-white/70 backdrop-blur rounded-xl border border-white shadow-md
+                        rotate-12 translate-x-[25px]
+                        animate-[float_5s_ease-in-out_infinite]">
+                    </div>
+
+                    <!-- MAIN CARD -->
+                    <div class="relative w-32 h-40 bg-white rounded-2xl
+                        shadow-[0_25px_60px_rgba(0,0,0,0.15)]
+                        flex flex-col p-3 border border-slate-50
+                        animate-[float_6s_ease-in-out_infinite]">
+
+                        <div
+                            class="w-8 h-8 bg-emerald-500 rounded-lg mb-2 flex items-center justify-center text-white text-xs">
+                            ✨
+                        </div>
+
+                        <div class="h-2 w-full bg-slate-100 rounded mb-2"></div>
+                        <div class="h-2 w-2/3 bg-slate-100 rounded mb-4"></div>
+
+                        <div class="mt-auto flex gap-1">
+                            <div class="h-4 w-4 rounded-full bg-emerald-100"></div>
+                            <div class="h-4 w-4 rounded-full bg-emerald-100"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BUTTON -->
+                <a href="/Create_CV/All_CV_Style" class="group/btn relative inline-flex items-center justify-center px-8 py-3 font-semibold text-white
+                    bg-gradient-to-r from-emerald-600 to-green-500
+                    rounded-xl shadow-lg shadow-emerald-300/40
+                    hover:shadow-emerald-400/60
+                    transition-all duration-300 hover:scale-105 active:scale-95">
+
+                    Xem ngay
+
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         class="w-4 h-4 ml-2 transition-transform group-hover/btn:translate-x-1" fill="none"
+                         viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="lg:col-span-2">
+        <!--
+        <h2 class="text-2xl font-bold mb-6">
+            Danh sách <span class="text-green-600">@Model.Count</span> việc làm đã lưu
+        </h2>
+        -->
+        <h2 class="text-2xl font-bold mb-6">
+            Việc làm tương tự việc làm đã lưu
+        </h2>
+        <!-- DỮ LIỆU THẬT -->
+        <div class="space-y-5">
+
+            @foreach (var job in Model)
+            {
+                <div class="bg-white border border-green-300 rounded-2xl p-5 flex gap-4 hover:shadow-lg transition">
+
+                    <!-- LOGO -->
+                    <div class="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center text-2xl">
+                        🏢
+                    </div>
+
+                    <!-- CONTENT -->
+                    <div class="flex-1">
+
+                        <!-- TITLE -->
+                        <a href="/FindJobByID/GetJobById?id=@job.JobID"
+                               class="font-semibold text-lg text-gray-800 hover:text-green-600">
+                            @job.Title
+                        </a>
+
+                        <!-- COMPANY -->
+                        <p class="text-gray-500 text-sm mt-1 uppercase">
+                            @job.CompanyName
+                        </p>
+
+                        <!-- TAG -->
+                        <div class="flex gap-2 mt-2 flex-wrap text-sm">
+
+                            <span class="bg-gray-100 px-3 py-1 rounded-full">
+                                📍 @job.Location?.LocationName
+                            </span>
+
+                            <span class="bg-gray-100 px-3 py-1 rounded-full">
+                                ⏳ 1 năm
+                            </span>
+
+                        </div>
+
+                        <!-- TIME -->
+                        <p class="text-gray-400 text-sm mt-2">
+                            Đã lưu: @DateTime.Now.ToString("dd/MM/yyyy - HH:mm")
+                        </p>
+                    </div>
+
+                    <!-- RIGHT -->
+                    <div class="flex flex-col justify-between items-end">
+
+                        <!-- SALARY -->
+                        <p class="text-green-600 font-bold">
+                            @job.Salary
+                        </p>
+
+                        <div class="flex items-center gap-2">
+
+                            <!-- APPLY -->
+                            <button class="bg-green-500 text-white px-4 py-2 rounded-full hover:bg-green-600">
+                                Ứng tuyển
+                            </button>
+
+                            <!-- HEART -->
+                            <button onclick="toggleSave(event, this, @job.JobID)"
+                                    class="text-xl border rounded-full w-10 h-10 flex items-center justify-center">
+                                ❤️
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            }
+            <!-- 🔥 FAKE DATA (HIỂN THỊ THÊM) -->
+            <!-- Item 1 -->
+            <div
+                class="bg-white border border-gray-200 rounded-2xl p-5 flex gap-4 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+
+                <div class="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center">
+                    🏢
+                </div>
+
+                <div class="flex-1">
+                    <h3 class="font-semibold text-lg text-gray-800 hover:text-green-600 cursor-pointer">
+                        Nhân viên kế toán nội bộ
+                    </h3>
+
+                    <p class="text-gray-500 text-sm uppercase">
+                        CÔNG TY TNHH TÂN AN
+                    </p>
+
+                    <div class="flex gap-2 mt-2 text-sm flex-wrap">
+                        <span class="bg-gray-100 px-3 py-1 rounded-full">📍 TP.HCM</span>
+                        <span class="bg-gray-100 px-3 py-1 rounded-full">⏳ Dưới 1 năm</span>
+                    </div>
+
+                    <p class="text-gray-400 text-sm mt-2">
+                        Cập nhật 10 phút trước
+                    </p>
+                </div>
+
+                <div class="flex flex-col justify-between items-end">
+                    <p class="text-green-600 font-bold">8.5 - 9.5 triệu</p>
+
+                    <button class="border rounded-full w-10 h-10 flex items-center justify-center hover:bg-green-50">
+                        🤍
+                    </button>
+                </div>
+            </div>
+            <!-- Item 2 -->
+            <div
+                class="bg-white border border-gray-200 rounded-2xl p-5 flex gap-4 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+
+                <div class="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center">
+                    🏢
+                </div>
+
+                <div class="flex-1">
+                    <h3 class="font-semibold text-lg text-gray-800 hover:text-green-600 cursor-pointer">
+                        Kế toán tổng hợp - Logistics
+                    </h3>
+
+                    <p class="text-gray-500 text-sm uppercase">
+                        CÔNG TY CỔ PHẦN SAFO LOGISTICS
+                    </p>
+
+                    <div class="flex gap-2 mt-2 text-sm flex-wrap">
+                        <span class="bg-gray-100 px-3 py-1 rounded-full">📍 Hà Nội</span>
+                        <span class="bg-gray-100 px-3 py-1 rounded-full">⏳ 1 năm</span>
+                    </div>
+
+                    <p class="text-gray-400 text-sm mt-2">
+                        Cập nhật 6 phút trước
+                    </p>
+                </div>
+
+                <div class="flex flex-col justify-between items-end">
+                    <p class="text-green-600 font-bold">9 - 12 triệu</p>
+
+                    <button class="border rounded-full w-10 h-10 flex items-center justify-center hover:bg-green-50">
+                        🤍
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section> 

@@ -1,7 +1,8 @@
 @using SRB_ViewModel.Data
+@using SRB_WebPortal.Consts
 @using SRB_WebPortal.Controllers.apis.auth
 @{
-   TokenPayload? session = Context.Items[key: "SessionLogin"] as TokenPayload;
+   TokenPayload? session = Context.Items[key: ServerKey.CONTEXT_ITEM_TOKEN_INFO] as TokenPayload;
 
    @* Todo: Thêm các Role liên quan để có thể thấy Button Tuyển dụng *@
    string[]? allowedRoles = new[] {

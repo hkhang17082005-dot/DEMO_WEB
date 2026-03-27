@@ -13,8 +13,8 @@ public class SavedJobController(DatabaseContext context) : Controller
    {
       var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-      if (userId == null)
-         return Redirect("/Login");
+     // if (userId == null)
+       //  return Redirect("/Login");
 
       var savedJobs = _context.SavedJobs
          .Where(x => x.UserId == userId)

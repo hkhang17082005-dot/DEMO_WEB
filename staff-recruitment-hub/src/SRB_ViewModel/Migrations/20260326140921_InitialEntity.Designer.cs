@@ -12,8 +12,8 @@ using SRB_ViewModel;
 namespace SRB_ViewModel.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20260326020427_UpdateEntity")]
-    partial class UpdateEntity
+    [Migration("20260326140921_InitialEntity")]
+    partial class InitialEntity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -139,18 +139,21 @@ namespace SRB_ViewModel.Migrations
 
             modelBuilder.Entity("SRB_ViewModel.Entities.JobPost", b =>
                 {
-                    b.Property<int>("JobPostID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("JobPostID"));
+                    b.Property<string>("JobPostID")
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("BusinessID")
                         .IsRequired()
                         .HasColumnType("char(36)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2(0)")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("CreatedByID")
+                        .IsRequired()
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -166,7 +169,16 @@ namespace SRB_ViewModel.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2(0)")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("UpdatedByID")
+                        .HasColumnType("char(36)");
 
                     b.HasKey("JobPostID");
 
@@ -1077,7 +1089,8 @@ namespace SRB_ViewModel.Migrations
 
                     b.HasKey("ProfileID");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("UserID")
+                        .IsUnique();
 
                     b.ToTable("UserProfiles");
                 });
@@ -1134,7 +1147,7 @@ namespace SRB_ViewModel.Migrations
                     b.HasOne("SRB_ViewModel.Entities.Business", "Business")
                         .WithMany()
                         .HasForeignKey("BusinessID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Business");
@@ -1202,8 +1215,8 @@ namespace SRB_ViewModel.Migrations
             modelBuilder.Entity("SRB_ViewModel.Entities.UserProfile", b =>
                 {
                     b.HasOne("SRB_ViewModel.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserID")
+                        .WithOne("UserProfile")
+                        .HasForeignKey("SRB_ViewModel.Entities.UserProfile", "UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1264,6 +1277,8 @@ namespace SRB_ViewModel.Migrations
             modelBuilder.Entity("SRB_ViewModel.Entities.User", b =>
                 {
                     b.Navigation("SavedJobs");
+
+                    b.Navigation("UserProfile");
 
                     b.Navigation("UserRoles");
                 });

@@ -1,6 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+
 using SRB_ViewModel;
 using SRB_ViewModel.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace SRB_WebPortal.Controllers.apis.auth;
 
@@ -23,11 +24,71 @@ public interface IAuthRepository
    Task<User?> GetUserByUsername(string username);
 
    Task SaveProfile(CreateProfileDTO profileDTO, string userID, string? avatarURL, string? cvURL);
+
+   Task<UserMeResponse?> GetMe(string userID);
+
+   Task<string[]> GetUserRoleSlugs(string userID);
 }
 
 public class AuthRepository(DatabaseContext context) : IAuthRepository
 {
    private readonly DatabaseContext _context = context;
+
+   public async Task<string[]> GetUserRoleSlugs(string userID)
+   {
+      try
+      {
+         return await _context.UserRoles
+            .AsNoTracking()
+            .Where(ur => ur.UserID == userID)
+            .Select(ur => ur.Role.RoleSlug)
+            .ToArrayAsync();
+      }
+      catch (Exception ex)
+      {
+         Console.Error.WriteLine($"Error in GetUserRoleSlugs: {ex.Message}");
+
+         return [];
+      }
+   }
+
+   public async Task<UserMeResponse?> GetMe(string userID)
+   {
+      try
+      {
+         var userRoleSlugs = await GetUserRoleSlugs(userID);
+
+         if (userRoleSlugs is null || userRoleSlugs.Length == 0)
+         {
+            return null;
+         }
+
+         return await _context.Users
+            .AsNoTracking()
+            .Include(u => u.UserProfile)
+            .Where(u => u.UserID == userID)
+            .Select(u => new UserMeResponse
+            {
+               UserID = u.UserID,
+               Username = u.Username,
+               RoleSlugs = userRoleSlugs,
+               BusinessID = u.BusinessID,
+               // Lấy UserProfile
+               FullName = u.UserProfile != null ? u.UserProfile.FullName : string.Empty,
+               Email = u.UserProfile != null ? u.UserProfile.Email : string.Empty,
+               PhoneNumber = u.UserProfile != null ? u.UserProfile.PhoneNumber : null,
+               AvatarURL = u.UserProfile != null ? u.UserProfile.AvatarURL : null,
+               CVvURL = u.UserProfile != null ? u.UserProfile.CVPath : null
+            })
+            .FirstOrDefaultAsync();
+      }
+      catch (Exception ex)
+      {
+         Console.Error.WriteLine($"Error in GetMe Repository: {ex.Message}");
+
+         return null;
+      }
+   }
 
    public async Task<int> GetRoleIDBySlug(string roleSlug)
    {
@@ -43,12 +104,8 @@ public class AuthRepository(DatabaseContext context) : IAuthRepository
       }
       catch (Exception ex)
       {
-         // _logger.LogError(ex, "Error getting role by name: {RoleName}", nameRole);
          Console.Error.WriteLine($"Error in GetRoleIDByName: {ex.Message}");
          return -1;
-
-         // Custom exception:
-         // throw new AppException($"Cannot get role: {nameRole}", ex);
       }
    }
 
