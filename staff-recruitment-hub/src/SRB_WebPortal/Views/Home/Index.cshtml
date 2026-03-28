@@ -5,6 +5,7 @@
 }
 
 <!-- HERO -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <section class="bg-gradient-to-r from-green-900 via-green-700 to-green-500 py-12 text-white relative rounded-3xl">
 
    <div class="max-w-7xl mx-auto px-4">
@@ -22,31 +23,41 @@
       <div class="relative max-w-5xl mx-auto">
 
          <!-- SEARCH CONTAINER -->
-         <div class="bg-white rounded-full flex items-center shadow-xl px-3 py-2
-            focus-within:ring-2 focus-within:ring-green-400 transition">
-
-            <!-- INPUT -->
-            <input id="jobSearch" type="text" placeholder="Vị trí tuyển dụng, tên công ty"
-                   class="flex-1 outline-none text-gray-700 px-2 py-2 bg-transparent" oninput="handleSuggest()" />
-
-            <!-- DIVIDER -->
-            <div class="w-px h-6 bg-gray-200 mx-2"></div>
-
-            <!-- LOCATION -->
-            <select id="locationFilter" class="outline-none text-gray-600 px-2 bg-transparent">
-               <option value="">Địa điểm</option>
-               @foreach (var location in ViewBag.Locations)
-               {
-                  <option value="@location.LocationID">
-                     @location.LocationName
-                  </option>
-               }
-            </select>
-
-            <!-- BUTTON -->
+         <div
+            class="bg-white rounded-2xl p-2 shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex flex-col md:flex-row gap-2 max-w-5xl mx-auto">
+            <!--Input-->
+            <div
+               class="flex-[1.5] flex items-center px-5 py-3 border-b md:border-b-0 md:border-r border-gray-100 group">
+               <i
+               class="fa-solid fa-magnifying-glass text-emerald-500 mr-3 group-focus-within:scale-110 transition-transform"></i>
+               <input type="text" id="jobSearch" value="@ViewBag.Keyword"
+                      placeholder="Vị trí tuyển dụng, tên công ty..."
+                      class="w-full text-gray-700 outline-none placeholder-gray-400 font-medium text-base">
+            </div>
+            <!--Location-->
+            <div class="flex-1 flex items-center px-5 py-3 group">
+               <i
+               class="fa-solid fa-location-dot text-emerald-500 mr-3 group-focus-within:bounce transition-transform"></i>
+               <div class="relative w-full">
+                  <select id="locationFilter"
+                          class="w-full text-gray-700 outline-none appearance-none font-medium bg-transparent cursor-pointer pr-8">
+                     <option value="">Tất cả địa điểm</option>
+                     @foreach (var location in ViewBag.Locations)
+                     {
+                        <option value="@location.LocationID" selected="@(ViewBag.CurrentLocation == location.LocationID)">
+                           @location.LocationName
+                        </option>
+                     }
+                  </select>
+                  <i
+                  class="fa-solid fa-chevron-down absolute right-0 top-1/2 -translate-y-1/2 text-[10px] text-gray-400 pointer-events-none"></i>
+               </div>
+            </div>
+            <!--button tim kiem -->
             <button onclick="searchJobs()"
-                    class="ml-3 bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:scale-105">
-               Tìm kiếm 🔍
+                    class="bg-orange-500 hover:bg-orange-600 px-12 py-4 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-orange-200 active:scale-95 flex items-center justify-center gap-2">
+               <i class="fa-solid fa-paper-plane"></i>
+               <span>TÌM KIẾM</span>
             </button>
          </div>
 
@@ -177,7 +188,7 @@
 
                   <!-- LOGO (fake nếu chưa có) -->
                   <div class="w-14 h-14 rounded-xl bg-gray-100 flex items-center justify-center text-gray-400 text-lg">
-                     🏢
+                     <img src="@job.LogoUrl" alt="logo" class="w-full h-full object-cover" />
                   </div>
 
                   <!-- INFO -->

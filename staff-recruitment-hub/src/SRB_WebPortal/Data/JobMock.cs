@@ -49,4 +49,36 @@ public static class JobMock
             }
         };
     }
+
+    // Class tạm để giả lập dữ liệu CV (Sau này sẽ thay bằng Entity DB)
+    public class MockApplication
+    {
+        public string ApplicationId { get; set; }
+        public string JobPostID { get; set; }
+        public string CandidateName { get; set; }
+        public string Email { get; set; }
+        public DateTime AppliedDate { get; set; }
+        public string Status { get; set; }
+        public string StatusColor { get; set; }
+    }
+
+    // Hàm sinh ra danh sách CV dựa vào mã chiến dịch (jobId)
+    public static List<MockApplication> GetMockApplications(string jobId)
+    {
+        return new List<MockApplication>
+        {
+            new MockApplication {
+                ApplicationId = "CV_001", JobPostID = jobId, CandidateName = "Nguyễn Văn A", Email = "nva@gmail.com",
+                AppliedDate = DateTime.UtcNow.AddMinutes(-30), Status = "Mới tiếp nhận", StatusColor = "bg-yellow-100 text-yellow-800 border-yellow-200"
+            },
+            new MockApplication {
+                ApplicationId = "CV_002", JobPostID = jobId, CandidateName = "Trần Thị B", Email = "tranthib@gmail.com",
+                AppliedDate = DateTime.UtcNow.AddHours(-5), Status = "Đang phỏng vấn", StatusColor = "bg-blue-100 text-blue-800 border-blue-200"
+            },
+            new MockApplication {
+                ApplicationId = "CV_003", JobPostID = jobId, CandidateName = "Lê Hoàng C", Email = "lehoangc@gmail.com",
+                AppliedDate = DateTime.UtcNow.AddDays(-1), Status = "Đã loại", StatusColor = "bg-red-100 text-red-800 border-red-200"
+            }
+        };
+    }
 }

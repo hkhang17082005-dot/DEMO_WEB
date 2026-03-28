@@ -1,180 +1,488 @@
 @{
-   ViewData["Title"] = "Tạo CV";
+    ViewData["Title"] = "Tạo CV";
+    Layout = null;
 }
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CV Builder Pro</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Segoe UI',sans-serif;background:#f0f2f5;color:#1a1a1a}
+#topbar{position:fixed;top:0;left:0;right:0;height:52px;background:#fff;border-bottom:1px solid #e0e0e0;display:flex;align-items:center;justify-content:space-between;padding:0 16px;z-index:200}
+#topbar-left{display:flex;align-items:center;gap:12px}
+.logo{font-size:18px;font-weight:700;color:#00b14f}
+#cvNameInput{border:none;outline:none;font-size:13px;color:#888;width:180px;font-family:inherit}
+#topbar-right{display:flex;gap:8px}
+.tbtn{padding:6px 14px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid #ddd;background:#fff;color:#333;font-family:inherit;transition:all .15s}
+.tbtn:hover{background:#f5f5f5}
+.tbtn.green{background:#00b14f;color:#fff;border-color:#00b14f}
+.tbtn.green:hover{background:#009940}
+.tbtn.blue{background:#1565c0;color:#fff;border-color:#1565c0}
+.tbtn.blue:hover{background:#0d47a1}
+#hintbar{position:fixed;top:52px;left:0;right:0;background:#fff8e1;border-bottom:1px solid #ffe082;padding:6px 16px;font-size:12px;color:#795548;z-index:199}
+#wrap{display:flex;position:fixed;top:80px;bottom:0;left:0;right:0}
+#sidebar{width:200px;background:#fff;border-right:1px solid #e0e0e0;overflow-y:auto;flex-shrink:0}
+.sbi{display:flex;align-items:center;gap:9px;padding:12px 16px;cursor:pointer;font-size:13px;color:#444;border-left:3px solid transparent;transition:all .15s}
+.sbi:hover{background:#f7f7f7;color:#00b14f}
+.sbi.active{background:#e8f7ef;color:#00b14f;font-weight:600;border-left-color:#00b14f}
+#panels{width:0;overflow:hidden;transition:width .2s;flex-shrink:0;background:#fff;border-right:1px solid #e0e0e0;display:flex;flex-direction:column}
+#panels.open{width:270px}
+.panel{display:none;flex-direction:column;height:100%;overflow-y:auto}
+.panel.active{display:flex}
+.ph{padding:14px 14px 10px;border-bottom:1px solid #e8e8e8;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.ph h3{font-size:14px;font-weight:600}
+.xbtn{background:#f0f0f0;border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;font-size:17px;line-height:1;color:#555}
+.xbtn:hover{background:#ddd}
+.psub{font-size:11.5px;color:#999;padding:8px 14px;border-bottom:1px solid #f0f0f0}
+.psec{padding:10px 12px}
+.psec-title{font-size:10.5px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.sitem{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:6px;cursor:pointer;font-size:13px;color:#444;border:1px solid transparent;margin-bottom:2px;transition:all .15s}
+.sitem:hover{background:#f0fbf5;border-color:#c0e8d0;color:#00b14f}
+.sitem.used{opacity:.4;cursor:default;pointer-events:none}
+.sitem .drag{margin-left:auto;opacity:.3;font-size:12px}
+.dpanel{padding:14px}
+.dpanel label{font-size:12px;font-weight:600;color:#555;display:block;margin-bottom:5px;margin-top:12px}
+.dpanel select,.dpanel input[type=color],.dpanel input[type=range]{width:100%;border:1px solid #e0e0e0;border-radius:6px;padding:7px 9px;font-size:13px;font-family:inherit;outline:none;cursor:pointer}
+.dpanel input[type=color]{height:36px;padding:3px}
+.dpanel input[type=range]{padding:4px 0}
+#previewArea{flex:1;overflow-y:auto;padding:20px;display:flex;justify-content:center;align-items:flex-start;background:#f0f2f5}
+#cvPaper{background:#fff;width:794px;min-height:1123px;box-shadow:0 4px 24px rgba(0,0,0,.13);flex-shrink:0}
+#cvHeader{padding:26px 32px 20px;border-bottom:2px solid #eee;display:flex;gap:18px;align-items:flex-start}
+#avatarWrap{width:86px;height:86px;border-radius:50%;background:#e8e8e8;flex-shrink:0;overflow:hidden;border:2px solid #ddd;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;font-size:11px;color:#aaa;text-align:center;line-height:1.4}
+#avatarWrap:hover::after{content:'Đổi ảnh';position:absolute;inset:0;background:rgba(0,0,0,.45);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;border-radius:50%}
+#avatarWrap img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
+#avatarInput{display:none}
+#cvInfoMain{flex:1}
+#cvName{font-size:22px;font-weight:700;color:#1a1a1a;min-height:26px;margin-bottom:3px}
+#cvPosition{font-size:13.5px;color:#555;min-height:18px;margin-bottom:10px}
+#cvContacts{display:grid;grid-template-columns:1fr 1fr;gap:2px 16px}
+.citem{font-size:11.5px;color:#444;display:flex;align-items:center;gap:5px}
+.citem .clbl{color:#999;font-size:10.5px;white-space:nowrap}
+#cvBody{padding:0 32px 32px}
+.cvsec{margin-top:18px}
+.cvsec-title{font-size:12px;font-weight:700;color:#1a1a1a;text-transform:uppercase;letter-spacing:.8px;padding-bottom:5px;border-bottom:2px solid #1a1a1a;margin-bottom:10px}
+.cvsec-text{font-size:12.5px;color:#444;line-height:1.7;min-height:16px}
+.cventry{margin-bottom:10px;display:grid;grid-template-columns:120px 1fr;gap:0 12px;position:relative}
+.cventry-dates{font-size:11px;color:#888;padding-top:2px;line-height:1.5}
+.cventry-detail{border-left:2px solid #e0e0e0;padding-left:11px}
+.cventry-title{font-size:13px;font-weight:600;color:#1a1a1a;margin-bottom:1px}
+.cventry-sub{font-size:12px;color:#555;margin-bottom:2px}
+.cventry-desc{font-size:12px;color:#666;line-height:1.6}
+.skillrow{display:flex;align-items:center;gap:8px;margin-bottom:8px;position:relative}
+.skilllabel{font-size:12px;color:#444;width:130px;flex-shrink:0}
+.skilltrack{flex:1;height:5px;background:#eee;border-radius:3px;overflow:hidden}
+.skillfill{height:100%;background:#00b14f;border-radius:3px;transition:width .3s}
+.skillpct{font-size:11px;color:#888;width:32px;text-align:right;flex-shrink:0}
+.skill-range{flex:1;cursor:pointer;accent-color:#00b14f}
+[contenteditable]{outline:2px dashed transparent;transition:outline .1s;border-radius:3px;cursor:text}
+[contenteditable]:hover{outline-color:#b8e8cf}
+[contenteditable]:focus{outline-color:#00b14f;background:#f6fff9}
+.addbtn{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px dashed #b0d8c0;border-radius:6px;color:#00b14f;font-size:12px;cursor:pointer;background:transparent;font-family:inherit;margin-top:5px;transition:all .15s}
+.addbtn:hover{background:#f0fbf5;border-color:#00b14f}
+.del-entry{position:absolute;top:0;right:0;background:none;border:none;color:#ccc;font-size:13px;cursor:pointer;padding:2px 4px;line-height:1;z-index:1}
+.del-entry:hover{color:#e53935}
+#toast{position:fixed;bottom:24px;right:24px;background:#222;color:#fff;padding:11px 18px;border-radius:8px;font-size:13px;z-index:9999;display:none;font-family:inherit;box-shadow:0 4px 16px rgba(0,0,0,.22)}
+@@media print{
+  #topbar,#hintbar,#sidebar,#panels,.addbtn,.del-entry{display:none!important}
+  #wrap{position:static;top:0}
+  #previewArea{padding:0;overflow:visible}
+  #cvPaper{box-shadow:none;width:100%;min-height:auto}
+  [contenteditable]:hover,[contenteditable]:focus{outline:none!important;background:transparent!important}
+  .skill-range{display:none!important}
+}
+</style>
+</head>
+<body>
 
-<div class="min-h-screen p-6 bg-linear-to-br from-indigo-100 via-purple-100 to-pink-100">
-
-   <div class="mx-auto max-w-7xl">
-
-      <!-- HEADER -->
-      <div class="flex items-center justify-between mb-6">
-         <h1 class="text-3xl font-bold text-indigo-600">CV BUILDER PRO</h1>
-         <div class="flex gap-3">
-            <button onclick="previewCV()" class="px-4 py-2 bg-gray-200 rounded-lg">Xem trước</button>
-            <button onclick="saveCV()" class="px-4 py-2 text-white bg-green-600 rounded-lg">Lưu CV</button>
-         </div>
-      </div>
-
-      <div class="grid gap-8 lg:grid-cols-2">
-
-         <!-- FORM -->
-         <div class="p-6 bg-white shadow-xl rounded-3xl">
-
-            <h2 class="mb-4 text-lg font-semibold">Thông tin cá nhân</h2>
-
-            <input id="name" class="w-full p-3 mb-3 border rounded-xl" placeholder="Họ và tên">
-            <input id="job" class="w-full p-3 mb-3 border rounded-xl" placeholder="Vị trí">
-            <input id="email" class="w-full p-3 mb-3 border rounded-xl" placeholder="Email">
-            <input id="phone" class="w-full p-3 mb-3 border rounded-xl" placeholder="SĐT">
-
-            <textarea id="about" class="w-full p-3 mb-3 border rounded-xl" placeholder="Giới thiệu"></textarea>
-
-            <h2 class="mt-4 mb-2 font-semibold">Kỹ năng</h2>
-            <textarea id="skills" class="w-full p-3 mb-3 border rounded-xl"></textarea>
-
-            <h2 class="mt-4 mb-2 font-semibold">Kinh nghiệm</h2>
-            <textarea id="experience" class="w-full p-3 mb-3 border rounded-xl"></textarea>
-
-            <h2 class="mt-4 mb-2 font-semibold">Học vấn</h2>
-            <textarea id="education" class="w-full p-3 mb-3 border rounded-xl"></textarea>
-
-            <input type="file" id="avatar" accept="image/*" class="mb-4">
-
-            <button onclick="downloadPDF()" class="w-full py-3 text-white bg-indigo-600 rounded-xl">
-               Xuất PDF
-            </button>
-         </div>
-
-         <!-- CV PREVIEW -->
-         <div id="cv" class="p-6 bg-white shadow-xl">
-
-            <div class="flex items-center gap-4 pb-4 border-b">
-               <img id="cvAvatar" src="https://via.placeholder.com/100" class="w-24 h-24 rounded-full">
-               <div>
-                  <h2 id="cvName" class="text-2xl font-bold">Họ tên</h2>
-                  <p id="cvJob">Vị trí</p>
-               </div>
-            </div>
-
-            <p class="mt-2">Email: <span id="cvEmail"></span></p>
-            <p>Phone: <span id="cvPhone"></span></p>
-
-            <h3 class="mt-4 font-bold">Giới thiệu</h3>
-            <p id="cvAbout"></p>
-
-            <h3 class="mt-4 font-bold">Kỹ năng</h3>
-            <div id="cvSkills"></div>
-
-            <h3 class="mt-4 font-bold">Kinh nghiệm</h3>
-            <ul id="cvExperience"></ul>
-
-            <h3 class="mt-4 font-bold">Học vấn</h3>
-            <ul id="cvEducation"></ul>
-
-         </div>
-
-      </div>
-   </div>
+<div id="topbar">
+  <div id="topbar-left">
+    <span class="logo">CV Builder</span>
+    <input id="cvNameInput" value="CV chưa đặt tên" />
+  </div>
+  <div id="topbar-right">
+    <button class="tbtn" onclick="doUndo()">↩ Hoàn tác</button>
+    <button class="tbtn" onclick="doPreview()">👁 Xem trước</button>
+    <button class="tbtn green" onclick="doSave()">💾 Lưu CV</button>
+    <button class="tbtn blue" onclick="doPDF()">⬇ Xuất PDF</button>
+  </div>
 </div>
 
-@section Scripts {
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<div id="hintbar">💡 Click trực tiếp vào nội dung CV để chỉnh sửa. Dùng sidebar trái để thêm / tuỳ chỉnh mục.</div>
 
-   <script>
+<div id="wrap">
+  <div id="sidebar">
+    <div class="sbi active" onclick="openPanel('addPanel',this)">➕ Thêm mục</div>
+    <div class="sbi" onclick="openPanel('designPanel',this)">🎨 Thiết kế &amp; Font</div>
+    <div class="sbi" onclick="openPanel('',this)">⊞ Bố cục</div>
+    <div class="sbi" onclick="openPanel('',this)">📄 Đổi mẫu CV</div>
+    <div class="sbi" onclick="openPanel('',this)">💬 Gợi ý viết CV</div>
+    <div class="sbi" onclick="openPanel('',this)">📚 Thư viện CV</div>
+  </div>
 
-      // realtime update
-      document.querySelectorAll("input, textarea").forEach(el => {
-      el.addEventListener("input", updateCV);
-      });
+  <div id="panels" class="open">
+    <!-- ADD PANEL -->
+    <div class="panel active" id="addPanel">
+      <div class="ph"><h3>Thêm mục</h3><button class="xbtn" onclick="closePanel()">×</button></div>
+      <div class="psub">Nhấn vào mục để thêm vào CV</div>
+      <div class="psec">
+        <div class="psec-title">Chưa sử dụng</div>
+        <div class="sitem" id="si-project" onclick="addSection('project',this)">📁 Dự án <span class="drag">⋮⋮</span></div>
+        <div class="sitem" id="si-lang" onclick="addSection('lang',this)">🌐 Ngoại ngữ <span class="drag">⋮⋮</span></div>
+        <div class="sitem" id="si-extra" onclick="addSection('extra',this)"># Thông tin thêm <span class="drag">⋮⋮</span></div>
+      </div>
+      <div class="psec" style="border-top:1px solid #f0f0f0;margin-top:6px;padding-top:12px">
+        <div class="psec-title">Đã sử dụng</div>
+        <div class="sitem used">🖼 Ảnh đại diện</div>
+        <div class="sitem used">👤 Danh thiếp</div>
+        <div class="sitem used">📞 Thông tin liên hệ</div>
+        <div class="sitem used">🎯 Mục tiêu nghề nghiệp</div>
+        <div class="sitem used">🎓 Học vấn</div>
+        <div class="sitem used">💼 Kinh nghiệm làm việc</div>
+        <div class="sitem used">🏃 Hoạt động</div>
+        <div class="sitem used">📜 Chứng chỉ</div>
+        <div class="sitem used">🏆 Giải thưởng</div>
+        <div class="sitem used">⚡ Kỹ năng</div>
+        <div class="sitem used">👥 Người giới thiệu</div>
+        <div class="sitem used">❤ Sở thích</div>
+      </div>
+    </div>
 
-      function updateList(inputId, outputId) {
-      let lines = document.getElementById(inputId).value.split("\\n");
-      let ul = document.getElementById(outputId);
-      ul.innerHTML = "";
-      lines.forEach(line => {
-      if (line.trim() !== "") {
-      let li = document.createElement("li");
-      li.textContent = line;
-      ul.appendChild(li);
-      }
-      });
-      }
+    <!-- DESIGN PANEL -->
+    <div class="panel" id="designPanel">
+      <div class="ph"><h3>Thiết kế &amp; Font</h3><button class="xbtn" onclick="closePanel()">×</button></div>
+      <div class="dpanel">
+        <label>Font chữ</label>
+        <select onchange="changeFont(this.value)">
+          <option value="'Segoe UI',sans-serif">Segoe UI (mặc định)</option>
+          <option value="Arial,sans-serif">Arial</option>
+          <option value="'Times New Roman',serif">Times New Roman</option>
+          <option value="Georgia,serif">Georgia</option>
+          <option value="'Courier New',monospace">Courier New</option>
+        </select>
+        <label>Màu tiêu đề mục</label>
+        <input type="color" value="#1a1a1a" onchange="changeTitleColor(this.value)" />
+        <label>Màu thanh kỹ năng</label>
+        <input type="color" value="#00b14f" id="skillColorPicker" onchange="changeSkillColor(this.value)" />
+        <label>Cỡ chữ nội dung: <span id="fontSizeVal">13</span>px</label>
+        <input type="range" min="10" max="18" value="13" oninput="changeFontSize(this.value)" />
+        <label>Khoảng cách dòng: <span id="lineHVal">1.7</span></label>
+        <input type="range" min="1.2" max="2.5" step="0.1" value="1.7" oninput="changeLineH(this.value)" />
+      </div>
+    </div>
+  </div>
 
-      function updateSkills() {
-      let lines = document.getElementById("skills").value.split("\\n");
-      let container = document.getElementById("cvSkills");
-      container.innerHTML = "";
-      lines.forEach(line => {
-      if (line.trim() !== "") {
-      let span = document.createElement("span");
-      span.textContent = line;
-      span.className = "bg-indigo-100 px-2 py-1 mr-2 rounded";
-      container.appendChild(span);
-      }
-      });
-      }
+  <div id="previewArea">
+    <div id="cvPaper">
+      <div id="cvHeader">
+        <div id="avatarWrap" onclick="document.getElementById('avatarInput').click()">
+          Ảnh<br>đại diện
+          <img id="avatarImg" alt="" />
+        </div>
+        <input type="file" id="avatarInput" accept="image/*" />
+        <div id="cvInfoMain">
+          <div id="cvName" contenteditable="true" spellcheck="false">Họ và Tên</div>
+          <div id="cvPosition" contenteditable="true" spellcheck="false">Vị trí ứng tuyển</div>
+          <div id="cvContacts">
+            <div class="citem"><span class="clbl">Ngày sinh:</span><span contenteditable="true" spellcheck="false">DD/MM/YYYY</span></div>
+            <div class="citem"><span class="clbl">Giới tính:</span><span contenteditable="true" spellcheck="false">Nam/Nữ</span></div>
+            <div class="citem"><span class="clbl">SĐT:</span><span contenteditable="true" spellcheck="false">0123 456 789</span></div>
+            <div class="citem"><span class="clbl">Email:</span><span contenteditable="true" spellcheck="false">email@example.com</span></div>
+            <div class="citem"><span class="clbl">Website:</span><span contenteditable="true" spellcheck="false">facebook.com/...</span></div>
+            <div class="citem"><span class="clbl">Địa chỉ:</span><span contenteditable="true" spellcheck="false">Quận X, TP.HCM</span></div>
+          </div>
+        </div>
+      </div>
 
-      function updateCV() {
-      cvName.innerText = name.value;
-      cvJob.innerText = job.value;
-      cvEmail.innerText = email.value;
-      cvPhone.innerText = phone.value;
-      cvAbout.innerText = about.value;
+      <div id="cvBody">
+        <div class="cvsec" id="sec-objective">
+          <div class="cvsec-title" contenteditable="true" spellcheck="false">MỤC TIÊU NGHỀ NGHIỆP</div>
+          <div class="cvsec-text" contenteditable="true" spellcheck="false">Mô tả mục tiêu nghề nghiệp của bạn, bao gồm mục tiêu ngắn hạn và dài hạn</div>
+        </div>
+        <div class="cvsec" id="sec-education">
+          <div class="cvsec-title" contenteditable="true" spellcheck="false">HỌC VẤN</div>
+          <div id="educationList"></div>
+          <button class="addbtn" onclick="addEntry('educationList','education')">+ Thêm học vấn</button>
+        </div>
+        <div class="cvsec" id="sec-experience">
+          <div class="cvsec-title" contenteditable="true" spellcheck="false">KINH NGHIỆM LÀM VIỆC</div>
+          <div id="experienceList"></div>
+          <button class="addbtn" onclick="addEntry('experienceList','experience')">+ Thêm kinh nghiệm</button>
+        </div>
+        <div class="cvsec" id="sec-activity">
+          <div class="cvsec-title" contenteditable="true" spellcheck="false">HOẠT ĐỘNG</div>
+          <div id="activityList"></div>
+          <button class="addbtn" onclick="addEntry('activityList','activity')">+ Thêm hoạt động</button>
+        </div>
+        <div class="cvsec" id="sec-cert">
+          <div class="cvsec-title" contenteditable="true" spellcheck="false">CHỨNG CHỈ</div>
+          <div id="certList"></div>
+          <button class="addbtn" onclick="addEntry('certList','cert')">+ Thêm chứng chỉ</button>
+        </div>
+        <div class="cvsec" id="sec-award">
+          <div class="cvsec-title" contenteditable="true" spellcheck="false">DANH HIỆU VÀ GIẢI THƯỞNG</div>
+          <div id="awardList"></div>
+          <button class="addbtn" onclick="addEntry('awardList','award')">+ Thêm giải thưởng</button>
+        </div>
+        <div class="cvsec" id="sec-skill">
+          <div class="cvsec-title" contenteditable="true" spellcheck="false">KỸ NĂNG</div>
+          <div id="skillList"></div>
+          <button class="addbtn" onclick="addEntry('skillList','skill')">+ Thêm kỹ năng</button>
+        </div>
+        <div class="cvsec" id="sec-reference">
+          <div class="cvsec-title" contenteditable="true" spellcheck="false">NGƯỜI GIỚI THIỆU</div>
+          <div id="referenceList"></div>
+          <button class="addbtn" onclick="addEntry('referenceList','reference')">+ Thêm người giới thiệu</button>
+        </div>
+        <div class="cvsec" id="sec-hobby">
+          <div class="cvsec-title" contenteditable="true" spellcheck="false">SỞ THÍCH</div>
+          <div class="cvsec-text" contenteditable="true" spellcheck="false">Điền các sở thích của bạn</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-      updateSkills();
-      updateList("experience", "cvExperience");
-      updateList("education", "cvEducation");
+<div id="toast"></div>
 
-      let file = avatar.files[0];
-      if (file) {
-      let reader = new FileReader();
-      reader.onload = e => cvAvatar.src = e.target.result;
-      reader.readAsDataURL(file);
-      }
-      }
-
-      // PREVIEW
-      function previewCV() {
-      let content = document.getElementById("cv").innerHTML;
-      let win = window.open();
-
-      win.document.write(content);
-      }
-
-      // SAVE
-      function saveCV() {
-      let data = {
-      name: name.value,
-      job: job.value,
-      email: email.value,
-      phone: phone.value,
-      about: about.value,
-      skills: skills.value,
-      experience: experience.value,
-      education: education.value
-      };
-      localStorage.setItem("cvData", JSON.stringify(data));
-      alert("Đã lưu CV");
-      }
-
-      // LOAD
-      window.onload = () => {
-      let data = JSON.parse(localStorage.getItem("cvData"));
-      if (data) {
-      name.value = data.name || "";
-      job.value = data.job || "";
-      email.value = data.email || "";
-      phone.value = data.phone || "";
-      about.value = data.about || "";
-      skills.value = data.skills || "";
-      experience.value = data.experience || "";
-      education.value = data.education || "";
-      updateCV();
-      }
-      }
-
-      function downloadPDF() {
-      html2pdf().from(document.getElementById("cv")).save();
-      }
-   </script>
+<script>
+// Panel
+function openPanel(pid,el){
+  document.querySelectorAll('.sbi').forEach(function(e){e.classList.remove('active')});
+  if(el) el.classList.add('active');
+  if(!pid){document.getElementById('panels').classList.remove('open');return;}
+  document.getElementById('panels').classList.add('open');
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active')});
+  var p=document.getElementById(pid);
+  if(p) p.classList.add('active');
 }
+function closePanel(){
+  document.getElementById('panels').classList.remove('open');
+  document.querySelectorAll('.sbi').forEach(function(e){e.classList.remove('active')});
+}
+
+// Avatar
+document.getElementById('avatarInput').addEventListener('change',function(){
+  var f=this.files[0]; if(!f)return;
+  var r=new FileReader();
+  r.onload=function(e){
+    var img=document.getElementById('avatarImg');
+    img.src=e.target.result; img.style.display='block';
+    document.getElementById('avatarWrap').style.fontSize='0';
+  };
+  r.readAsDataURL(f);
+});
+
+// Make entry element
+function makeEntry(type){
+  var d=document.createElement('div');
+  var delbtn='<button class="del-entry" title="Xoá mục này" onclick="this.parentElement.remove()">✕</button>';
+  if(type==='education'||type==='experience'||type==='activity'){
+    var t1=type==='education'?'Tên trường học':type==='experience'?'Tên công ty':'Tên tổ chức';
+    var t2=type==='education'?'Ngành học / Môn học':type==='experience'?'Vị trí công việc':'Vị trí của bạn';
+    var t3=type==='education'?'Mô tả quá trình học tập hoặc thành tích':type==='experience'?'Mô tả kinh nghiệm làm việc':'Mô tả hoạt động';
+    d.className='cventry';
+    d.innerHTML=delbtn
+      +'<div class="cventry-dates" contenteditable="true" spellcheck="false">Bắt đầu – Kết thúc</div>'
+      +'<div class="cventry-detail">'
+        +'<div class="cventry-title" contenteditable="true" spellcheck="false">'+t1+'</div>'
+        +'<div class="cventry-sub" contenteditable="true" spellcheck="false">'+t2+'</div>'
+        +'<div class="cventry-desc" contenteditable="true" spellcheck="false">'+t3+'</div>'
+      +'</div>';
+  } else if(type==='cert'){
+    d.className='cventry';
+    d.innerHTML=delbtn
+      +'<div class="cventry-dates" contenteditable="true" spellcheck="false">Thời gian</div>'
+      +'<div class="cventry-detail">'
+        +'<div class="cventry-title" contenteditable="true" spellcheck="false">Tên chứng chỉ</div>'
+        +'<div class="cventry-sub" contenteditable="true" spellcheck="false">Tổ chức cấp</div>'
+      +'</div>';
+  } else if(type==='award'){
+    d.className='cventry';
+    d.innerHTML=delbtn
+      +'<div class="cventry-dates" contenteditable="true" spellcheck="false">Thời gian</div>'
+      +'<div class="cventry-detail">'
+        +'<div class="cventry-title" contenteditable="true" spellcheck="false">Tên giải thưởng / danh hiệu</div>'
+      +'</div>';
+  } else if(type==='skill'||type==='lang'){
+    var label=type==='lang'?'Tên ngôn ngữ':'Tên kỹ năng';
+    d.className='skillrow';
+    d.innerHTML='<button class="del-entry" title="Xoá" onclick="this.parentElement.remove()" style="position:static;margin-right:2px">✕</button>'
+      +'<div class="skilllabel" contenteditable="true" spellcheck="false">'+label+'</div>'
+      +'<input type="range" class="skill-range" min="0" max="100" value="70" oninput="syncSkill(this)" style="flex:1;accent-color:#00b14f;cursor:pointer" />'
+      +'<div class="skilltrack"><div class="skillfill" style="width:70%"></div></div>'
+      +'<span class="skillpct">70%</span>';
+  } else if(type==='reference'){
+    d.className='cventry';
+    d.innerHTML=delbtn
+      +'<div class="cventry-dates"></div>'
+      +'<div class="cventry-detail">'
+        +'<div class="cventry-title" contenteditable="true" spellcheck="false">Họ và tên người giới thiệu</div>'
+        +'<div class="cventry-sub" contenteditable="true" spellcheck="false">Chức vụ – Công ty</div>'
+        +'<div class="cventry-desc" contenteditable="true" spellcheck="false">SĐT / Email liên hệ</div>'
+      +'</div>';
+  } else if(type==='project'){
+    d.className='cventry';
+    d.innerHTML=delbtn
+      +'<div class="cventry-dates" contenteditable="true" spellcheck="false">Bắt đầu – Kết thúc</div>'
+      +'<div class="cventry-detail">'
+        +'<div class="cventry-title" contenteditable="true" spellcheck="false">Tên dự án</div>'
+        +'<div class="cventry-sub" contenteditable="true" spellcheck="false">Vai trò / Công nghệ</div>'
+        +'<div class="cventry-desc" contenteditable="true" spellcheck="false">Mô tả dự án của bạn</div>'
+      +'</div>';
+  }
+  return d;
+}
+
+function addEntry(listId,type){
+  var list=document.getElementById(listId);
+  if(!list)return;
+  var el=makeEntry(type);
+  if(el&&el.innerHTML) list.appendChild(el);
+}
+
+function syncSkill(range){
+  var v=parseInt(range.value);
+  var row=range.parentElement;
+  var fill=row.querySelector('.skillfill');
+  var pct=row.querySelector('.skillpct');
+  if(fill) fill.style.width=v+'%';
+  if(pct)  pct.textContent=v+'%';
+}
+
+// Add section
+function addSection(type,sitem){
+  var body=document.getElementById('cvBody');
+  var sec=document.createElement('div');
+  sec.className='cvsec';
+  if(type==='project'){
+    sec.id='sec-project';
+    sec.innerHTML='<div class="cvsec-title" contenteditable="true" spellcheck="false">DỰ ÁN</div>'
+      +'<div id="projectList"></div>'
+      +'<button class="addbtn" onclick="addEntry(\'projectList\',\'project\')">+ Thêm dự án</button>';
+    body.appendChild(sec);
+    addEntry('projectList','project');
+  } else if(type==='lang'){
+    sec.id='sec-lang';
+    sec.innerHTML='<div class="cvsec-title" contenteditable="true" spellcheck="false">NGOẠI NGỮ</div>'
+      +'<div id="langList"></div>'
+      +'<button class="addbtn" onclick="addEntry(\'langList\',\'lang\')">+ Thêm ngoại ngữ</button>';
+    body.appendChild(sec);
+    addEntry('langList','lang');
+  } else if(type==='extra'){
+    sec.innerHTML='<div class="cvsec-title" contenteditable="true" spellcheck="false">THÔNG TIN THÊM</div>'
+      +'<div class="cvsec-text" contenteditable="true" spellcheck="false">Điền thông tin bổ sung tại đây</div>';
+    body.appendChild(sec);
+  }
+  if(sitem){sitem.classList.add('used');sitem.onclick=null;}
+}
+
+// Design
+function changeFont(f){document.getElementById('cvPaper').style.fontFamily=f;}
+function changeTitleColor(c){document.querySelectorAll('.cvsec-title').forEach(function(el){el.style.color=c;el.style.borderBottomColor=c;});}
+function changeSkillColor(c){document.querySelectorAll('.skillfill').forEach(function(el){el.style.background=c;});document.querySelectorAll('.skill-range').forEach(function(el){el.style.accentColor=c;});}
+function changeFontSize(v){document.getElementById('cvBody').style.fontSize=v+'px';document.getElementById('fontSizeVal').textContent=v;}
+function changeLineH(v){document.getElementById('cvBody').style.lineHeight=v;document.getElementById('lineHVal').textContent=parseFloat(v).toFixed(1);}
+
+// Save/Load
+function doSave(){
+  try{
+    var obj={
+      name:document.getElementById('cvNameInput').value,
+      headerHTML:document.getElementById('cvHeader').innerHTML,
+      bodyHTML:document.getElementById('cvBody').innerHTML,
+      paperFF:document.getElementById('cvPaper').style.fontFamily,
+      bodyFS:document.getElementById('cvBody').style.fontSize,
+      bodyLH:document.getElementById('cvBody').style.lineHeight
+    };
+    localStorage.setItem('cvb3',JSON.stringify(obj));
+    showToast('✅ Đã lưu CV thành công!');
+  }catch(e){showToast('❌ Lỗi: '+e.message);}
+}
+
+function doLoad(){
+  try{
+    var raw=localStorage.getItem('cvb3');
+    if(!raw)return;
+    var o=JSON.parse(raw);
+    if(o.name) document.getElementById('cvNameInput').value=o.name;
+    if(o.headerHTML) document.getElementById('cvHeader').innerHTML=o.headerHTML;
+    if(o.bodyHTML)   document.getElementById('cvBody').innerHTML=o.bodyHTML;
+    if(o.paperFF)    document.getElementById('cvPaper').style.fontFamily=o.paperFF;
+    if(o.bodyFS)     document.getElementById('cvBody').style.fontSize=o.bodyFS;
+    if(o.bodyLH)     document.getElementById('cvBody').style.lineHeight=o.bodyLH;
+    // rebind avatar
+    document.getElementById('avatarInput').addEventListener('change',function(){
+      var f=this.files[0];if(!f)return;
+      var r=new FileReader();
+      r.onload=function(e){
+        var img=document.getElementById('avatarImg');
+        if(img){img.src=e.target.result;img.style.display='block';}
+        document.getElementById('avatarWrap').style.fontSize='0';
+      };r.readAsDataURL(f);
+    });
+    // rebind skill ranges
+    document.querySelectorAll('.skill-range').forEach(function(r){r.oninput=function(){syncSkill(this);};});
+  }catch(e){}
+}
+
+function doPreview(){
+  var css='<style>*{box-sizing:border-box;margin:0;padding:0}body{padding:32px;background:#f0f2f5;display:flex;justify-content:center;font-family:Segoe UI,sans-serif}'
+    +'#cvPaper{background:#fff;width:794px;min-height:1123px;box-shadow:0 4px 24px rgba(0,0,0,.13)}'
+    +'#cvHeader{padding:26px 32px 20px;border-bottom:2px solid #eee;display:flex;gap:18px}'
+    +'#avatarWrap{width:86px;height:86px;border-radius:50%;background:#e8e8e8;overflow:hidden;border:2px solid #ddd;flex-shrink:0}'
+    +'#avatarWrap img{width:100%;height:100%;object-fit:cover}'
+    +'#cvInfoMain{flex:1}#cvName{font-size:22px;font-weight:700;margin-bottom:3px}'
+    +'#cvPosition{font-size:13.5px;color:#555;margin-bottom:10px}'
+    +'#cvContacts{display:grid;grid-template-columns:1fr 1fr;gap:2px 16px}'
+    +'.citem{font-size:11.5px;color:#444;display:flex;gap:5px}.citem .clbl{color:#999;font-size:10.5px}'
+    +'#cvBody{padding:0 32px 32px}.cvsec{margin-top:18px}'
+    +'.cvsec-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;padding-bottom:5px;border-bottom:2px solid #1a1a1a;margin-bottom:10px}'
+    +'.cvsec-text{font-size:12.5px;color:#444;line-height:1.7}'
+    +'.cventry{margin-bottom:10px;display:grid;grid-template-columns:120px 1fr;gap:0 12px}'
+    +'.cventry-dates{font-size:11px;color:#888;padding-top:2px}'
+    +'.cventry-detail{border-left:2px solid #e0e0e0;padding-left:11px}'
+    +'.cventry-title{font-size:13px;font-weight:600;margin-bottom:1px}'
+    +'.cventry-sub{font-size:12px;color:#555;margin-bottom:2px}.cventry-desc{font-size:12px;color:#666;line-height:1.6}'
+    +'.skillrow{display:flex;align-items:center;gap:8px;margin-bottom:8px}'
+    +'.skilllabel{font-size:12px;color:#444;width:130px;flex-shrink:0}'
+    +'.skilltrack{flex:1;height:5px;background:#eee;border-radius:3px;overflow:hidden}'
+    +'.skillfill{height:100%;background:#00b14f;border-radius:3px}.skillpct{font-size:11px;color:#888;width:32px}'
+    +'.addbtn,.del-entry,.skill-range{display:none!important}[contenteditable]{outline:none!important}</style>';
+  var w=window.open('','_blank');
+  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8">'+css+'</head><body>');
+  w.document.write('<div id="cvPaper">'+document.getElementById('cvHeader').outerHTML+document.getElementById('cvBody').outerHTML+'</div>');
+  w.document.write('</body></html>');
+  w.document.close();
+}
+
+function doPDF(){window.print();}
+function doUndo(){document.execCommand('undo');}
+
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.style.display='block';
+  clearTimeout(t._tid);
+  t._tid=setTimeout(function(){t.style.display='none';},2500);
+}
+
+// Init
+window.addEventListener('DOMContentLoaded',function(){
+  // seed default entries
+  addEntry('educationList','education');
+  addEntry('experienceList','experience');
+  addEntry('experienceList','experience');
+  addEntry('activityList','activity');
+  addEntry('certList','cert');
+  addEntry('awardList','award');
+  addEntry('skillList','skill');
+  addEntry('skillList','skill');
+  addEntry('referenceList','reference');
+  // load saved
+  doLoad();
+});
+</script>
+</body>
+</html>

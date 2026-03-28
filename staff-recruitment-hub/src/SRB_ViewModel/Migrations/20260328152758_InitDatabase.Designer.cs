@@ -12,8 +12,8 @@ using SRB_ViewModel;
 namespace SRB_ViewModel.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20260326140921_InitialEntity")]
-    partial class InitialEntity
+    [Migration("20260328152758_InitDatabase")]
+    partial class InitDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -121,6 +121,9 @@ namespace SRB_ViewModel.Migrations
 
                     b.Property<int>("LocationID")
                         .HasColumnType("int");
+
+                    b.Property<string>("LogoUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Salary")
                         .IsRequired()

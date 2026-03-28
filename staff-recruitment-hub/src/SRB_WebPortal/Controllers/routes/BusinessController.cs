@@ -86,13 +86,25 @@ public class BusinessController : Controller
    {
       var mockJobs = SRB_WebPortal.Data.JobMock.GetMockJobPosts();
       // Trang quản lý danh sách tin tuyển dụng
-      return View();
+      return View(mockJobs);
    }
 
-   public IActionResult CVList(int jobId = 1)
+   public IActionResult CVList(string jobId)
    {
-      // Trang xem danh sách những người đã nộp vào 1 Job
-      return View();
+      if (string.IsNullOrEmpty(jobId))
+      {
+         return RedirectToAction("MyJobs");
+      }
+
+      // 1. Tìm tên chiến dịch để hiển thị lên tiêu đề
+      var job = SRB_WebPortal.Data.JobMock.GetMockJobPosts().FirstOrDefault(j => j.JobPostID == jobId);
+      ViewBag.JobTitle = job != null ? job.Title : "Chiến dịch không xác định";
+
+      // 2. Lấy danh sách CV nộp cho đúng cái jobId này
+      var cvList = SRB_WebPortal.Data.JobMock.GetMockApplications(jobId);
+
+      // 3. Truyền danh sách CV ra ngoài Giao diện
+      return View(cvList);
    }
 
    public IActionResult ReviewCV(int id = 1)

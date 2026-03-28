@@ -2,6 +2,7 @@ namespace SRB_ViewModel.Entities
 {
    public class Job
    {
+      public string? LogoUrl { get; set; }   
       public int JobID { get; set; }
 
       public required string Title { get; set; }

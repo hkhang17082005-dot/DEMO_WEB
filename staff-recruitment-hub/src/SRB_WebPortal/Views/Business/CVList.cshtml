@@ -1,37 +1,21 @@
+@model List<SRB_WebPortal.Data.JobMock.MockApplication>
 @{
-    ViewData["Title"] = "Hồ sơ ứng viên: C#.NET Backend Developer";
+    // Hiển thị tên chiến dịch lấy từ ViewBag
+    ViewData["Title"] = "Hồ sơ ứng viên: " + ViewBag.JobTitle;
     Layout = "~/Views/Shared/_BusinessLayout.cshtml";
 }
 
 <div class="mb-6 flex items-center justify-between">
-    <a href="/Business/MyJobs"
-           class="text-gray-500 hover:text-green-600 transition flex items-center gap-2 text-sm font-medium">
-        <i class="fa-solid fa-arrow-left"></i> Quay lại danh sách chiến dịch
+    <a href="/Business/MyJobs" class="text-gray-500 hover:text-green-600 transition flex items-center gap-2 text-sm font-medium">
+        <i class="fa-solid fa-arrow-left"></i> Quay lại chiến dịch
     </a>
     <div class="text-sm text-gray-500">
-        Tổng số: <span class="font-bold text-gray-800">12 CV</span>
+        Tổng số: <span class="font-bold text-gray-800">@Model.Count CV</span>
     </div>
 </div>
 
 <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 flex gap-4">
-    <div class="flex-1 relative">
-        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-gray-400 text-sm"></i>
-        <input type="text" placeholder="Tìm tên, email ứng viên..."
-               class="w-full pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 outline-none text-sm">
     </div>
-    <select
-        class="border border-gray-200 bg-gray-50 text-gray-700 py-2 px-3 rounded-lg outline-none text-sm min-w-[150px]">
-        <option>Tất cả trạng thái</option>
-        <option>Mới tiếp nhận</option>
-        <option>Đang phỏng vấn</option>
-        <option>Đã loại</option>
-    </select>
-    <select
-        class="border border-gray-200 bg-gray-50 text-gray-700 py-2 px-3 rounded-lg outline-none text-sm min-w-[150px]">
-        <option>Mới nhất trước</option>
-        <option>Cũ nhất trước</option>
-    </select>
-</div>
 
 <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
     <table class="w-full text-left border-collapse">
@@ -44,33 +28,46 @@
             </tr>
         </thead>
         <tbody class="text-sm">
-            <tr class="border-b border-gray-100 hover:bg-green-50/50 transition group">
-                <td class="py-4 px-6">
-                    <div class="flex items-center gap-3">
-                        <div
-                            class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold">
-                            NV</div>
-                            <div>
-                                <p class="font-bold text-gray-800 text-base group-hover:text-green-600 transition">Nguyễn
-                                    Văn A</p>
-                                    <p class="text-gray-500 text-xs mt-0.5"><i class="fa-solid fa-envelope mr-1"></i>
-                                        nva@gmail.com</p>
-                                    </div>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var cv in Model)
+                {
+                    <tr class="border-b border-gray-100 hover:bg-green-50/50 transition group">
+                        <td class="py-4 px-6">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold">
+                                    @cv.CandidateName.Substring(0, 1)
                                 </div>
-                            </td>
-                            <td class="py-4 px-6 text-gray-600">27/03/2026 - 10:30</td>
-                            <td class="py-4 px-6">
-                                <span
-                                    class="bg-yellow-100 text-yellow-800 border border-yellow-200 px-3 py-1 rounded-full text-xs font-bold">Mới
-                                    tiếp nhận</span>
-                                </td>
-                                <td class="py-4 px-6 text-right">
-                                    <a href="/Business/ReviewCV?id=1" target="_blank"
-                                           class="inline-block bg-white border border-gray-300 text-gray-700 hover:border-green-500 hover:text-green-600 px-4 py-2 rounded-lg font-medium transition shadow-sm">
-                                        Xem & Duyệt CV
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                                <div>
+                                    <p class="font-bold text-gray-800 text-base group-hover:text-green-600 transition">@cv.CandidateName</p>
+                                    <p class="text-gray-500 text-xs mt-0.5"><i class="fa-solid fa-envelope mr-1"></i> @cv.Email</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-4 px-6 text-gray-600">
+                            @cv.AppliedDate.ToString("dd/MM/yyyy - HH:mm")
+                        </td>
+                        <td class="py-4 px-6">
+                            <span class="@cv.StatusColor border px-3 py-1 rounded-full text-xs font-bold shadow-sm">
+                                @cv.Status
+                            </span>
+                        </td>
+                        <td class="py-4 px-6 text-right">
+                            <a href="/Business/ReviewCV?id=@cv.ApplicationId" target="_blank" class="inline-block bg-white border border-gray-300 text-gray-700 hover:border-green-500 hover:text-green-600 px-4 py-2 rounded-lg font-medium transition shadow-sm">
+                                Xem & Duyệt
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4" class="py-10 text-center text-gray-500">
+                        Chưa có ứng viên nào nộp hồ sơ cho chiến dịch này.
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

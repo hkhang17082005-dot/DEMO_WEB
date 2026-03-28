@@ -1,40 +1,135 @@
 @{
-   ViewData["Title"] = "Lịch sử ứng tuyển";
+   Layout = "~/Views/Shared/_CandidateLayout.cshtml";
+   ViewData["Title"] = "Việc làm đã nộp";
 }
 
-<main class="container px-4 pb-12 mx-auto">
-   <h2 class="mb-6 text-2xl font-bold text-gray-800">Việc làm bạn đã ứng tuyển</h2>
+<div class="mb-6">
+   <h1 class="text-2xl font-bold text-gray-800">Việc làm đã ứng tuyển</h1>
+   <p class="text-sm text-gray-500 mt-1">Theo dõi trạng thái hồ sơ và phản hồi từ nhà tuyển dụng.</p>
+</div>
 
-   <div class="overflow-hidden bg-white border border-gray-200 shadow-sm rounded-2xl">
-      <div class="overflow-x-auto">
-         <table class="w-full text-left border-collapse">
-            <thead class="text-sm uppercase border-b border-gray-200 bg-gray-50">
-               <tr>
-                  <th class="p-4 font-semibold text-gray-600">Vị trí ứng tuyển</th>
-                  <th class="p-4 font-semibold text-gray-600">Ngày nộp</th>
-                  <th class="p-4 font-semibold text-gray-600">Trạng thái</th>
-               </tr>
-            </thead>
-            <tbody id="applicationList" class="divide-y divide-gray-100">
-               <tr class="transition hover:bg-gray-50">
-                  <td class="p-4">
-                     <p class="font-bold text-gray-800">Software Engineer</p>
-                     <p class="text-sm text-gray-500">Công ty ABC</p>
-                  </td>
-                  <td class="p-4 font-medium text-gray-500">10/03/2026</td>
-                  <td class="p-4">
-                     <span
-                        class="bg-yellow-50 border border-yellow-200 text-yellow-700 px-3 py-1.5 rounded-lg text-xs font-bold inline-block">
-                        Đang chờ duyệt
-                     </span>
-                  </td>
-               </tr>
-            </tbody>
-         </table>
-      </div>
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 mb-6 overflow-hidden">
+   <div class="flex overflow-x-auto custom-scrollbar">
+      <button class="px-6 py-4 text-sm font-bold text-topcv border-b-2 border-topcv whitespace-nowrap bg-green-50/30">
+         Tất cả (4)
+      </button>
+      <button
+         class="px-6 py-4 text-sm font-medium text-gray-600 border-b-2 border-transparent hover:text-topcv hover:border-gray-200 transition whitespace-nowrap">
+         Đã nộp (1)
+      </button>
+      <button
+         class="px-6 py-4 text-sm font-medium text-gray-600 border-b-2 border-transparent hover:text-topcv hover:border-gray-200 transition whitespace-nowrap">
+         NTD đã xem (2)
+      </button>
+      <button
+         class="px-6 py-4 text-sm font-medium text-gray-600 border-b-2 border-transparent hover:text-topcv hover:border-gray-200 transition whitespace-nowrap">
+         Phỏng vấn (1)
+      </button>
+      <button
+         class="px-6 py-4 text-sm font-medium text-gray-600 border-b-2 border-transparent hover:text-topcv hover:border-gray-200 transition whitespace-nowrap">
+         Bị từ chối (0)
+      </button>
    </div>
-</main>
+</div>
 
-@section Scripts {
-   <script src="~/js/candidate.js"></script>
-}
+<div class="space-y-4">
+
+   <div
+      class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:border-topcv transition relative overflow-hidden">
+      <div class="absolute top-0 left-0 w-1.5 h-full bg-green-500"></div>
+      <div class="flex flex-col md:flex-row gap-5 items-start md:items-center">
+            
+         <div
+            class="w-16 h-16 rounded-lg border border-gray-200 bg-white flex items-center justify-center p-1 shrink-0">
+            <img src="https://ui-avatars.com/api/?name=FPT&background=fff&color=F97316" alt="Logo"
+                 class="w-full h-full object-contain" />
+         </div>
+            
+         <div class="flex-1">
+            <a href="#" class="font-bold text-gray-800 text-lg hover:text-topcv transition line-clamp-1 mb-1">Chuyên
+               Viên Phát Triển Phần Mềm (C# / ASP.NET)</a>
+               <p class="text-sm text-gray-500 mb-2">Tập đoàn FPT Software</p>
+               <div class="flex flex-wrap items-center gap-4 text-xs text-gray-500">
+                  <span class="flex items-center gap-1"><i class="fa-regular fa-clock"></i> Nộp lúc: 14:30 -
+                     25/03/2026</span>
+                     <span class="flex items-center gap-1"><i class="fa-regular fa-file-pdf"></i> CV:
+                        HoangKhang_Backend.pdf</span>
+                     </div>
+                  </div>
+
+                  <div class="flex flex-col items-end gap-3 mt-4 md:mt-0 md:w-48 shrink-0">
+                     <span
+                        class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 border border-green-200">
+                        <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> Hẹn phỏng vấn
+                     </span>
+                     <button class="text-sm font-medium text-topcv hover:underline">Xem thư mời</button>
+                  </div>
+               </div>
+            </div>
+
+            <div
+               class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:border-topcv transition relative overflow-hidden">
+               <div class="absolute top-0 left-0 w-1.5 h-full bg-orange-400"></div>
+               <div class="flex flex-col md:flex-row gap-5 items-start md:items-center">
+            
+                  <div
+                     class="w-16 h-16 rounded-lg border border-gray-200 bg-white flex items-center justify-center p-1 shrink-0">
+                     <img src="https://ui-avatars.com/api/?name=VNG&background=fff&color=000" alt="Logo"
+                          class="w-full h-full object-contain" />
+                  </div>
+            
+                  <div class="flex-1">
+                     <a href="#" class="font-bold text-gray-800 text-lg hover:text-topcv transition line-clamp-1 mb-1">Backend
+                        Engineer (Golang/C#)</a>
+                        <p class="text-sm text-gray-500 mb-2">Công ty Cổ phần VNG</p>
+                        <div class="flex flex-wrap items-center gap-4 text-xs text-gray-500">
+                           <span class="flex items-center gap-1"><i class="fa-regular fa-clock"></i> Nộp lúc: 09:15 -
+                              20/03/2026</span>
+                              <span class="flex items-center gap-1"><i class="fa-regular fa-file-pdf"></i> CV:
+                                 HoangKhang_Backend.pdf</span>
+                              </div>
+                           </div>
+
+                           <div class="flex flex-col items-end gap-3 mt-4 md:mt-0 md:w-48 shrink-0">
+                              <span
+                                 class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-orange-50 text-orange-600 border border-orange-200">
+                                 <i class="fa-solid fa-eye"></i> NTD đã xem CV
+                              </span>
+                              <span class="text-xs text-gray-400">Cập nhật 1 ngày trước</span>
+                           </div>
+                        </div>
+                     </div>
+
+                     <div
+                        class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:border-topcv transition relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1.5 h-full bg-gray-300"></div>
+                        <div class="flex flex-col md:flex-row gap-5 items-start md:items-center">
+            
+                           <div
+                              class="w-16 h-16 rounded-lg border border-gray-200 bg-white flex items-center justify-center p-1 shrink-0">
+                              <img src="https://ui-avatars.com/api/?name=Tech+Corp&background=fff&color=000" alt="Logo"
+                                   class="w-full h-full object-contain" />
+                           </div>
+            
+                           <div class="flex-1">
+                              <a href="#" class="font-bold text-gray-800 text-lg hover:text-topcv transition line-clamp-1 mb-1">Senior
+                                 Backend Developer (.NET Core)</a>
+                                 <p class="text-sm text-gray-500 mb-2">Công ty Cổ phần Công nghệ Tech Corp</p>
+                                 <div class="flex flex-wrap items-center gap-4 text-xs text-gray-500">
+                                    <span class="flex items-center gap-1"><i class="fa-regular fa-clock"></i> Nộp lúc: 10:00 - Hôm nay</span>
+                                    <span class="flex items-center gap-1"><i class="fa-regular fa-file-pdf"></i> CV:
+                                       CV_ChuyenNghiep.pdf</span>
+                                    </div>
+                                 </div>
+
+                                 <div class="flex flex-col items-end gap-3 mt-4 md:mt-0 md:w-48 shrink-0">
+                                    <span
+                                       class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-600 border border-gray-200">
+                                       <i class="fa-solid fa-paper-plane"></i> Gửi thành công
+                                    </span>
+                                    <button class="text-xs text-red-500 hover:underline">Rút lại hồ sơ</button>
+                                 </div>
+                              </div>
+                           </div>
+
+                        </div>

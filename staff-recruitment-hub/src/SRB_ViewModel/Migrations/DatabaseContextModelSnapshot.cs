@@ -119,6 +119,9 @@ namespace SRB_ViewModel.Migrations
                     b.Property<int>("LocationID")
                         .HasColumnType("int");
 
+                    b.Property<string>("LogoUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Salary")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
