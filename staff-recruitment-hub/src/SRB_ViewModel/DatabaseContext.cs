@@ -17,6 +17,11 @@ public class DatabaseContext(DbContextOptions<DatabaseContext> options) : DbCont
 
       /* Load Data */
       modelBuilder.InitCoreData();
+      // Thiết lập quan hệ 1-1 giữa Job và JobDetail
+      modelBuilder.Entity<Job>()
+         .HasOne(j => j.JobDetail)
+         .WithOne(d => d.Job)
+         .HasForeignKey<JobDetail>(d => d.JobID);
    }
 
    public DbSet<Role> Roles { get; set; }
@@ -36,4 +41,6 @@ public class DatabaseContext(DbContextOptions<DatabaseContext> options) : DbCont
    public DbSet<SavedJob> SavedJobs { get; set; }
 
    public DbSet<JobPost> JobPosts { get; set; }
+
+   public DbSet<JobDetail> JobDetails { get; set; }
 }

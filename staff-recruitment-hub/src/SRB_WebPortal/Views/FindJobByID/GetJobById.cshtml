@@ -1,0 +1,219 @@
+@model SRB_ViewModel.Entities.Job
+@{
+    ViewData["Title"] = Model.Title;
+    // Tạo biến cục bộ để code gọn hơn
+    var detail = Model.JobDetail;
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<div class="bg-gray-50 min-h-screen pb-12 font-sans">
+    <div class="bg-white border-b shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 py-8">
+            <div class="flex flex-col md:flex-row gap-6 items-start">
+                <div class="w-24 h-24 md:w-32 md:h-32 bg-white border rounded-2xl flex items-center justify-center p-2 shadow-sm shrink-0">
+                    <img src="@Model.LogoUrl" alt="@Model.CompanyName" class="max-w-full max-h-full object-contain">
+                </div>
+
+                <div class="flex-1 space-y-3">
+                    <h1 class="text-2xl md:text-3xl font-extrabold text-gray-800 leading-tight">@Model.Title</h1>
+                    <p class="text-xl font-medium text-emerald-600">@Model.CompanyName</p>
+                    
+                    <div class="flex flex-wrap gap-4 text-gray-500 text-sm">
+                        <span class="flex items-center gap-2">
+                            <i class="fa-solid fa-money-bill-wave text-emerald-500"></i> @Model.Salary
+                        </span>
+                        <span class="flex items-center gap-2">
+                            <i class="fa-solid fa-location-dot text-emerald-500"></i> @Model.Location?.LocationName
+                        </span>
+                        <span class="flex items-center gap-2">
+                            <i class="fa-solid fa-clock text-emerald-500"></i> 
+                            Hạn nộp: @(detail?.Deadline?.ToString("dd/MM/yyyy") ?? "Đang cập nhật")
+                        </span>
+                    </div>
+
+                    <div class="flex flex-wrap gap-3 pt-4">
+                        <button class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-lg active:scale-95 flex-1 md:flex-none">
+                            ỨNG TUYỂN NGAY
+                        </button>
+                        <button class="border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-50 font-bold py-3 px-8 rounded-xl transition-all flex-1 md:flex-none">
+                            LƯU TIN
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-4 mt-8">
+        <div class="grid lg:grid-cols-3 gap-8">
+            
+            <div class="lg:col-span-2 space-y-8">
+                <div class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100">
+                    <h2 class="text-xl font-bold text-gray-800 border-l-4 border-emerald-500 pl-4 mb-6">Chi tiết tin tuyển dụng</h2>
+                    
+                    <div class="prose prose-emerald max-w-none text-gray-700 leading-relaxed space-y-8">
+                        @if (detail != null)
+                        {
+                            <section>
+                                <h3 class="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
+                                    <i class="fa-solid fa-circle-info text-emerald-500 text-sm"></i> Mô tả công việc
+                                </h3>
+                                <div class="whitespace-pre-line text-gray-600">@detail.Description</div>
+                            </section>
+
+                            <section>
+                                <h3 class="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
+                                    <i class="fa-solid fa-user-check text-emerald-500 text-sm"></i> Yêu cầu ứng viên
+                                </h3>
+                                <div class="whitespace-pre-line text-gray-600">@detail.Requirements</div>
+                            </section>
+
+                            <section>
+                                <h3 class="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
+                                    <i class="fa-solid fa-gift text-emerald-500 text-sm"></i> Quyền lợi
+                                </h3>
+                                <div class="whitespace-pre-line text-gray-600">@detail.Benefits</div>
+                            </section>
+
+                            <section>
+                                <h3 class="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
+                                    <i class="fa-solid fa-map-location-dot text-emerald-500 text-sm"></i> Địa điểm làm việc
+                                </h3>
+                                <p class="text-gray-600">@detail.WorkAddress</p>
+                            </section>
+                        }
+                        else
+                        {
+                            <p class="italic text-gray-400">Thông tin chi tiết đang được cập nhật...</p>
+                        }
+                    </div>
+
+                    <div class="mt-10 p-6 bg-emerald-50 rounded-2xl border border-emerald-100">
+                        <h4 class="font-bold text-emerald-800 mb-2">Cách thức ứng tuyển</h4>
+                        <p class="text-sm text-emerald-700">Ứng viên nộp hồ sơ trực tuyến bằng cách nhấn vào nút bên dưới.</p>
+                        <button class="mt-4 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl uppercase tracking-wider shadow-md transition-colors">Ứng tuyển ngay</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                    <h2 class="text-lg font-bold text-gray-800 mb-4">Thông tin chung</h2>
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-3">
+                            <i class="fa-solid fa-briefcase mt-1 text-gray-400 w-5"></i>
+                            <div>
+                                <p class="text-xs text-gray-400 uppercase font-bold tracking-wider">Loại hình</p>
+                                <p class="text-sm text-gray-700 font-medium">@Model.JobType</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i class="fa-solid fa-medal mt-1 text-gray-400 w-5"></i>
+                            <div>
+                                <p class="text-xs text-gray-400 uppercase font-bold tracking-wider">Kinh nghiệm</p>
+                                <p class="text-sm text-gray-700 font-medium">@(detail?.Experience ?? "Không yêu cầu")</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i class="fa-solid fa-users mt-1 text-gray-400 w-5"></i>
+                            <div>
+                                <p class="text-xs text-gray-400 uppercase font-bold tracking-wider">Số lượng</p>
+                                <p class="text-sm text-gray-700 font-medium">@(detail?.Quantity > 0 ? detail.Quantity + " người" : "Không giới hạn")</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i class="fa-solid fa-venus-mars mt-1 text-gray-400 w-5"></i>
+                            <div>
+                                <p class="text-xs text-gray-400 uppercase font-bold tracking-wider">Giới tính</p>
+                                <p class="text-sm text-gray-700 font-medium">@(detail?.Gender ?? "Không yêu cầu")</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i class="fa-solid fa-calendar-day mt-1 text-gray-400 w-5"></i>
+                            <div>
+                                <p class="text-xs text-gray-400 uppercase font-bold tracking-wider">Thời gian làm việc</p>
+                                <p class="text-sm text-gray-700 font-medium">@(detail?.WorkTime ?? "Thỏa thuận")</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-6 text-white shadow-lg">
+                    <i class="fa-solid fa-shield-halved text-3xl opacity-50 mb-4"></i>
+                    <h3 class="font-bold mb-2">Cam kết an toàn</h3>
+                    <p class="text-sm opacity-90 leading-relaxed">Tin tuyển dụng này đã được kiểm duyệt. Nếu thấy có dấu hiệu lừa đảo, vui lòng báo cáo ngay cho chúng tôi.</p>
+                </div>
+
+                <div class="bg-gradient-to-br from-orange-400 to-red-500 rounded-2xl p-6 text-white shadow-lg">
+                    <i class="fa-solid fa-lightbulb text-3xl opacity-50 mb-4"></i>
+                    <h3 class="font-bold mb-2">Mẹo tìm việc</h3>
+                    <p class="text-sm opacity-90 leading-relaxed">Hãy cập nhật CV thường xuyên để lọt vào mắt xanh của Nhà tuyển dụng sớm nhất nhé!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="max-w-6xl mx-auto px-4 mt-16 border-t border-gray-200 pt-12">
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800">Việc làm tương tự</h2>
+                <p class="text-gray-500 text-sm mt-1">Dựa trên vị trí và từ khóa của công việc này</p>
+            </div>
+            <a asp-action="Search" class="text-emerald-600 font-bold text-sm hover:text-emerald-700 transition-colors flex items-center gap-2">
+                Xem tất cả <i class="fa-solid fa-arrow-right text-xs"></i>
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @{
+                var relatedJobs = ViewBag.RelatedJobs as IEnumerable<SRB_ViewModel.Entities.Job>;
+            }
+
+            @if (relatedJobs != null && relatedJobs.Any())
+            {
+                foreach (var rJob in relatedJobs)
+                {
+                    <div class="bg-white rounded-2xl p-5 border border-gray-100 hover:border-emerald-200 hover:shadow-xl hover:shadow-emerald-900/5 transition-all group relative flex flex-col h-full">
+                        <div class="flex gap-4 items-start mb-4">
+                            <div class="w-16 h-16 bg-white border border-gray-50 rounded-xl flex items-center justify-center p-2 shrink-0 shadow-sm">
+                                <img src="@rJob.LogoUrl" alt="@rJob.CompanyName" class="max-w-full max-h-full object-contain">
+                            </div>
+                            
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-bold text-gray-800 truncate group-hover:text-emerald-600 transition-colors mb-1">
+                                    <a asp-action="GetJobByID" asp-route-id="@rJob.JobID">@rJob.Title</a>
+                                </h3>
+                                <p class="text-sm text-gray-500 truncate">@rJob.CompanyName</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-auto">
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="text-[11px] font-bold bg-gray-100 text-gray-600 px-2 py-1 rounded uppercase tracking-wider">@rJob.JobType</span>
+                                <span class="text-[11px] font-bold bg-emerald-50 text-emerald-600 px-2 py-1 rounded uppercase tracking-wider">@rJob.Salary</span>
+                            </div>
+
+                            <div class="pt-4 border-t border-gray-50 flex items-center justify-between">
+                                <span class="text-xs text-gray-400 flex items-center gap-1">
+                                    <i class="fa-solid fa-location-dot text-emerald-500/60"></i> @(rJob.Location?.LocationName ?? "Toàn quốc")
+                                </span>
+                                <button class="text-gray-300 hover:text-rose-500 transition-colors z-10 relative">
+                                    <i class="fa-solid fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <a asp-action="GetJobByID" asp-route-id="@rJob.JobID" class="absolute inset-0 z-0"></a>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-span-full py-10 text-center bg-gray-100 rounded-2xl">
+                    <p class="text-gray-400 italic">Không tìm thấy việc làm tương tự phù hợp.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -187,171 +187,175 @@
                <div class="flex gap-4">
 
                   <!-- LOGO (fake nếu chưa có) -->
-                  <div class="w-14 h-14 rounded-xl bg-gray-100 flex items-center justify-center text-gray-400 text-lg">
+                  <div
+                     class="w-20 h-20 bg-gray-50 border border-gray-100 rounded-2xl flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300 relative overflow-hidden">
                      <img src="@job.LogoUrl" alt="logo" class="w-full h-full object-cover" />
+                     <div
+                        class="absolute top-0 left-0 bg-red-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-br-lg uppercase">
+                        Hot</div>
+                     </div>
+
+                     <!-- INFO -->
+                     <div class="flex-1">
+
+                        <!-- TITLE -->
+                        <a href="/FindJobByID/GetJobById?id=@job.JobID"
+                           class="font-semibold text-lg text-gray-800 group-hover:text-green-600 line-clamp-2">
+                           @job.Title
+                        </a>
+
+                        <!-- COMPANY -->
+                        <p class="text-gray-500 text-sm mt-1">
+                           @job.CompanyName
+                        </p>
+                     </div>
                   </div>
 
-                  <!-- INFO -->
-                  <div class="flex-1">
+                  <!-- SALARY -->
+                  <div class="mt-4 flex items-center justify-between">
 
-                     <!-- TITLE -->
-                     <a href="/FindJobByID/GetJobById?id=@job.JobID"
-                        class="font-semibold text-lg text-gray-800 group-hover:text-green-600 line-clamp-2">
-                        @job.Title
+                     <p class="text-green-600 font-bold text-base">
+                        💰 @job.Salary
+                     </p>
+
+                     <!-- BADGE
+                     <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-md">
+                        Hot
+                     </span> -->
+                  </div>
+
+                  <!-- TAG -->
+                  <div class="flex flex-wrap gap-2 mt-4">
+
+                     <span class="bg-green-50 text-green-700 px-3 py-1 text-xs rounded-full">
+                        📍 @job.Location?.LocationName
+                     </span>
+
+                     <span class="bg-gray-100 text-gray-600 px-3 py-1 text-xs rounded-full">
+                        💼 @job.JobType
+                     </span>
+
+                  </div>
+
+                  <!-- FOOTER -->
+                  <div class="flex justify-between items-center mt-5 pt-4 border-t">
+
+                     <a href="/FindJobByID/GetJobById?id=@job.JobID" class="text-sm text-green-600 font-medium hover:underline">
+                        Xem chi tiết →
                      </a>
 
-                     <!-- COMPANY -->
-                     <p class="text-gray-500 text-sm mt-1">
-                        @job.CompanyName
-                     </p>
+                     <span class="text-xs text-gray-400">
+                        🔥 Mới
+                     </span>
+
                   </div>
-               </div>
-
-               <!-- SALARY -->
-               <div class="mt-4 flex items-center justify-between">
-
-                  <p class="text-green-600 font-bold text-base">
-                     💰 @job.Salary
-                  </p>
-
-                  <!-- BADGE -->
-                  <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-md">
-                     Hot
-                  </span>
-               </div>
-
-               <!-- TAG -->
-               <div class="flex flex-wrap gap-2 mt-4">
-
-                  <span class="bg-green-50 text-green-700 px-3 py-1 text-xs rounded-full">
-                     📍 @job.Location?.LocationName
-                  </span>
-
-                  <span class="bg-gray-100 text-gray-600 px-3 py-1 text-xs rounded-full">
-                     💼 @job.JobType
-                  </span>
 
                </div>
+            }
 
-               <!-- FOOTER -->
-               <div class="flex justify-between items-center mt-5 pt-4 border-t">
-
-                  <a href="/FindJobByID/GetJobById?id=@job.JobID" class="text-sm text-green-600 font-medium hover:underline">
-                     Xem chi tiết →
-                  </a>
-
-                  <span class="text-xs text-gray-400">
-                     🔥 Mới
-                  </span>
-
-               </div>
-
-            </div>
-         }
-
+         </div>
+      </section>
+      <!-- FLOAT BUTTON -->
+      <div class="fixed right-4 bottom-20 flex flex-col gap-3">
+         <button class="bg-green-500 text-white w-12 h-12 rounded-full shadow">💬</button>
+         <button class="bg-green-500 text-white w-12 h-12 rounded-full shadow">👤</button>
+         <button class="bg-green-500 text-white w-12 h-12 rounded-full shadow">✔</button>
       </div>
-   </section>
-   <!-- FLOAT BUTTON -->
-   <div class="fixed right-4 bottom-20 flex flex-col gap-3">
-      <button class="bg-green-500 text-white w-12 h-12 rounded-full shadow">💬</button>
-      <button class="bg-green-500 text-white w-12 h-12 rounded-full shadow">👤</button>
-      <button class="bg-green-500 text-white w-12 h-12 rounded-full shadow">✔</button>
-   </div>
 
-   @section Scripts {
-      <script>
-         new Swiper(".mySwiper", {
-            loop: true,
-            autoplay: {
-               delay: 2500,
-            },
-            pagination: {
-               el: ".swiper-pagination",
-               clickable: true,
-            },
-            navigation: {
-               nextEl: ".swiper-button-next",
-               prevEl: ".swiper-button-prev",
-            },
-         });
-      </script>
-      <script>
-         function selectSuggestion(value) {
-            document.getElementById("jobSearch").value = value;
-         }
-         function handleSuggest() {
-            let keyword = document.getElementById("jobSearch").value;
-            let box = document.getElementById("suggestBox");
-            let list = document.getElementById("suggestList");
-
-            if (keyword.length < 2) {
-               box.classList.add("hidden");
-               return;
+      @section Scripts {
+         <script>
+            new Swiper(".mySwiper", {
+               loop: true,
+               autoplay: {
+                  delay: 2500,
+               },
+               pagination: {
+                  el: ".swiper-pagination",
+                  clickable: true,
+               },
+               navigation: {
+                  nextEl: ".swiper-button-next",
+                  prevEl: ".swiper-button-prev",
+               },
+            });
+         </script>
+         <script>
+            function selectSuggestion(value) {
+               document.getElementById("jobSearch").value = value;
             }
-            // Fake data (sau bạn thay bằng API)
-            let suggestions = [
-               "Frontend Developer",
-               "Backend Developer",
-               "Java Developer",
-               "Nhân viên văn phòng",
-               "Marketing Executive"
-            ];
+            function handleSuggest() {
+               let keyword = document.getElementById("jobSearch").value;
+               let box = document.getElementById("suggestBox");
+               let list = document.getElementById("suggestList");
 
-            let filtered = suggestions.filter(x =>
-               x.toLowerCase().includes(keyword.toLowerCase())
-            );
-
-            list.innerHTML = "";
-
-            filtered.forEach(item => {
-               let li = document.createElement("li");
-               li.className = "px-4 py-2 hover:bg-green-50 cursor-pointer";
-               li.innerText = item;
-
-               li.onclick = () => {
-                  document.getElementById("jobSearch").value = item;
+               if (keyword.length < 2) {
                   box.classList.add("hidden");
-               };
+                  return;
+               }
+               // Fake data (sau bạn thay bằng API)
+               let suggestions = [
+                  "Frontend Developer",
+                  "Backend Developer",
+                  "Java Developer",
+                  "Nhân viên văn phòng",
+                  "Marketing Executive"
+               ];
 
-               list.appendChild(li);
-            });
+               let filtered = suggestions.filter(x =>
+                  x.toLowerCase().includes(keyword.toLowerCase())
+               );
 
-            box.classList.remove("hidden");
-         }
-         async function toggleSave(event, btn, jobId) {
-            event.stopPropagation();
+               list.innerHTML = "";
 
-            const heart = btn.querySelector('.heart');
-            let isSaved = heart.textContent === "❤️";
+               filtered.forEach(item => {
+                  let li = document.createElement("li");
+                  li.className = "px-4 py-2 hover:bg-green-50 cursor-pointer";
+                  li.innerText = item;
 
-            const res = await fetch("/api/SavedJob/toggle", {
-               method: "POST",
-               headers: { "Content-Type": "application/json" },
-               body: JSON.stringify({ jobId: jobId })
-            });
+                  li.onclick = () => {
+                     document.getElementById("jobSearch").value = item;
+                     box.classList.add("hidden");
+                  };
 
-            if (res.ok) {
-               heart.textContent = isSaved ? "🤍" : "❤️";
-            } else {
-               alert("Bạn cần đăng nhập!");
+                  list.appendChild(li);
+               });
+
+               box.classList.remove("hidden");
             }
-         }
+            async function toggleSave(event, btn, jobId) {
+               event.stopPropagation();
 
-         function searchJobs() {
-            var keyword = document.getElementById("jobSearch").value;
-            var locationId = document.getElementById("locationFilter").value;
+               const heart = btn.querySelector('.heart');
+               let isSaved = heart.textContent === "❤️";
 
-            if (keyword === "" && locationId === "") {
-               alert("Vui lòng nhập từ khóa hoặc chọn địa điểm");
-               return;
+               const res = await fetch("/api/SavedJob/toggle", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ jobId: jobId })
+               });
+
+               if (res.ok) {
+                  heart.textContent = isSaved ? "🤍" : "❤️";
+               } else {
+                  alert("Bạn cần đăng nhập!");
+               }
             }
 
-            var url = "/FindJobByID/Search?";
+            function searchJobs() {
+               var keyword = document.getElementById("jobSearch").value;
+               var locationId = document.getElementById("locationFilter").value;
 
-            if (keyword) url += "keyword=" + encodeURIComponent(keyword);
-            if (locationId) url += (keyword ? "&" : "") + "locationId=" + locationId;
+               if (keyword === "" && locationId === "") {
+                  alert("Vui lòng nhập từ khóa hoặc chọn địa điểm");
+                  return;
+               }
 
-            window.location.href = url;
-         }
-      </script>
-   }
+               var url = "/FindJobByID/Search?";
+
+               if (keyword) url += "keyword=" + encodeURIComponent(keyword);
+               if (locationId) url += (keyword ? "&" : "") + "locationId=" + locationId;
+
+               window.location.href = url;
+            }
+         </script>
+      }

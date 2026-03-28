@@ -25,4 +25,19 @@
    html {
       font-family: var(--font-sans);
    }
+
+   /* Chỉ áp dụng cho checkbox/radio hiển thị bình thường, bỏ qua các nút ẩn (sr-only) */
+   [type='checkbox']:not(.sr-only),
+   [type='radio']:not(.sr-only) {
+      width: 1rem;
+      height: 1rem;
+      accent-color: var(--primary-blue);
+      cursor: pointer;
+      border: 1px solid var(--gray-medium);
+      border-radius: 0.25rem;
+   }
+
+   [type='radio']:not(.sr-only) {
+      border-radius: 50%;
+   }
 }
