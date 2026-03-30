@@ -10,6 +10,7 @@ public interface IPostRepository
    Task UpdateJobPost(JobPost jobPost);
    Task<List<JobPost>> GetPagedPosts(string? lastPostID, int pageSize = 10);
    Task<JobPost?> GetByID(string jobPostID);
+   Task CreateApplyJobPost(JobApplication jobApplication);
 }
 
 public class PostRepository(DatabaseContext context) : IPostRepository
@@ -87,4 +88,17 @@ public class PostRepository(DatabaseContext context) : IPostRepository
       }
    }
 
+   public async Task CreateApplyJobPost(JobApplication jobApplication)
+   {
+      try
+      {
+         await _context.JobApplications.AddAsync(jobApplication);
+
+         await _context.SaveChangesAsync();
+      }
+      catch (Exception ex)
+      {
+         Console.Error.WriteLine($"Error in JobApplications: {ex.Message}");
+      }
+   }
 }

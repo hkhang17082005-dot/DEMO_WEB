@@ -9,23 +9,51 @@ namespace SRB_WebPortal.Services;
 
 public interface IBunnyCNDService
 {
-   Task<BaseResponse<Uri>> UploadToBunny(IFormFile file);
+   Task<BaseResponse<Uri>> UploadToBunnyRunBackground(Stream fileStream, string originalFileName, string folderPath);
+   Task<BaseResponse<Uri>> UploadToBunny(IFormFile file, string folderPath);
    Task<BaseResponse> DeleteFileAsync(string fileName);
 }
 
-public class BunnyCNDService(IOptions<BunnyOptions> options, IHttpClientFactory httpClientFactory) : IBunnyCNDService
+public class BunnyCNDService(
+   IOptions<BunnyOptions> options,
+   IHttpClientFactory httpClientFactory
+) : IBunnyCNDService
 {
    private readonly IOptions<BunnyOptions> _bunnyOptions = options;
 
    private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
 
-   public async Task<BaseResponse<Uri>> UploadToBunny(IFormFile file)
+   public async Task<BaseResponse<Uri>> UploadToBunnyRunBackground(Stream fileStream, string originalFileName, string folderPath)
+   {
+      var storageZoneName = _bunnyOptions.Value.StorageZoneName;
+      var accessKey = _bunnyOptions.Value.AccessKey;
+
+      var fileName = Guid.CreateVersion7().ToString() + Path.GetExtension(originalFileName);
+      var uploadUrl = $"{_bunnyOptions.Value.Hostname.TrimEnd('/')}/{storageZoneName}/{folderPath}/{fileName}";
+
+      var client = _httpClientFactory.CreateClient();
+      client.DefaultRequestHeaders.Add("AccessKey", accessKey);
+
+      var content = new StreamContent(fileStream);
+      var response = await client.PutAsync(uploadUrl, content);
+
+      if (response.IsSuccessStatusCode)
+      {
+         var publicUrlString = $"{_bunnyOptions.Value.BaseCdnUrl.TrimEnd('/')}/{folderPath}/{fileName}";
+
+         return BaseResponse<Uri>.Success(new Uri(publicUrlString), "Upload thành công", HttpStatusCode.Created);
+      }
+
+      return BaseResponse<Uri>.Failure($"Lỗi: {response.ReasonPhrase}", HttpStatusCode.BadRequest);
+   }
+
+
+   public async Task<BaseResponse<Uri>> UploadToBunny(IFormFile file, string folderPath)
    {
       var storageZoneName = _bunnyOptions.Value.StorageZoneName;
       var accessKey = _bunnyOptions.Value.AccessKey;
 
       var fileName = Guid.CreateVersion7().ToString() + Path.GetExtension(file.FileName);
-      var folderPath = CloudCNDKey.FOLDER_APPLY_JOB_CV;
 
       var uploadUrl = $"{_bunnyOptions.Value.Hostname.TrimEnd('/')}/{storageZoneName}/{folderPath}/{fileName}";
 

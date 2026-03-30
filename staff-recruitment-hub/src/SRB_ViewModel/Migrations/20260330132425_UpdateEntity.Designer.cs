@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SRB_ViewModel;
 
@@ -11,9 +12,11 @@ using SRB_ViewModel;
 namespace SRB_ViewModel.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20260330132425_UpdateEntity")]
+    partial class UpdateEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -146,7 +149,7 @@ namespace SRB_ViewModel.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("JobApplications");
+                    b.ToTable("JobApplication");
                 });
 
             modelBuilder.Entity("SRB_ViewModel.Entities.JobPost", b =>

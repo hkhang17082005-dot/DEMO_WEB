@@ -1,166 +1,108 @@
-@* @{
-   ViewData["Title"] = "Candidate Dashboard";
-}
-
-<main class="container px-4 pb-12 mx-auto">
-   <h1 class="mb-8 text-3xl font-extrabold text-gray-900">Xin chào, <span class="text-blue-600">Ứng viên</span>! 👋
-   </h1>
-
-   <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-      <div
-         class="flex flex-col justify-between p-6 transition bg-white border border-gray-100 shadow-sm rounded-2xl hover:shadow-md">
-         <div>
-            <div class="mb-4 text-3xl text-blue-600">🔍</div>
-            <h3 class="mb-2 text-xl font-bold text-gray-800">Khám phá việc làm</h3>
-            <p class="mb-6 text-sm text-gray-500">Tìm kiếm hàng ngàn cơ hội phù hợp với năng lực của bạn.</p>
-         </div>
-         <a href="/" class="flex items-center gap-1 font-bold text-blue-600 hover:underline w-max">
-            Tìm việc ngay &rarr;
-         </a>
-      </div>
-
-      <div
-         class="flex flex-col justify-between p-6 transition bg-white border border-gray-100 shadow-sm rounded-2xl hover:shadow-md">
-         <div>
-            <div class="mb-4 text-3xl text-green-600">📄</div>
-            <h3 class="mb-2 text-xl font-bold text-gray-800">Hồ sơ cá nhân</h3>
-            <p class="mb-6 text-sm text-gray-500">Cập nhật thông tin và CV để nhà tuyển dụng dễ dàng tìm thấy bạn.
-            </p>
-         </div>
-         <a href="/Candidate/Profile" class="flex items-center gap-1 font-bold text-green-600 hover:underline w-max">
-            Quản lý hồ sơ &rarr;
-         </a>
-      </div>
-
-      <div
-         class="flex flex-col justify-between p-6 transition bg-white border border-gray-100 shadow-sm rounded-2xl hover:shadow-md">
-         <div>
-            <div class="mb-4 text-3xl text-purple-600">🕒</div>
-            <h3 class="mb-2 text-xl font-bold text-gray-800">Việc làm đã nộp</h3>
-            <p class="mb-6 text-sm text-gray-500">Theo dõi trạng thái các đơn ứng tuyển của bạn.</p>
-         </div>
-         <a href="/Candidate/MyApplications"
-            class="flex items-center gap-1 font-bold text-purple-600 hover:underline w-max">
-            Xem lịch sử &rarr;
-         </a>
-      </div>
-   </div>
-</main>
-
-
-
-<div
-   class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition flex flex-col justify-between">
-   <div>
-      <div class="text-purple-600 text-3xl mb-4">🕒</div>
-      <h3 class="font-bold text-xl mb-2 text-gray-800">Việc làm đã nộp</h3>
-      <p class="text-gray-500 text-sm mb-6">Theo dõi trạng thái các đơn ứng tuyển của bạn.</p>
-   </div>
-   <a href="/Candidate/MyApplications" class="text-purple-600 font-bold hover:underline flex items-center gap-1 w-max">
-      Xem lịch sử &rarr;
-   </a>
-</div>
-</div>
-</main> *@
-
 @{
-    Layout = "~/Views/Shared/_CandidateLayout.cshtml";
-    ViewData["Title"] = "Bảng điều khiển";
+   Layout = "~/Views/Shared/_CandidateLayout.cshtml";
+
+   ViewData["Title"] = "Bảng điều khiển";
 }
 
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-    
-    <div class="lg:col-span-4 space-y-6">
-        
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <div class="flex items-center gap-4">
-                <img src="https://ui-avatars.com/api/?name=HHK&background=00b14f&color=fff&bold=true" alt="Avatar" class="h-16 w-16 rounded-full border-2 border-topcv" />
-                <div>
-                    <h2 class="text-lg font-bold text-gray-800">Chào mừng quay trở lại, Khang!</h2>
-                    <p class="text-sm text-gray-500 mt-1">Tài khoản ứng viên</p>
-                </div>
-            </div>
-            
-            <div class="mt-6 pt-6 border-t border-gray-100">
-                <p class="text-sm font-medium text-gray-700 mb-2">Mức độ hoàn thiện hồ sơ:</p>
-                <div class="w-full bg-gray-200 rounded-full h-2.5">
-                    <div class="bg-topcv h-2.5 rounded-full" style="width: 75%"></div>
-                </div>
-                <p class="text-xs text-right text-gray-500 mt-1">75% - Khá tốt</p>
-                <a href="/Candidate/Profile" class="mt-4 block w-full text-center text-sm font-semibold text-topcv bg-green-50 py-2 rounded-lg hover:bg-green-100 transition">
-                    Cập nhật hồ sơ
-                </a>
-            </div>
-        </div>
 
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
-                <h3 class="font-bold text-gray-800">Quản lý hồ sơ</h3>
-            </div>
-            <div class="p-2">
-                <a href="/Candidate/MyApplications" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-gray-700 transition">
-                    <i class="fa-solid fa-paper-plane text-gray-400 w-5"></i>
-                    <span class="font-medium text-sm">Việc làm đã nộp</span>
-                    <span class="ml-auto bg-gray-100 text-gray-600 text-xs py-0.5 px-2 rounded-full font-bold">3</span>
-                </a>
-                <a href="/SavedJob" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-gray-700 transition">
-                    <i class="fa-solid fa-heart text-gray-400 w-5"></i>
-                    <span class="font-medium text-sm">Việc làm đã lưu</span>
-                    <span class="ml-auto bg-gray-100 text-gray-600 text-xs py-0.5 px-2 rounded-full font-bold">12</span>
-                </a>
-                <a href="/Create_CV/CV_Management" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-gray-700 transition">
-                    <i class="fa-solid fa-file-pdf text-gray-400 w-5"></i>
-                    <span class="font-medium text-sm">Quản lý CV</span>
-                </a>
-            </div>
-        </div>
-    </div>
+   <div class="lg:col-span-4 space-y-6">
 
-    <div class="lg:col-span-8 space-y-6">
-        
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col justify-center">
-                <div class="flex items-center gap-3 mb-2">
-                    <div class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-500">
-                        <i class="fa-solid fa-eye"></i>
-                    </div>
-                    <h4 class="text-2xl font-bold text-gray-800">14</h4>
-                </div>
-                <p class="text-sm font-medium text-gray-500">NTD xem hồ sơ</p>
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+         <div class="flex items-center gap-4">
+            <img src="https://ui-avatars.com/api/?name=HHK&background=00b14f&color=fff&bold=true" alt="Avatar"
+                 class="h-16 w-16 rounded-full border-2 border-topcv" />
+            <div>
+               <h2 class="text-lg font-bold text-gray-800">Chào mừng quay trở lại, Khang!</h2>
+               <p class="text-sm text-gray-500 mt-1">Tài khoản ứng viên</p>
             </div>
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col justify-center">
-                <div class="flex items-center gap-3 mb-2">
-                    <div class="h-10 w-10 rounded-full bg-green-50 flex items-center justify-center text-topcv">
-                        <i class="fa-solid fa-check-circle"></i>
-                    </div>
-                    <h4 class="text-2xl font-bold text-gray-800">2</h4>
-                </div>
-                <p class="text-sm font-medium text-gray-500">Lời mời phỏng vấn</p>
-            </div>
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col justify-center hidden md:flex">
-                <div class="flex items-center gap-3 mb-2">
-                    <div class="h-10 w-10 rounded-full bg-purple-50 flex items-center justify-center text-purple-500">
-                        <i class="fa-solid fa-briefcase"></i>
-                    </div>
-                    <h4 class="text-2xl font-bold text-gray-800">45+</h4>
-                </div>
-                <p class="text-sm font-medium text-gray-500">Việc làm phù hợp</p>
-            </div>
-        </div>
+         </div>
 
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div class="px-6 py-5 border-b border-gray-100 flex justify-between items-center">
-                <h3 class="font-bold text-lg text-gray-800">Gợi ý việc làm phù hợp</h3>
-                <a href="/FindJobByID/Search" class="text-sm font-medium text-topcv hover:underline">Xem tất cả</a>
+         <div class="mt-6 pt-6 border-t border-gray-100">
+            <p class="text-sm font-medium text-gray-700 mb-2">Mức độ hoàn thiện hồ sơ:</p>
+            <div class="w-full bg-gray-200 rounded-full h-2.5">
+               <div class="bg-topcv h-2.5 rounded-full" style="width: 75%"></div>
             </div>
-            <div class="p-6">
-                <div class="text-center py-10">
-                    <img src="https://cdn-icons-png.flaticon.com/512/3050/3050525.png" class="h-20 w-20 mx-auto opacity-50 mb-4" />
-                    <h4 class="text-gray-800 font-semibold mb-1">Cập nhật CV để nhận gợi ý!</h4>
-                    <p class="text-sm text-gray-500">Chúng tôi cần biết thêm về kỹ năng của bạn để tìm việc chính xác hơn.</p>
-                </div>
-            </div>
-        </div>
-    </div>
+            <p class="text-xs text-right text-gray-500 mt-1">75% - Khá tốt</p>
+            <a href="/Candidate/Profile"
+               class="mt-4 block w-full text-center text-sm font-semibold text-topcv bg-green-50 py-2 rounded-lg hover:bg-green-100 transition">
+               Cập nhật hồ sơ
+            </a>
+         </div>
+      </div>
 
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+         <div class="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+            <h3 class="font-bold text-gray-800">Quản lý hồ sơ</h3>
+         </div>
+         <div class="p-2">
+            <a href="/Candidate/MyApplications"
+               class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-gray-700 transition">
+               <i class="fa-solid fa-paper-plane text-gray-400 w-5"></i>
+               <span class="font-medium text-sm">Việc làm đã nộp</span>
+               <span class="ml-auto bg-gray-100 text-gray-600 text-xs py-0.5 px-2 rounded-full font-bold">3</span>
+            </a>
+            <a href="/SavedJob"
+               class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-gray-700 transition">
+               <i class="fa-solid fa-heart text-gray-400 w-5"></i>
+               <span class="font-medium text-sm">Việc làm đã lưu</span>
+               <span class="ml-auto bg-gray-100 text-gray-600 text-xs py-0.5 px-2 rounded-full font-bold">12</span>
+            </a>
+            <a href="/Create_CV/CV_Management"
+               class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-gray-700 transition">
+               <i class="fa-solid fa-file-pdf text-gray-400 w-5"></i>
+               <span class="font-medium text-sm">Quản lý CV</span>
+            </a>
+         </div>
+      </div>
+   </div>
+
+   <div class="lg:col-span-8 space-y-6">
+
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col justify-center">
+            <div class="flex items-center gap-3 mb-2">
+               <div class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-500">
+                  <i class="fa-solid fa-eye"></i>
+               </div>
+               <h4 class="text-2xl font-bold text-gray-800">14</h4>
+            </div>
+            <p class="text-sm font-medium text-gray-500">NTD xem hồ sơ</p>
+         </div>
+         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col justify-center">
+            <div class="flex items-center gap-3 mb-2">
+               <div class="h-10 w-10 rounded-full bg-green-50 flex items-center justify-center text-topcv">
+                  <i class="fa-solid fa-check-circle"></i>
+               </div>
+               <h4 class="text-2xl font-bold text-gray-800">2</h4>
+            </div>
+            <p class="text-sm font-medium text-gray-500">Lời mời phỏng vấn</p>
+         </div>
+         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col justify-center md:flex">
+            <div class="flex items-center gap-3 mb-2">
+               <div class="h-10 w-10 rounded-full bg-purple-50 flex items-center justify-center text-purple-500">
+                  <i class="fa-solid fa-briefcase"></i>
+               </div>
+               <h4 class="text-2xl font-bold text-gray-800">45+</h4>
+            </div>
+            <p class="text-sm font-medium text-gray-500">Việc làm phù hợp</p>
+         </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+         <div class="px-6 py-5 border-b border-gray-100 flex justify-between items-center">
+            <h3 class="font-bold text-lg text-gray-800">Gợi ý việc làm phù hợp</h3>
+            <a href="/FindJobByID/Search" class="text-sm font-medium text-topcv hover:underline">Xem tất cả</a>
+         </div>
+         <div class="p-6">
+            <div class="text-center py-10">
+               <img src="https://cdn-icons-png.flaticon.com/512/3050/3050525.png"
+                    class="h-20 w-20 mx-auto opacity-50 mb-4" />
+               <h4 class="text-gray-800 font-semibold mb-1">Cập nhật CV để nhận gợi ý!</h4>
+               <p class="text-sm text-gray-500">Chúng tôi cần biết thêm về kỹ năng của bạn để tìm việc chính xác hơn.
+               </p>
+            </div>
+         </div>
+      </div>
+   </div>
 </div>

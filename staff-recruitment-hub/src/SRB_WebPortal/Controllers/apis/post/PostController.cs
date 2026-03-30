@@ -4,16 +4,24 @@ using SRB_ViewModel.Data;
 using SRB_WebPortal.Shared;
 using SRB_WebPortal.Services;
 using SRB_WebPortal.Controllers.apis.auth;
+using SRB_WebPortal.Consts;
+using SRB_ViewModel.Entities;
 
 namespace SRB_WebPortal.Controllers.apis.post;
 
 [ApiController]
 [Route("api/[controller]")]
-public class PostController(IPostService postService, IBunnyCNDService bunnyCNDService) : BaseAPIController
+public class PostController(
+   IPostService postService,
+   IBunnyCNDService bunnyCNDService,
+   IServiceScopeFactory serviceScopeFactory
+) : BaseAPIController
 {
    private readonly IPostService _postService = postService;
 
    private readonly IBunnyCNDService _bunnyCNDService = bunnyCNDService;
+
+   private readonly IServiceScopeFactory _scopeFactory = serviceScopeFactory;
 
    [AuthGuard(Roles = new[] { Roles.ADMIN, Roles.SYSTEM_MANAGER })]
    [HttpGet("health")]
@@ -31,12 +39,64 @@ public class PostController(IPostService postService, IBunnyCNDService bunnyCNDS
       return HandleResult(result);
    }
 
-   [HttpPost("apply-job-post")]
-   public async Task<IActionResult> ApplyJobPost([FromQuery] ApplyJobPostReq requestData)
+   [HttpGet("test-api")]
+   public void TestAPI()
    {
-      var result = await _postService.ApplyJobPost(requestData.JobPostID);
+      Console.WriteLine("NQHxLog: Controller Test API is Running!");
 
-      return HandleResult(result);
+      return;
+   }
+
+   [HttpPost("apply-job-post")]
+   public async Task<BaseResponse> ApplyJobPost([FromForm] ApplyJobPostReq requestData)
+   {
+      var userID = CurrentUserID;
+      if (string.IsNullOrEmpty(userID) || requestData.CVFile == null || requestData.CVFile.Length == 0)
+      {
+         return BaseResponse.BadRequest("Dữ liệu không hợp lệ");
+      }
+
+      var ms = new MemoryStream();
+      await requestData.CVFile.CopyToAsync(ms);
+      ms.Position = 0; // Reset con trỏ về đầu stream
+
+      _ = Task.Run(async () =>
+      {
+         using (var scope = _scopeFactory.CreateScope())
+         {
+            var postServiceInsideTask = scope.ServiceProvider.GetRequiredService<IPostService>();
+            var bunnyServiceInsideTask = scope.ServiceProvider.GetRequiredService<IBunnyCNDService>();
+
+            using (ms)
+            {
+               try
+               {
+                  var uploadResult = await bunnyServiceInsideTask.UploadToBunnyRunBackground(ms, requestData.CVFile.FileName, CloudCNDKey.FOLDER_APPLY_JOB_CV);
+
+                  if (uploadResult.IsSuccess)
+                  {
+                     var applyJobPost = new JobApplication
+                     {
+                        ApplicationID = Guid.CreateVersion7().ToString(),
+                        JobPostID = requestData.JobPostID,
+                        UserID = userID,
+                        CVPath = uploadResult?.Data?.ToString() ?? string.Empty,
+                        Status = ApplicationStatus.Submitted,
+                        AppliedAt = DateTime.Now
+                     };
+
+                     await postServiceInsideTask.ApplyJobPost(applyJobPost);
+                  }
+               }
+               catch (Exception ex)
+               {
+                  Console.WriteLine($"Background Upload Failed for JobID: {requestData.JobPostID} - Error: {ex}");
+               }
+            }
+         }
+      });
+
+      return BaseResponse.Success("Hồ sơ của bạn đang được xử lý!");
    }
 
    [HttpPost("save-post")]
@@ -63,7 +123,7 @@ public class PostController(IPostService postService, IBunnyCNDService bunnyCNDS
    [HttpPost("upload-cv")]
    public async Task<IActionResult> UploadCVGetURL([FromForm] UploadCVModel model)
    {
-      var result = await _bunnyCNDService.UploadToBunny(model.FileCV);
+      var result = await _bunnyCNDService.UploadToBunny(model.FileCV, CloudCNDKey.FOLDER_APPLY_JOB_CV);
 
       return HandleResult(result);
    }

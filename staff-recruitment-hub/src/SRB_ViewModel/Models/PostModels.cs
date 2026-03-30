@@ -32,6 +32,11 @@ public static class PostModels
          entity.Property(e => e.Description)
             .HasColumnType("nvarchar(max)");
 
+         entity.Property(e => e.ExpiryDate)
+            .IsRequired()
+            .HasColumnType("datetime2(0)")
+            .HasDefaultValueSql("GETUTCDATE()");
+
          entity.Property(e => e.CreatedAt)
             .HasColumnType("datetime2(0)")
             .HasDefaultValueSql("GETUTCDATE()");

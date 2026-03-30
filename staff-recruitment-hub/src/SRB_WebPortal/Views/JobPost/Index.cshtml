@@ -1,0 +1,161 @@
+@using SRB_ViewModel.Data
+@using SRB_WebPortal.Consts
+@using SRB_WebPortal.Controllers.apis.auth
+@using SRB_WebPortal.Controllers.apis.post
+@model JobPostDTO
+@{
+   TokenPayload? session = Context.Items[key: ServerKey.CONTEXT_ITEM_TOKEN_INFO] as TokenPayload;
+
+   var locations = ViewBag.Locations as IEnumerable<SRB_ViewModel.Entities.Location>;
+
+   var locationName = locations?.FirstOrDefault(l => l.LocationID == Model.LocationID)?.LocationName ?? "Địa điểm không xác định";
+
+   bool isLogged = session != null && !string.IsNullOrEmpty(session.User.UserID);
+}
+
+<script defer src="https://unpkg.com"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<div class="bg-gray-50 min-h-screen pb-12 font-sans">
+   <div class="bg-white border-b shadow-sm">
+      <div class="max-w-6xl mx-auto px-4 py-8">
+         <div class="flex flex-col md:flex-row gap-6 items-start">
+            <div
+               class="w-24 h-24 md:w-32 md:h-32 bg-white border rounded-2xl flex items-center justify-center p-2 shadow-sm shrink-0">
+               <img
+               src="@(string.IsNullOrEmpty(Model.BusinessLogoURL) ? "/images/business-logo.png" : Model.BusinessLogoURL)"
+               onerror="this.onerror=null; this.src='/images/business_logo.png';" alt="@Model.BusinessName" />
+            </div>
+
+            <div class="flex-1 space-y-3">
+               <h1 class="text-2xl md:text-3xl font-extrabold text-gray-800 leading-tight">@Model.Title</h1>
+               <p class="text-xl font-medium text-emerald-600">@Model.BusinessName</p>
+
+               <div class="flex flex-wrap gap-4 text-gray-500 text-sm">
+                  <span class="flex items-center gap-2">
+                     <i class="fa-solid fa-money-bill-wave text-emerald-500"></i> @Model.SalaryRange
+                  </span>
+                  <span class="flex items-center gap-2">
+                     <i class="fa-solid fa-location-dot text-emerald-500"></i> @locationName
+                  </span>
+                  <span class="flex items-center gap-2">
+                     <i class="fa-solid fa-clock text-emerald-500"></i>
+                     Hạn nộp: @(Model.ExpiryDate.ToString("dd/MM/yyyy") ?? "Đang cập nhật")
+                  </span>
+               </div>
+
+               <div class="flex flex-wrap gap-3 pt-4" x-data>
+                  @if (isLogged)
+                  {
+                     <button @@click="$dispatch('open-modal', { id: '@Model.JobPostID' })"
+                        class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-lg active:scale-95 flex-1 md:flex-none">
+                        ỨNG TUYỂN NGAY
+                     </button>
+                  }
+                  else
+                  {
+                     <a href="/login?returnUrl=@Context.Request.Path"
+                        class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-lg active:scale-95 flex-1 md:flex-none text-center">
+                        ỨNG TUYỂN NGAY
+                     </a>
+                  }
+                  <button
+                     class="border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-50 font-bold py-3 px-8 rounded-xl transition-all flex-1 md:flex-none">
+                     LƯU TIN
+                  </button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <div class="max-w-6xl mx-auto px-4 mt-8">
+      <div class="grid lg:grid-cols-3 gap-8">
+         <div class="lg:col-span-2 space-y-8">
+            <div class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100">
+               <h2 class="text-xl font-bold text-gray-800 border-l-4 border-emerald-500 pl-4 mb-6">
+                  Chi tiết tin tuyển dụng
+               </h2>
+
+               <div class="prose prose-emerald max-w-none text-gray-700 leading-relaxed space-y-8">
+                  <section>
+                     <h3 class="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-info text-emerald-500 text-sm"></i> Mô tả công việc
+                     </h3>
+                     <div class="whitespace-pre-line text-gray-600">@Model.Description</div>
+                  </section>
+
+                  <section>
+                     <h3 class="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-user-check text-emerald-500 text-sm"></i> Yêu cầu ứng viên
+                     </h3>
+                     <div class="whitespace-pre-line text-gray-600">@Model.Requirements</div>
+                  </section>
+
+                  <section>
+                     <h3 class="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-gift text-emerald-500 text-sm"></i> Quyền lợi
+                     </h3>
+                     <div class="whitespace-pre-line text-gray-600">@Model.Benefits</div>
+                  </section>
+
+                  <section>
+                     <h3 class="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-map-location-dot text-emerald-500 text-sm"></i> Địa điểm làm việc
+                     </h3>
+                     <p class="text-gray-600">@Model.Address</p>
+                  </section>
+               </div>
+
+               <div class="mt-10 p-6 bg-emerald-50 rounded-2xl border border-emerald-100">
+                  <h4 class="font-bold text-emerald-800 mb-2">Cách thức ứng tuyển</h4>
+                  <p class="text-sm text-emerald-700">Ứng viên nộp hồ sơ trực tuyến bằng cách nhấn vào nút Ứng tuyển
+                     ngay!</p>
+                  </div>
+               </div>
+            </div>
+
+            <div class="space-y-6">
+               <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                  <h2 class="text-lg font-bold text-gray-800 mb-4">Thông tin chung</h2>
+                  <div class="space-y-4">
+                     <div class="flex items-start gap-3">
+                        <i class="fa-solid fa-briefcase mt-1 text-gray-400 w-5"></i>
+                        <div>
+                           <p class="text-xs text-gray-400 uppercase font-bold tracking-wider">Loại hình</p>
+                           <p class="text-sm text-gray-700 font-medium">@Model.JobType</p>
+                        </div>
+                     </div>
+                     <div class="flex items-start gap-3">
+                        <i class="fa-solid fa-calendar-day mt-1 text-gray-400 w-5"></i>
+                        <div>
+                           <p class="text-xs text-gray-400 uppercase font-bold tracking-wider">Thời gian làm việc</p>
+                           <p class="text-sm text-gray-700 font-medium">Giờ hành chính</p>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+               <div class="bg-linear-to-br from-emerald-500 to-teal-600 rounded-2xl p-6 text-white shadow-lg">
+                  <i class="fa-solid fa-shield-halved text-3xl opacity-50 mb-4"></i>
+                  <h3 class="font-bold mb-2">Cam kết an toàn</h3>
+                  <p class="text-sm opacity-90 leading-relaxed">
+                     Tin tuyển dụng này đã được kiểm duyệt. Nếu thấy có dấu hiệu lừa đảo,
+                     vui lòng báo cáo ngay cho chúng tôi.
+                  </p>
+               </div>
+
+               <div class="bg-linear-to-br from-orange-400 to-red-500 rounded-2xl p-6 text-white shadow-lg">
+                  <i class="fa-solid fa-lightbulb text-3xl opacity-50 mb-4"></i>
+                  <h3 class="font-bold mb-2">Mẹo tìm việc</h3>
+                  <p class="text-sm opacity-90 leading-relaxed">
+                     Hãy cập nhật CV thường xuyên để lọt vào mắt xanh của Nhà tuyển dụng sớm nhất nhé!
+                  </p>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   @await Html.PartialAsync("~/Views/JobPost/Components/_ApplyJobModal.cshtml", Model.JobPostID)

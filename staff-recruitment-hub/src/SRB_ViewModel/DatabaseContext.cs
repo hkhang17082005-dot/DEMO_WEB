@@ -24,6 +24,8 @@ public class DatabaseContext(DbContextOptions<DatabaseContext> options) : DbCont
 
    public DbSet<User> Users { get; set; }
 
+   public DbSet<JobApplication> JobApplications { get; set; }
+
    public DbSet<UserRoles> UserRoles { get; set; }
 
    public DbSet<UserProfile> UserProfiles { get; set; }

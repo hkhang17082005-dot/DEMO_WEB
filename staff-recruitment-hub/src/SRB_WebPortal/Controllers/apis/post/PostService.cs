@@ -8,7 +8,7 @@ public interface IPostService
 {
    Task<BaseResponse<SaveJobPostRes>> SavePost(SaveJobPostDTO formData, string ownerID, string? businessID);
    Task<BaseResponse<List<JobPostDTO>>> LoadListPost(string? lastPostID, int pageSize);
-   Task<BaseResponse> ApplyJobPost(string JobPostID);
+   Task ApplyJobPost(JobApplication jobApplication);
 }
 
 public class PostService(IPostRepository postRepository) : IPostService
@@ -62,6 +62,7 @@ public class PostService(IPostRepository postRepository) : IPostService
          existingPost.Benefits = formData.Benefits;
          existingPost.SalaryRange = formData.SalaryRange;
          existingPost.Address = formData.Address;
+         existingPost.ExpiryDate = formData.ExpiryDate ?? DateTime.Now;
          existingPost.UpdatedAt = DateTime.Now;
 
          await _postRepository.UpdateJobPost(existingPost);
@@ -87,6 +88,7 @@ public class PostService(IPostRepository postRepository) : IPostService
             SalaryRange = formData.SalaryRange,
             LocationID = formData.LocationID,
             Address = formData.Address,
+            ExpiryDate = formData.ExpiryDate ?? DateTime.Now,
             CreatedAt = DateTime.Now,
             CreatedByID = ownerID,
             IsActive = true
@@ -100,8 +102,8 @@ public class PostService(IPostRepository postRepository) : IPostService
       return BaseResponse<SaveJobPostRes>.Success(savePostRes, "Lưu bài đăng tuyển thành công");
    }
 
-   public async Task<BaseResponse> ApplyJobPost(string JobPostID)
+   public async Task ApplyJobPost(JobApplication jobApplication)
    {
-      return BaseResponse.Success("Update Post Successful..");
+      await _postRepository.CreateApplyJobPost(jobApplication);
    }
 }

@@ -12,6 +12,7 @@ public interface IShareRepository
    Task<bool> IsHasRole(string userID, string[] roleSlugs);
    Task<int?> GetRoleIDBySlug(string roleSlug);
    Task<IEnumerable<Location>> GetLocations();
+   Task<JobPost?> GetJobPost(string jobPostID);
 }
 
 public class ShareRepository(
@@ -21,6 +22,23 @@ public class ShareRepository(
 {
    private readonly DatabaseContext _context = context;
    private readonly IRedisService _redisService = redisService;
+
+   public async Task<JobPost?> GetJobPost(string jobPostID)
+   {
+      try
+      {
+         return await _context.JobPosts
+            .Include(j => j.Business)
+            .Include(j => j.Location)
+            .FirstOrDefaultAsync(j => j.JobPostID == jobPostID);
+      }
+      catch (Exception ex)
+      {
+         Console.WriteLine($"Error: {ex.Message}");
+
+         return null;
+      }
+   }
 
    public async Task<IEnumerable<Location>> GetLocations()
    {
@@ -35,7 +53,6 @@ public class ShareRepository(
          return [];
       }
    }
-
 
    public async Task<bool> IsHasRole(string userID, string[] roleSlugs)
    {

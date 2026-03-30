@@ -7,7 +7,9 @@ namespace SRB_WebPortal.Controllers.apis.post;
 public record ApplyJobPostReq(
    [Required(ErrorMessage = "Job ID không được để trống")]
    [StringLength(36, MinimumLength = 36, ErrorMessage = "Job ID phải đúng định dạng")]
-   string JobPostID
+   string JobPostID,
+
+   IFormFile CVFile
 );
 
 public class GetJobPostDTO
@@ -34,6 +36,12 @@ public record JobPostDTO
 
    public string? BusinessLogoURL { get; init; }
 
+   public string? Description { get; init; }
+
+   public string? Requirements { get; init; }
+
+   public string? Benefits { get; init; }
+
    public JobType JobType { get; init; }
 
    public string? SalaryRange { get; init; }
@@ -41,6 +49,8 @@ public record JobPostDTO
    public int? LocationID { get; init; }
 
    public string? Address { get; init; }
+
+   public DateTime ExpiryDate { get; init; }
 
    public DateTime? CreatedAt { get; init; }
 }
