@@ -7,8 +7,6 @@ namespace SRB_WebPortal.Controllers.apis.auth;
 
 public interface IAuthRepository
 {
-   Task<int> GetRoleIDBySlug(string roleSlug);
-
    Task<string?> GetRoleSlugByID(int roleID);
 
    /// <summary>
@@ -87,25 +85,6 @@ public class AuthRepository(DatabaseContext context) : IAuthRepository
          Console.Error.WriteLine($"Error in GetMe Repository: {ex.Message}");
 
          return null;
-      }
-   }
-
-   public async Task<int> GetRoleIDBySlug(string roleSlug)
-   {
-      try
-      {
-         if (string.IsNullOrWhiteSpace(roleSlug)) return -1;
-
-         return await _context.Roles
-            .AsNoTracking()
-            .Where(r => r.RoleSlug == roleSlug)
-            .Select(r => r.RoleID)
-            .FirstOrDefaultAsync();
-      }
-      catch (Exception ex)
-      {
-         Console.Error.WriteLine($"Error in GetRoleIDByName: {ex.Message}");
-         return -1;
       }
    }
 

@@ -31,7 +31,8 @@ public class AuthService(
    IHttpContextAccessor httpContextAccessor,
    IOptions<JwtOptions> jwtOptions,
    TokenFactory tokenFactory,
-   Cloudinary cloudinary
+   Cloudinary cloudinary,
+   IShareRepository shareRepository
    ) : IAuthService
 {
    private readonly IRedisService _redisService = redisService;
@@ -42,6 +43,7 @@ public class AuthService(
    private readonly IOptions<JwtOptions> _jwtOptions = jwtOptions;
    private readonly TokenFactory _tokenFactory = tokenFactory;
    private readonly Cloudinary _cloudinary = cloudinary;
+   private readonly IShareRepository _shareRepository = shareRepository;
 
    public async Task<BaseResponse> Health()
    {
@@ -114,29 +116,19 @@ public class AuthService(
          return BaseResponse.BadRequest("Đăng ký thất bại! Tên đăng nhập đã tồn tại");
       }
 
-      var roleSlugDefault = Roles.CANDIDATE;
-      string roleKey = RedisCacheKeys.RoleKey(roleSlugDefault);
-      var cacheRoleID = await _redisService.GetAsync<int?>(roleKey);
+      string roleSlugDefault = Roles.CANDIDATE;
+      var roleDefaultID = await _shareRepository.GetRoleIDBySlug(roleSlugDefault);
+      if (roleDefaultID is null)
+      {
+         Console.WriteLine("NQHxLog: Không tìm thấy Role ID");
 
-      int roleDefaultID;
-      if (cacheRoleID == null)
-      {
-         roleDefaultID = await _authRepository.GetRoleIDBySlug(roleSlugDefault);
-         if (roleDefaultID == -1)
-         {
-            return BaseResponse.BadRequest("Xảy ra lỗi khi tạo tài khoản mới!");
-         }
-         await _redisService.SetAsync(roleKey, roleDefaultID);
-      }
-      else
-      {
-         roleDefaultID = cacheRoleID.Value;
+         return BaseResponse.InternalServerError("Hệ thống xảy ra lỗi! Vui lòng thử lại sau!");
       }
 
       var userID = Guid.CreateVersion7().ToString();
       string hashedPassword = _hashingService.HashValue(model.Password);
 
-      await _authRepository.CreateNewUser(userID, model.Username, hashedPassword, roleDefaultID);
+      await _authRepository.CreateNewUser(userID, model.Username, hashedPassword, roleDefaultID.Value);
 
       var sessionId = Guid.CreateVersion7().ToString();
 
@@ -348,7 +340,7 @@ public class AuthService(
             var uploadParams = new ImageUploadParams()
             {
                File = new FileDescription(formData.AvatarFile.FileName, formData.AvatarFile.OpenReadStream()),
-               Folder = CloudinaryKey.FOLDER_PROFILE_AVATAR,
+               Folder = CloudCNDKey.FOLDER_PROFILE_AVATAR,
                Transformation = new Transformation().Width(500).Height(500).Crop("fill") // Auto Resize
             };
             var uploadResult = await _cloudinary.UploadAsync(uploadParams);
@@ -361,7 +353,7 @@ public class AuthService(
             var uploadParams = new RawUploadParams()
             {
                File = new FileDescription(formData.CVFile.FileName, formData.CVFile.OpenReadStream()),
-               Folder = CloudinaryKey.FOLDER_PROFILE_CV
+               Folder = CloudCNDKey.FOLDER_PROFILE_CV
             };
 
             var uploadResult = await _cloudinary.UploadAsync(uploadParams);

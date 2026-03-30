@@ -11,22 +11,15 @@ public interface IVNPayService
    Task<string> CreatePaymentAsync(long amount);
 }
 
-public class VNPayService : IVNPayService
+public class VNPayService(
+   IOptions<SystemOptions> systemOptions,
+   IOptions<PaymentOptions> paymentOptions,
+   IHashingService hashingService
+) : IVNPayService
 {
-   private readonly IOptions<SystemOptions> _systemOptions;
-   private readonly IOptions<PaymentOptions> _paymentOptions;
-   private readonly IHashingService _hashingService;
-
-   public VNPayService(
-      IOptions<SystemOptions> systemOptions,
-      IOptions<PaymentOptions> paymentOptions,
-      IHashingService hashingService
-   )
-   {
-      _systemOptions = systemOptions;
-      _paymentOptions = paymentOptions;
-      _hashingService = hashingService;
-   }
+   private readonly IOptions<SystemOptions> _systemOptions = systemOptions;
+   private readonly IOptions<PaymentOptions> _paymentOptions = paymentOptions;
+   private readonly IHashingService _hashingService = hashingService;
 
    public void Health()
    {

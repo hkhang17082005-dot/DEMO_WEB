@@ -1,0 +1,64 @@
+<div
+   class="bg-white rounded-2xl p-2 shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex flex-col md:flex-row gap-2 max-w-5xl mx-auto">
+   <!--Input-->
+   <div class="flex-[1.5] flex items-center px-5 py-3 border-b md:border-b-0 md:border-r border-gray-100 group">
+      <i
+      class="fa-solid fa-magnifying-glass text-emerald-500 mr-3 group-focus-within:scale-110 transition-transform"></i>
+      <input type="text" id="jobSearch" value="@ViewBag.Keyword" placeholder="Vị trí tuyển dụng, tên công ty..."
+             class="w-full text-gray-700 outline-none placeholder-gray-400 font-medium text-base">
+   </div>
+   <!--Location-->
+   <div class="flex-1 flex items-center px-5 py-3 group">
+      <i class="fa-solid fa-location-dot text-emerald-500 mr-3 group-focus-within:bounce transition-transform"></i>
+      <div class="relative w-full">
+         <select id="locationFilter"
+                 class="w-full text-gray-700 outline-none appearance-none font-medium bg-transparent cursor-pointer pr-8">
+            <option value="">Tất cả địa điểm</option>
+            @foreach (var location in ViewBag.Locations)
+            {
+               <option value="@location.LocationID" selected="@(ViewBag.CurrentLocation == location.LocationID)">
+                  @location.LocationName
+               </option>
+            }
+         </select>
+         <i
+         class="fa-solid fa-chevron-down absolute right-0 top-1/2 -translate-y-1/2 text-[10px] text-gray-400 pointer-events-none"></i>
+      </div>
+   </div>
+   <!--button tim kiem -->
+   <button onclick="searchJobs()"
+           class="bg-orange-500 hover:bg-orange-600 px-12 py-4 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-orange-200 active:scale-95 flex items-center justify-center gap-2">
+      <i class="fa-solid fa-paper-plane"></i>
+      <span>TÌM KIẾM</span>
+   </button>
+</div>
+
+<script>
+   function searchJobs() {
+      var keywordInput = document.getElementById("jobSearch");
+      var locationSelect = document.getElementById("locationFilter");
+
+      var keyword = keywordInput ? keywordInput.value : "";
+      var locationId = locationSelect ? locationSelect.value : "";
+
+      if (keyword.trim() === "" && locationId === "") {
+         alert("Vui lòng nhập từ khóa hoặc chọn địa điểm");
+         return;
+      }
+
+      // Tạo URL search
+      var url = "/FindJobByID/Search?";
+      var params = [];
+
+      if (keyword) params.push("keyword=" + encodeURIComponent(keyword));
+      if (locationId) params.push("locationId=" + locationId);
+
+      window.location.href = url + params.join("&");
+   }
+
+   document.getElementById("jobSearch")?.addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+         searchJobs();
+      }
+   });
+</script>

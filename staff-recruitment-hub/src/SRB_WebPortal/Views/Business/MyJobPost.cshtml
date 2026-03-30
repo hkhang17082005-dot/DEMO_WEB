@@ -1,0 +1,186 @@
+@{
+   ViewData["Title"] = "Quản lý chiến dịch tuyển dụng";
+   Layout = "~/Views/Shared/_BusinessLayout.cshtml";
+}
+
+<div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 flex items-center justify-between gap-4">
+   <div class="flex-1 relative">
+      <i class="fa-solid fa-magnifying-glass absolute left-4 top-3 text-gray-400"></i>
+      <input type="text" placeholder="Tìm kiếm theo tiêu đề chiến dịch..."
+             class="w-full pl-11 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:bg-white outline-none transition text-sm">
+   </div>
+   <div class="flex gap-3">
+      <select
+         class="border border-gray-200 bg-gray-50 text-gray-700 py-2.5 px-4 rounded-lg outline-none text-sm focus:ring-2 focus:ring-green-500">
+         <option>Trạng thái: Tất cả</option>
+         <option>Đang hiển thị</option>
+         <option>Đã đóng</option>
+      </select>
+      <a href="/Business/PostJob"
+         class="bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-lg font-medium shadow-sm transition">
+         Tạo chiến dịch mới
+      </a>
+   </div>
+</div>
+
+<div class="space-y-4">
+   <!-- Chỉ cần một Container trống để JS đổ dữ liệu vào -->
+   <div id="jobContainer" class="space-y-4">
+      <!-- Loading spinner hiển thị mặc định khi mới vào trang -->
+      <div id="loading" class="text-center py-10">
+         <i class="fa-solid fa-circle-notch animate-spin text-3xl text-green-500"></i>
+      </div>
+   </div>
+
+   <!-- Nút Tải thêm nằm ngoài jobContainer -->
+   <div id="loadMoreBox" class="text-center py-8 hidden">
+      <button id="btnLoadMore"
+              class="px-6 py-2 bg-white border border-gray-300 rounded-full text-sm font-medium hover:bg-gray-50 transition cursor-pointer">
+         Xem thêm chiến dịch
+      </button>
+   </div>
+
+   <!-- Div thông báo trống (Sẽ được JS hiển thị nếu không có bài nào) -->
+   <div id="emptyMessage" class="hidden text-center py-10 bg-white rounded-xl border border-dashed border-gray-300">
+      <p class="text-gray-500">Chưa có chiến dịch tuyển dụng nào.</p>
+   </div>
+</div>
+
+<script type="module">
+   import businessService from '/js/services/businessService.js';
+
+   let lastPostID = "";
+   const getSize = 5;
+
+   const jobContainer = document.getElementById('jobContainer');
+   const loadMoreBox = document.getElementById('loadMoreBox');
+   const loading = document.getElementById('loading');
+   const btnLoadMore = document.getElementById('btnLoadMore');
+
+   async function loadJobs(isLoadMore = false) {
+   try {
+   if (!isLoadMore) {
+   lastPostID = "";
+   jobContainer.innerHTML = `
+   <div id="loading" class="text-center py-10">
+   <i class="fa-solid fa-circle-notch animate-spin text-3xl text-green-500"></i>
+   </div>`;
+   }
+
+   const response = await businessService.getBusinessJobPosts(lastPostID, getSize);
+
+   console.log("API:", response);
+
+   const result = response?.isSuccess ? response : response?.data;
+
+   if (!result?.isSuccess) {
+   throw new Error(result?.message || "API failed");
+   }
+
+   const jobs = result.data;
+
+   if (!jobs || jobs.length === 0) {
+   if (!isLoadMore) {
+   jobContainer.innerHTML = `
+   <div class="text-center py-10 bg-white rounded-xl border border-dashed border-gray-300">
+   <p class="text-gray-500">Chưa có chiến dịch tuyển dụng nào.</p>
+   </div>`;
+   }
+   loadMoreBox.classList.add('hidden');
+   return;
+   }
+
+   if (!isLoadMore) {
+   jobContainer.innerHTML = "";
+   }
+
+   jobs.forEach(job => {
+   const html = `
+   <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:border-green-400 transition overflow-hidden">
+   <div class="p-5 flex justify-between items-start gap-6">
+   <div class="flex-1">
+   <div class="flex items-center gap-3 mb-2">
+   <span class="px-2.5 py-1 ${job.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'} text-[11px] font-bold rounded-full uppercase tracking-wide">
+   ${job.isActive ? 'Đang hoạt động' : 'Đã đóng'}
+   </span>
+   <span class="text-xs text-gray-400">
+   <i class="fa-regular fa-clock mr-1"></i>
+   Ngày đăng: ${formatDate(job.createdAt)}
+   </span>
+   </div>
+
+   <h3 class="text-lg font-bold text-gray-800 hover:text-green-600 transition cursor-pointer mb-2">
+   ${job.title || "Không có tiêu đề"}
+   </h3>
+
+   <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600">
+   <span class="flex items-center">
+   <i class="fa-solid fa-location-dot mr-1.5 text-gray-400"></i>
+   ${job.address || 'Chưa cập nhật địa chỉ'}
+   </span>
+
+   <span class="flex items-center">
+   <i class="fa-solid fa-sack-dollar mr-1.5 text-gray-400"></i>
+   ${job.salaryRange || "Thỏa thuận"}
+   </span>
+   </div>
+   </div>
+
+   <div class="flex gap-4">
+   <div class="bg-gray-50 border border-gray-100 rounded-lg p-3 text-center min-w-[90px]">
+   <p class="text-2xl font-bold text-gray-700">0</p>
+   <p class="text-[11px] text-gray-500 font-medium mt-1">Lượt Xem</p>
+   </div>
+
+   <a href="/Business/CVList?jobId=${job.jobPostID}"
+   class="bg-green-50 border border-green-100 rounded-lg p-3 text-center min-w-[90px] cursor-pointer hover:bg-green-100 transition group">
+   <p class="text-2xl font-bold text-green-600 group-hover:scale-110 transition">
+   ${job.totalApplications ?? 0}
+   </p>
+   <p class="text-[11px] text-green-700 font-bold mt-1 uppercase">
+   CV Ứng tuyển
+   </p>
+   </a>
+   </div>
+   </div>
+   </div>`;
+
+   jobContainer.insertAdjacentHTML('beforeend', html);
+   });
+
+   lastPostID = jobs[jobs.length - 1]?.jobPostID || "";
+
+   if (jobs.length >= getSize) {
+   loadMoreBox.classList.remove('hidden');
+   } else {
+   loadMoreBox.classList.add('hidden');
+   }
+
+   } catch (error) {
+   console.error("SCRIPT ERROR:", error);
+
+   if (!isLoadMore) {
+   jobContainer.innerHTML = `
+   <div class="text-center py-10">
+   <p class="text-red-500">Lỗi hệ thống: ${error.message}</p>
+   </div>`;
+   }
+   }
+   }
+
+   function formatDate(dateString) {
+   try {
+   return new Date(dateString).toLocaleDateString('vi-VN');
+   } catch {
+   return "Không rõ";
+   }
+   }
+
+   document.addEventListener('DOMContentLoaded', () => {
+   loadJobs();
+
+   if (btnLoadMore) {
+   btnLoadMore.addEventListener('click', () => loadJobs(true));
+   }
+   });
+</script>

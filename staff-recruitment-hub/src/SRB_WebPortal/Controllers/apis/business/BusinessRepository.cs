@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 
 using SRB_ViewModel;
+using SRB_ViewModel.Data;
 using SRB_ViewModel.Entities;
+using SRB_WebPortal.Shared;
 
 namespace SRB_WebPortal.Controllers.apis.business;
 
@@ -14,11 +16,17 @@ public interface IBusinessRepository
    Task RegisterBusiness(RegisterBusinessDTO formData, string userID);
 
    Task<bool> ExistingUserBusiness(string userID);
+
+   Task<IEnumerable<JobPost>> GetBusinessJobPosts(string? lastPostID, int postSize, string businessID);
 }
 
-public class BusinessRepository(DatabaseContext context) : IBusinessRepository
+public class BusinessRepository(
+   DatabaseContext context,
+   IShareRepository shareRepository
+) : IBusinessRepository
 {
    private readonly DatabaseContext _context = context;
+   private readonly IShareRepository _shareRepository = shareRepository;
 
    public async Task<bool> ExistingUserBusiness(string userID)
    {
@@ -52,6 +60,21 @@ public class BusinessRepository(DatabaseContext context) : IBusinessRepository
          var user = await _context.Users.FindAsync(userID);
          user?.BusinessID = newBusinessID;
 
+         var roleBusinessManagerID = await _shareRepository.GetRoleIDBySlug(Roles.BUSINESS_MANAGER);
+         if (roleBusinessManagerID is null)
+         {
+            await transaction.RollbackAsync();
+            return;
+         }
+
+         var newUserRole = new UserRoles
+         {
+            UserID = userID,
+            RoleID = roleBusinessManagerID.Value
+         };
+
+         await _context.UserRoles.AddAsync(newUserRole);
+
          await _context.SaveChangesAsync();
          await transaction.CommitAsync();
       }
@@ -78,4 +101,32 @@ public class BusinessRepository(DatabaseContext context) : IBusinessRepository
          .OrderByDescending(j => j.CreatedAt)
          .ToListAsync();
    }
+
+   public async Task<IEnumerable<JobPost>> GetBusinessJobPosts(string? lastPostID, int postSize, string businessID)
+   {
+      try
+      {
+         var query = _context.JobPosts
+            .AsNoTracking()
+            .Where(j => j.BusinessID == businessID)
+            .OrderByDescending(j => j.CreatedAt);
+
+         if (!string.IsNullOrEmpty(lastPostID))
+         {
+            var lastPost = await _context.JobPosts.FindAsync(lastPostID);
+            if (lastPost != null)
+            {
+               query = (IOrderedQueryable<JobPost>)query.Where(j => j.CreatedAt < lastPost.CreatedAt);
+            }
+         }
+
+         return await query.Take(postSize).ToListAsync();
+      }
+      catch (Exception ex)
+      {
+         Console.WriteLine($"Error in GetBusinessJobPosts: {ex.Message}");
+         throw;
+      }
+   }
+
 }

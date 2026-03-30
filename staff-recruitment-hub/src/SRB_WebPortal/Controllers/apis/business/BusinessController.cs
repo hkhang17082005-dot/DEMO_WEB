@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 
 using SRB_ViewModel.Data;
-using SRB_WebPortal.Extensions;
-using SRB_WebPortal.Controllers.apis.auth;
 using SRB_WebPortal.Consts;
+using SRB_WebPortal.Extensions;
+
+using SRB_WebPortal.Controllers.apis.auth;
+using SRB_WebPortal.Controllers.apis.post;
 
 namespace SRB_WebPortal.Controllers.apis.business;
 
@@ -56,6 +58,19 @@ public class BusinessController(BusinessService businessService) : BaseAPIContro
       if (string.IsNullOrEmpty(CurrentUserID)) return Unauthorized("Không tìm thấy Thông tin cần thiết!");
 
       var result = await _businessService.RegisterBusiness(fromData, CurrentUserID);
+
+      return HandleResult(result);
+   }
+
+   [HttpGet("get-business-jp")]
+   public async Task<IActionResult> GetBusinessJobPosts([FromQuery] GetJobPostDTO requestData)
+   {
+      if (string.IsNullOrEmpty(CurrentUserID) || string.IsNullOrEmpty(CurrentBusinessID))
+      {
+         return Unauthorized("Không tìm thấy Thông tin cần thiết!");
+      }
+
+      var result = await _businessService.GetBusinessJobPost(requestData, CurrentBusinessID);
 
       return HandleResult(result);
    }

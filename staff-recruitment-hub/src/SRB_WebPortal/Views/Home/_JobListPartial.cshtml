@@ -1,0 +1,185 @@
+@{
+   ViewData["Title"] = "Trang chủ";
+
+   var savedJobs = ViewBag.SavedJobs as List<string> ?? new List<string>();
+}
+
+<div class="relative min-h-100">
+   <div id="jobListWrapper" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+   <div class="flex justify-center items-center gap-4 mt-10 mb-20">
+      <button id="btnPrev" onclick="prevPage()" class="group relative w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500
+         transition-all duration-300 ease-out
+         hover:border-green-500 hover:text-green-600 hover:shadow-md hover:shadow-green-50/50 hover:-translate-x-0.5
+         active:scale-90
+         disabled:opacity-30 disabled:pointer-events-none">
+
+         <!-- Lớp nền hover tinh tế -->
+         <span
+         class="absolute inset-0 rounded-lg bg-green-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+
+         <!-- Icon size nhỏ hơn -->
+         <i
+         class="fa-solid fa-chevron-left text-sm relative z-10 transition-transform group-hover:-translate-x-0.5"></i>
+      </button>
+
+      <span id="currentPageDisplay" class="font-bold text-green-600">Trang 1</span>
+
+      <button id="btnNext" onclick="nextPage()" class="group relative w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500
+         transition-all duration-300 ease-out
+         hover:border-green-500 hover:text-green-600 hover:shadow-md hover:shadow-green-50/50 hover:translate-x-0.5
+         active:scale-90
+         disabled:opacity-30 disabled:pointer-events-none">
+
+         <span
+         class="absolute inset-0 rounded-lg bg-green-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+
+         <i
+         class="fa-solid fa-chevron-right text-sm relative z-10 transition-transform group-hover:translate-x-0.5"></i>
+      </button>
+   </div>
+</div>
+
+<script>
+   let currentPage = 1;
+   let pageSize = 6;
+
+   let pageHistory = [""];
+
+   async function loadJobsApi(lastId = "", direction = "next") {
+      const container = document.getElementById("jobListWrapper");
+      container.style.opacity = "0.5";
+
+      try {
+         const response = await fetch(`http://localhost:8000/api/post/load-list?LastPostID=${lastId}&PageSize=${pageSize}`);
+
+         if (!response.ok) throw new Error("Network error");
+
+         const res = await response.json();
+         const jobs = res.data;
+
+         if (jobs && jobs.length > 0) {
+            renderJobs(jobs);
+
+            // Cập nhật giao diện trang
+            document.getElementById("currentPageDisplay").innerText = `Trang ${currentPage}`;
+
+            // Xử lý nút bấm
+            document.getElementById("btnPrev").disabled = (currentPage === 1);
+            // Nếu lấy về ít hơn PageSize nghĩa là hết dữ liệu để Next
+            document.getElementById("btnNext").disabled = (data.length < pageSize);
+         } else {
+            if (direction === "next") alert("Đã hết danh sách việc làm");
+         }
+      } catch (err) {
+         console.error("Lỗi load API:", err);
+      } finally {
+         container.style.opacity = "1";
+      }
+   }
+
+   function nextPage() {
+      const jobItems = document.querySelectorAll(".job-item");
+      if (jobItems.length === 0) return;
+
+      const lastId = jobItems[jobItems.length - 1].getAttribute("data-id");
+
+      currentPage++;
+      pageHistory.push(lastId);
+
+      loadJobsApi(lastId, "next");
+   }
+
+   function prevPage() {
+      if (currentPage > 1) {
+         currentPage--;
+         pageHistory.pop();
+
+         const prevLastId = pageHistory[pageHistory.length - 1] || "";
+         loadJobsApi(prevLastId, "prev");
+      }
+   }
+
+   const jobTypeMap = @Html.Raw(Json.Serialize(SRB_ViewModel.Data.JobTypeHelper.GetAll()));
+
+   function getJobTypeName(id) {
+      return jobTypeMap[id] || "Nghề nghiệp";
+   }
+
+   function renderJobs(jobs, savedJobs = []) {
+      const container = document.getElementById("jobListWrapper");
+
+      container.innerHTML = jobs.map(job => {
+         // Kiểm tra xem job đã được lưu chưa (giả định savedJobs là mảng ID)
+         const isSaved = savedJobs.includes(job.jobPostID);
+
+         const typeName = getJobTypeName(job.jobType);
+
+         return `
+        <div data-id="${job.jobPostID}"
+             class="job-item bg-white rounded-2xl p-5 border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group">
+
+            <div class="flex gap-4 items-start">
+               <div
+                  class="w-16 h-16 bg-gray-50 border border-gray-100 rounded-xl flex items-center justify-center shrink-0 group-hover:border-green-200 transition-colors overflow-hidden">
+                  <img src="${job.businessLogoURL || '/images/business-logo.png'}"
+                     alt="logo"
+                     class="w-full h-full object-cover"
+                     onerror="this.src='/images/business-logo.png'" />
+               </div>
+
+               <div class="flex-1 min-w-0">
+                  <a href="/FindJobByID/GetJobById?id=${job.jobPostID}"
+                     class="block font-bold text-gray-800 group-hover:text-green-600 text-base leading-snug line-clamp-2 transition-colors">
+                     ${job.title}
+                  </a>
+                  <p class="text-gray-500 text-xs mt-1 truncate uppercase tracking-wider font-medium">
+                     ${job.businessName}
+                  </p>
+               </div>
+            </div>
+
+            <div class="mt-4 flex items-center justify-between">
+               <span class="text-green-500 font-extrabold text-lg">
+                  <i class="fa-solid fa-coins"></i> ${job.salaryRange}
+               </span>
+
+               <div class="flex items-center gap-2">
+                  <span class="bg-red-50 text-red-600 text-[10px] font-bold px-2 py-1 rounded uppercase">
+                     Hot
+                  </span>
+                  <span class="bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg text-[10px] font-bold flex items-center gap-1.5 uppercase">
+                     <i class="fa-solid fa-briefcase"></i> ${typeName}
+                  </span>
+               </div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2 mt-4">
+               <span class="bg-gray-100 text-gray-600 px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5">
+                  <i class="fa-solid fa-location-dot"></i> ${job.address || 'Nghiệp vụ'}
+               </span>
+
+               <button onclick="toggleSave(event, this, ${job.jobPostID})"
+                       class="ml-auto w-9 h-9 flex items-center justify-center rounded-full transition-all duration-300 ${isSaved ? 'bg-rose-50' : 'bg-gray-50 hover:bg-rose-50'}">
+                  <i class="fa-${isSaved ? 'solid' : 'regular'} fa-heart ${isSaved ? 'text-rose-500' : 'text-gray-400 group-hover:text-rose-500'}"></i>
+               </button>
+            </div>
+
+            <div class="flex items-center justify-between mt-5 pt-4 border-t border-dashed border-gray-200">
+               <span class="text-[11px] text-gray-400 flex items-center gap-1">
+                  <i class="fa-regular fa-clock"></i> Cập nhật mới nhất
+               </span>
+               <a href="/FindJobByID/GetJobById?id=${job.jobPostID}"
+                  class="text-xs font-bold text-green-600 hover:text-green-700 flex items-center gap-1">
+                  Xem chi tiết <i class="fa-solid fa-arrow-right-long"></i>
+               </a>
+            </div>
+        </div>
+        `;
+      }).join('');
+   }
+
+   window.onload = () => {
+      loadJobsApi();
+   };
+</script>

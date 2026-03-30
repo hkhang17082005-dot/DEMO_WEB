@@ -1,7 +1,8 @@
 MAIN_PROJECT = src/SRB_WebPortal
 MODEL_PROJECT = src/SRB_ViewModel
 
-ARGS = ${filter-out $@, ${MAKECMDGOALS}}
+RAW_ARGS = $(filter-out $@,$(MAKECMDGOALS))
+ARGS = $(if $(RAW_ARGS), $(RAW_ARGS), InitialEntity)
 
 .PHONY: run dev build migrate updateDB clean restore
 

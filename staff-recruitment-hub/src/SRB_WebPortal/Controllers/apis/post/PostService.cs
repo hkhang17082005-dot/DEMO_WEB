@@ -1,80 +1,106 @@
 using System.Net;
-using CloudinaryDotNet;
-using CloudinaryDotNet.Actions;
-
+using SRB_ViewModel.Entities;
 using SRB_WebPortal.Shared;
 
 namespace SRB_WebPortal.Controllers.apis.post;
 
 public interface IPostService
 {
-   Task<BaseResponse> CreateNewPost(CreateJobPostDTO formData, string createdByID);
-   Task<BaseResponse> UploadCVAsync(IFormFile file);
+   Task<BaseResponse<SaveJobPostRes>> SavePost(SaveJobPostDTO formData, string ownerID, string? businessID);
+   Task<BaseResponse<List<JobPostDTO>>> LoadListPost(string? lastPostID, int pageSize);
+   Task<BaseResponse> ApplyJobPost(string JobPostID);
 }
 
-public class PostService(IPostRepository postRepository, Cloudinary cloudinary) : IPostService
+public class PostService(IPostRepository postRepository) : IPostService
 {
    private readonly IPostRepository _postRepository = postRepository;
 
-   private readonly Cloudinary _cloudinary = cloudinary;
-
-   public async Task<BaseResponse> CreateNewPost(CreateJobPostDTO formData, string createdByID)
+   public async Task<BaseResponse<List<JobPostDTO>>> LoadListPost(string? lastPostID, int pageSize)
    {
-      await _postRepository.CreateNewJobPost(formData, createdByID);
-
-      return BaseResponse.Success("Tạo thành công!");
-   }
-
-   public async Task<BaseResponse> UploadCVAsync(IFormFile file)
-   {
-      if (file is null || file.Length == 0)
+      if (!string.IsNullOrEmpty(lastPostID) && lastPostID.Length != 36)
       {
-         return BaseResponse.BadRequest("File CV không hợp lệ");
+         return BaseResponse<List<JobPostDTO>>.Failure("Mã định danh không phù hợp", HttpStatusCode.BadRequest);
       }
 
-      using var stream = file.OpenReadStream();
-      var uploadParams = new RawUploadParams
+      var posts = await _postRepository.GetPagedPosts(lastPostID, pageSize);
+
+      var data = posts.Select(p => new JobPostDTO
       {
-         File = new FileDescription(file.FileName, stream),
-         Folder = "CV_Storage"
-      };
+         JobPostID = p.JobPostID,
+         Title = p.Title,
+         BusinessID = p.BusinessID,
+         BusinessName = p.Business?.BusinessName,
+         BusinessLogoURL = p.Business?.LogoUrl ?? "default-logo.png",
+         JobType = p.JobType,
+         SalaryRange = p.SalaryRange ?? "Không rõ",
+         LocationID = p.LocationID,
+         Address = p.Address,
+         CreatedAt = p.CreatedAt,
+      }).ToList();
 
-      var uploadResult = await _cloudinary.UploadAsync(uploadParams);
-      if (uploadResult.Error is not null)
-      {
-         throw new Exception(uploadResult.Error.Message);
-      }
-
-      // var urlCV = _cloudinary.Api.Url
-      //    .ResourceType("raw")
-      //    .Signed(true)
-      //    .BuildUrl(uploadResult.PublicId);
-      // window.open(urlCV)
-
-      // UserCVs(
-      //    Id               UUID(PK),
-      //    UserId           UUID(FK),
-      //    PublicId         VARCHAR(255) NOT NULL,
-      //    ResourceType     VARCHAR(20) DEFAULT 'raw',
-      //    Folder           VARCHAR(100),
-      //    OriginalFileName VARCHAR(255),
-      //    MimeType         VARCHAR(100),
-      //    FileSize         BIGINT,
-      //    UploadedAt       TIMESTAMP,
-      //    IsActive         BOOLEAN
-      // )
-
-      Console.WriteLine("CLOUD NAME RUNTIME: " + _cloudinary.Api.Account.Cloud);
-      Console.WriteLine($"New URL SecureUrl: {uploadResult.SecureUrl}");
-      Console.WriteLine($"New URL ResourceType: {uploadResult.ResourceType}");
-      Console.WriteLine($"New URL Bytes: {uploadResult.Bytes}");
-      Console.WriteLine($"New URL PublicId: {uploadResult.PublicId}");
-      Console.WriteLine($"New URL Format: {uploadResult.Format}");
-
-      return BaseResponse.Success("Đăng thông tin CV thành công", HttpStatusCode.Created);
+      return BaseResponse<List<JobPostDTO>>.Success(data, "Tải danh sách thành công");
    }
 
-   public async Task<BaseResponse> UpdatePost()
+   public async Task<BaseResponse<SaveJobPostRes>> SavePost(SaveJobPostDTO formData, string ownerID, string? businessID)
+   {
+      string jobPostRes;
+      if (!string.IsNullOrEmpty(formData.JobPostID))
+      {
+         // Update Post
+         var existingPost = await _postRepository.GetByID(formData.JobPostID);
+         if (existingPost == null)
+         {
+            return BaseResponse<SaveJobPostRes>.Failure("Không tìm thấy bài đăng để cập nhật", HttpStatusCode.NotFound);
+         }
+
+         // Cập nhật các Field
+         existingPost.UpdatedByID = ownerID;
+         existingPost.Title = formData.Title;
+         existingPost.LocationID = formData.LocationID;
+         existingPost.Description = formData.Description;
+         existingPost.Requirements = formData.Requirements;
+         existingPost.Benefits = formData.Benefits;
+         existingPost.SalaryRange = formData.SalaryRange;
+         existingPost.Address = formData.Address;
+         existingPost.UpdatedAt = DateTime.Now;
+
+         await _postRepository.UpdateJobPost(existingPost);
+
+         jobPostRes = existingPost.JobPostID;
+      }
+      else
+      {
+         // Create Post
+         if (string.IsNullOrEmpty(businessID))
+         {
+            return BaseResponse<SaveJobPostRes>.Failure("Không tìm thấy thông tin doanh nghiệp!", HttpStatusCode.NotFound);
+         }
+
+         var newPost = new JobPost
+         {
+            JobPostID = Guid.NewGuid().ToString(),
+            BusinessID = businessID,
+            Title = formData.Title,
+            Description = formData.Description,
+            Requirements = formData.Requirements ?? "Yêu cầu mặc định",
+            Benefits = formData.Benefits,
+            SalaryRange = formData.SalaryRange,
+            LocationID = formData.LocationID,
+            Address = formData.Address,
+            CreatedAt = DateTime.Now,
+            CreatedByID = ownerID,
+            IsActive = true
+         };
+
+         jobPostRes = await _postRepository.CreateNewJobPost(newPost);
+      }
+
+      var savePostRes = new SaveJobPostRes(jobPostRes);
+
+      return BaseResponse<SaveJobPostRes>.Success(savePostRes, "Lưu bài đăng tuyển thành công");
+   }
+
+   public async Task<BaseResponse> ApplyJobPost(string JobPostID)
    {
       return BaseResponse.Success("Update Post Successful..");
    }

@@ -1,5 +1,306 @@
 @{
    Layout = "_Layout";
+   ViewData["Title"] = "Đăng ký doanh nghiệp";
 }
 
-<h1>Nguyen Quang Hung</h1>
+<style>
+   :root {
+      --glass-bg: rgba(255, 255, 255, 0.95);
+      --primary-color: #4f46e5;
+      --secondary-color: #818cf8;
+      --accent-color: #f59e0b;
+      --text-main: #1e293b;
+   }
+
+   .reg-body {
+      background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 50%, #e0e7ff 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 40px 0;
+   }
+
+   .reg-card {
+      border: none;
+      border-radius: 30px;
+      background: var(--glass-bg);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      overflow: hidden;
+      transition: transform 0.3s ease;
+   }
+
+   .form-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+   }
+
+   .form-header h2 {
+      font-weight: 800;
+      background: linear-gradient(to right, #4338ca, #6366f1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+   }
+
+   /* Grouping fields with subtle cards */
+   .form-group-section {
+      background: #f1f5f9;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid #f1f5f9;
+      transition: all 0.3s ease;
+   }
+
+   .form-group-section:focus-within {
+      background: #ffffff;
+      border-color: var(--secondary-color);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+   }
+
+   .section-label {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      text-transform: uppercase;
+      margin-bottom: 15px;
+      display: block;
+      letter-spacing: 1.5px;
+   }
+
+   .input-wrapper {
+      position: relative;
+      margin-bottom: 15px;
+   }
+
+   .input-wrapper i {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+      transition: color 0.3s;
+   }
+
+   .form-control-custom {
+      width: 100%;
+      padding: 12px 15px 12px 45px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      color: var(--text-main);
+      transition: all 0.3s;
+   }
+
+   .form-control-custom:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+   }
+
+   .form-control-custom:focus+i {
+      color: var(--primary-color);
+   }
+
+   .btn-submit-luxury {
+      background: linear-gradient(to right, #4338ca, #6366f1);
+      color: white;
+      border: none;
+      padding: 16px;
+      border-radius: 15px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      width: 100%;
+      margin-top: 10px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s;
+   }
+
+   .btn-submit-luxury:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 30px rgba(67, 56, 202, 0.3);
+      filter: brightness(1.1);
+   }
+
+   .btn-submit-luxury::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: rgba(255, 255, 255, 0.1);
+      transform: rotate(45deg);
+      transition: 0.5s;
+   }
+
+   .btn-submit-luxury:hover::after {
+      left: 120%;
+   }
+
+   .custom-checkbox {
+      accent-color: var(--primary-color);
+   }
+
+   @@keyframes pulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(79, 70, 229, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(79, 70, 229, 0); }
+   }
+</style>
+
+<div class="reg-body">
+   <div class="container">
+      <div class="row justify-content-center">
+         <div class="col-lg-7 col-xl-6">
+            <div class="reg-card p-4 p-md-5">
+               <div class="form-header">
+                  <div class="mb-4 d-flex justify-content-center">
+                     <div style="background: rgba(79, 70, 229, 0.08);
+                        color: #4f46e5;
+                        padding: 6px 16px;
+                        border-radius: 100px;
+                        font-size: 0.7rem;
+                        font-weight: 800;
+                        letter-spacing: 2px;
+                        display: flex;
+                        align-items: center;
+                        border: 1px solid rgba(79, 70, 229, 0.1);">
+                        <span
+                        style="width: 6px; height: 6px; background: #4f46e5; border-radius: 50%; margin-right: 10px; display: inline-block; animation: pulse 2s infinite;"></span>
+                        DÀNH CHO NHÀ TUYỂN DỤNG
+                     </div>
+                  </div>
+                  <h2 class="h1">Bắt đầu tuyển dụng</h2>
+                  <p class="text-muted">Đăng ký tài khoản doanh nghiệp trong vài phút.</p>
+               </div>
+
+               <form id="registerBusinessForm">
+                  <!-- Section 1 -->
+                  <div class="form-group-section">
+                     <span class="section-label">Hồ sơ pháp lý</span>
+
+                     <div class="input-wrapper">
+                        <i class="bi bi-building"></i>
+                        <input type="text" name="BusinessName" class="form-control-custom"
+                               placeholder="Tên doanh nghiệp chính thức" required>
+                     </div>
+
+                     <div class="row g-3">
+                        <div class="col-md-6">
+                           <div class="input-wrapper">
+                              <i class="bi bi-hash"></i>
+                              <input type="text" name="TaxCode" class="form-control-custom" placeholder="Mã số thuế"
+                                     required>
+                           </div>
+                        </div>
+                        <div class="col-md-6">
+                           <div class="input-wrapper">
+                              <i class="bi bi-people"></i>
+                              <select name="CompanySize" class="form-control-custom" style="padding-left:45px">
+                                 <option value="" disabled selected>Quy mô...</option>
+                                 <option value="1-50">1-50 nhân sự</option>
+                                 <option value="50-200">50-200 nhân sự</option>
+                                 <option value="500">Trên 500 nhân sự</option>
+                              </select>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
+                  <!-- Section 2 -->
+                  <div class="form-group-section">
+                     <span class="section-label">Thông tin liên lạc</span>
+
+                     <div class="input-wrapper">
+                        <i class="bi bi-envelope"></i>
+                        <input type="email" name="ContactEmail" class="form-control-custom" placeholder="Email liên hệ (HR/Admin)" required>
+                     </div>
+
+                     <div class="row g-3">
+                        <div class="col-md-6">
+                           <div class="input-wrapper">
+                              <i class="bi bi-phone"></i>
+                              <input type="tel" name="PhoneNumber" class="form-control-custom" placeholder="Số điện thoại" required>
+                           </div>
+                        </div>
+                        <div class="col-md-6">
+                           <div class="input-wrapper">
+                              <i class="bi bi-globe"></i>
+                              <input type="url" name="Website" class="form-control-custom" placeholder="Website (nếu có)">
+                           </div>
+                        </div>
+                     </div>
+
+                     <div class="input-wrapper mb-0">
+                        <i class="bi bi-geo-alt"></i>
+                        <input type="text" name="Address" class="form-control-custom" placeholder="Địa chỉ trụ sở chính" required>
+                     </div>
+                  </div>
+
+                  <!-- Terms -->
+                  <div class="px-2 mb-4">
+                     <div class="form-check">
+                        <input class="form-check-input custom-checkbox" type="checkbox" id="terms" required>
+                        <label class="form-check-label small text-muted" for="terms">
+                           Tôi cam kết thông tin trên là chính xác và đồng ý với <a href="#" class="text-primary fw-bold text-decoration-none">Chính sách doanh nghiệp</a>.
+                        </label>
+                     </div>
+                  </div>
+
+                  <button type="submit" id="btnSubmit" class="btn-submit-luxury">
+                     <span>ĐĂNG KÝ NGAY</span>
+                  </button>
+               </form>
+
+               <div class="text-center mt-4">
+                  <p class="small text-muted">Bạn đã có tài khoản? <a href="/Login" class="text-primary fw-bold text-decoration-none">Đăng nhập</a></p>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   @section Scripts {
+      <script type="module">
+         import businessService from '/js/services/businessService.js';
+
+         document.getElementById('registerBusinessForm').addEventListener('submit', async (e) => {
+         e.preventDefault();
+
+         const btnSubmit = document.getElementById('btnSubmit');
+         const formData = new FormData(e.target);
+
+         // Chuyển FormData thành Plain Object (JSON)
+         const data = Object.fromEntries(formData.entries());
+
+         if (!data.Website || data.Website.trim() === "") {
+            data.Website = null;
+         }
+
+         try {
+         btnSubmit.disabled = true;
+         btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Đang xử lý...';
+
+         const response = await businessService.registerBusiness(data);
+
+         if (response.isSuccess) {
+         alert('Đăng ký doanh nghiệp thành công!');
+         window.location.href = '/Business';
+         } else {
+         alert('Lỗi: ' + (response.message || 'Không thể đăng ký'));
+         }
+         } catch (error) {
+         console.error('Submit error:', error);
+         alert('Có lỗi xảy ra khi kết nối máy chủ!');
+         } finally {
+         btnSubmit.disabled = false;
+         btnSubmit.innerHTML = 'Đăng ký ngay';
+         }
+         });
+      </script>
+   }

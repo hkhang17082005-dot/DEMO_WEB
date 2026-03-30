@@ -5,16 +5,11 @@ using System.Security.Claims;
 
 namespace SRB_WebPortal.Controllers.apis.savedjob;
 
-[Route("api/[controller]")]
 [ApiController]
-public class SavedJobController : ControllerBase
+[Route("api/[controller]")]
+public class SavedJobController(DatabaseContext context) : ControllerBase
 {
-   private readonly DatabaseContext _context;
-
-   public SavedJobController(DatabaseContext context)
-   {
-      _context = context;
-   }
+   private readonly DatabaseContext _context = context;
 
    [HttpPost("toggle")]
    public IActionResult Toggle([FromBody] dynamic data)

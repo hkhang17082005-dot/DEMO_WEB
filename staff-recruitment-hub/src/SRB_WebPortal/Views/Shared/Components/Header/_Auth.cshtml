@@ -56,14 +56,14 @@ else
 
          @if (!string.IsNullOrEmpty(session.User.BusinessID) && isManagerBusiness)
          {
-            <a href="/manager/system/ManagerSystem/Index"
+            <a href="/manager/ManageBusiness/index"
                class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition-colors">
                <i class="fa-solid fa-gauge-high w-4 text-center"></i> Dashboard Quản trị
             </a>
          }
-         else
+         else if (string.IsNullOrEmpty(session.User.BusinessID))
          {
-            <a href="/business/register"
+            <a href="/business/RegisterBusiness"
                class="flex items-center gap-3 px-4 py-2.5 text-sm text-purple-600 font-medium hover:bg-purple-50 transition-colors">
                <i class="fa-solid fa-plus-circle w-4 text-center"></i> Đăng ký Doanh nghiệp
             </a>
@@ -84,23 +84,23 @@ else
    </div>
 }
 
-<script>
+<script type="module">
+   import authService from '/js/services/authService.js';
+
    async function handleLogout() {
-      try {
-         const response = await fetch('/api/auth/logout', {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' }
-         });
+   try {
+   await authService.logout();
 
-         if (response.ok) {
-            window.location.href = '/login';
-         } else {
-            alert("Đăng xuất thất bại, vui lòng thử lại.");
-         }
-      } catch (error) {
-         console.error("Logout Error:", error);
+   window.location.href = '/';
 
-         window.location.href = '/login';
-      }
+   } catch (error) {
+   console.error("Logout Error:", error.message);
+
+   window.location.href = '/';
+
    }
+   }
+
+   window.handleLogout = handleLogout;
 </script>
+

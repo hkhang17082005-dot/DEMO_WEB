@@ -43,7 +43,7 @@ public static class BusinessModels
             .HasMaxLength(500);
 
          entity.Property(e => e.Description)
-         .HasColumnType("nvarchar(max)");
+            .HasColumnType("nvarchar(max)");
 
          entity.Property(e => e.Industry)
             .HasMaxLength(100);
@@ -76,4 +76,58 @@ public static class BusinessModels
       });
    }
 
+   public static void InitModelJobApplication(this ModelBuilder modelBuilder)
+   {
+      modelBuilder.Entity<JobApplication>(entity =>
+      {
+         entity.HasKey(e => e.ApplicationID);
+
+         entity.Property(e => e.ApplicationID)
+            .HasColumnType("char(36)")
+            .IsRequired();
+
+         entity.Property(e => e.UserID)
+            .IsRequired()
+            .HasColumnType("char(36)");
+
+         entity.Property(e => e.JobPostID)
+           .IsRequired()
+           .HasColumnType("char(36)");
+
+         entity.Property(e => e.CVPath)
+           .IsRequired()
+           .HasMaxLength(500)
+           .IsUnicode(false);
+
+         entity.Property(e => e.CoverLetter)
+           .HasColumnType("nvarchar(max)");
+
+         entity.Property(e => e.Feedback)
+           .HasColumnType("nvarchar(max)");
+
+         entity.Property(e => e.Status)
+           .HasConversion<int>()
+           .HasDefaultValue(ApplicationStatus.Submitted);
+
+         entity.Property(e => e.AppliedAt)
+           .HasColumnType("datetime2(0)")
+           .HasDefaultValueSql("GETUTCDATE()");
+
+         entity.Property(e => e.UpdatedAt)
+           .HasColumnType("datetime2(0)")
+           .HasDefaultValueSql("GETUTCDATE()");
+
+         // Một User có thể nộp nhiều đơn ứng tuyển
+         entity.HasOne(a => a.User)
+           .WithMany()
+           .HasForeignKey(a => a.UserID)
+           .OnDelete(DeleteBehavior.Restrict);
+
+         // Một JobPost có thể nhận nhiều đơn ứng tuyển
+         entity.HasOne(a => a.JobPost)
+            .WithMany()
+            .HasForeignKey(a => a.JobPostID)
+            .OnDelete(DeleteBehavior.Cascade);
+      });
+   }
 }

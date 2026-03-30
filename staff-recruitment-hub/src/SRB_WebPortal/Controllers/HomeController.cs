@@ -1,88 +1,105 @@
 using System.Diagnostics;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 using SRB_ViewModel;
+using SRB_WebPortal.Data;
 using SRB_WebPortal.Models;
 
-namespace SRB_WebPortal.Controllers
+using SRB_WebPortal.Controllers.apis.post;
+
+namespace SRB_WebPortal.Controllers;
+
+public class HomeController(
+   ILogger<HomeController> logger,
+   DatabaseContext context
+) : Controller
 {
-   public class HomeController(ILogger<HomeController> logger, DatabaseContext context) : Controller
+   private readonly ILogger<HomeController> _logger = logger;
+   private readonly DatabaseContext _context = context;
+
+   public IActionResult Index()
    {
-      private readonly ILogger<HomeController> _logger = logger;
-      private readonly DatabaseContext _context = context;
+      ViewBag.Locations = LocationMock.GetLocations();
 
-      public IActionResult Index()
+      // Logic lưu trạng thái trái tim (Tạm thời để trống hoặc giữ nguyên nếu db SavedJobs đã có)
+      ViewBag.SavedJobs = new List<string>();
+
+      return View();
+   }
+
+   public IActionResult Privacy()
+   {
+      return View();
+   }
+
+   public IActionResult GetJobs(string keyword, int? locationId, int page = 1)
+   {
+      int pageSize = 6;
+
+      // Lấy dữ liệu từ Mock
+      var allJobs = JobMock.GetJobs();
+      var query = allJobs.AsQueryable();
+
+      // --- LOGIC TÌM KIẾM (Search In-Memory) ---
+      if (!string.IsNullOrEmpty(keyword))
       {
-         var jobs = _context.Jobs
-             .Include(j => j.Location)
-             .ToList();
-
-         ViewBag.Locations = _context.Locations.ToList();
-
-         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-         if (userId != null)
-         {
-            ViewBag.SavedJobs = _context.SavedJobs
-                .Where(x => x.UserId == userId)
-                .Select(x => x.JobID)
-                .ToList();
-         }
-         else
-         {
-            ViewBag.SavedJobs = new List<int>();
-         }
-
-         return View(jobs);
+         // Sử dụng OrdinalIgnoreCase để tìm kiếm không phân biệt hoa thường khi chạy trên List
+         query = query.Where(j =>
+             j.Title.Contains(keyword, StringComparison.OrdinalIgnoreCase) ||
+             (j.Description != null && j.Description.Contains(keyword, StringComparison.OrdinalIgnoreCase))
+         );
       }
 
-      public IActionResult Privacy()
+      if (locationId.HasValue)
       {
-         return View();
+         query = query.Where(j => j.LocationID == locationId);
       }
 
-      [HttpGet]
-      public IActionResult Search(string keyword, int? locationId)
+      // --- LOGIC PHÂN TRANG ---
+      int totalItems = query.Count();
+      int totalPages = (int)Math.Ceiling((double)totalItems / (double)pageSize);
+      if (totalPages == 0) totalPages = 1;
+
+      // Đảm bảo page nằm trong khoảng hợp lệ
+      page = page < 1 ? 1 : (page > totalPages ? totalPages : page);
+
+      var jobs = query
+          .OrderByDescending(j => j.JobPostID) // Sắp xếp theo ID (Guid string)
+          .Skip((page - 1) * pageSize)
+          .Take(pageSize)
+          .ToList();
+
+      // --- TRUYỀN DỮ LIỆU RA PARTIAL VIEW ---
+      ViewBag.CurrentPage = page;
+      ViewBag.TotalPages = totalPages;
+      ViewBag.Keyword = keyword;
+      ViewBag.CurrentLocation = locationId;
+
+      // Tạm thời để trống SavedJobs nếu bạn chưa làm phần lưu vào Database cho Mock
+      ViewBag.SavedJobs = new List<string>();
+
+      var jobDtos = jobs.Select(p => new JobPostDTO
       {
-         var jobs = _context.Jobs
-             .Include(j => j.Location)
-             .AsQueryable();
+         JobPostID = p.JobPostID,
+         Title = p.Title,
+         BusinessID = p.BusinessID,
+         BusinessName = "Business VNG",
+         BusinessLogoURL = "/images/business-logo.png",
+         JobType = p.JobType,
+         SalaryRange = p.SalaryRange ?? "Thỏa thuận",
+         LocationID = p.LocationID,
+         Address = p.Address ?? "Toàn quốc",
+         CreatedAt = p.CreatedAt
+      }).ToList();
 
-         if (!string.IsNullOrEmpty(keyword))
-         {
-            jobs = jobs.Where(j =>
-                j.Title.Contains(keyword) ||
-                j.CompanyName.Contains(keyword));
-         }
+      return PartialView("_JobListPartial", jobDtos);
+   }
 
-         if (locationId.HasValue)
-         {
-            jobs = jobs.Where(j => j.LocationID == locationId);
-         }
+   [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+   public IActionResult Error()
+   {
+      var requestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
 
-         var result = jobs.Select(j => new
-         {
-            title = j.Title,
-            companyName = j.CompanyName,
-            salary = j.Salary,
-            jobType = j.JobType,
-            location = new
-            {
-               locationName = j.Location.LocationName
-            }
-         }).ToList();
-
-         return Json(result);
-      }
-
-
-
-      [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-      public IActionResult Error()
-      {
-         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-      }
+      return View(new ErrorViewModel(requestId, 500, "Đã có lỗi xảy ra"));
    }
 }

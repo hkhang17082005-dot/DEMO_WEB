@@ -41,6 +41,21 @@ const apiClient = {
          method: 'GET',
       });
    },
+
+   async delete(endpoint, data = null) {
+      const config = {
+         method: 'DELETE',
+      };
+
+      if (data) {
+         config.headers = {
+            'Content-Type': 'application/json',
+         };
+         config.body = JSON.stringify(data);
+      }
+
+      return this.baseRequest(endpoint, config);
+   },
 };
 
 export default apiClient;

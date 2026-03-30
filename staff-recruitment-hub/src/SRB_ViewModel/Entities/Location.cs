@@ -8,6 +8,4 @@ public class Location
    public int LocationID { get; set; }
 
    public required string LocationName { get; set; }
-
-   public ICollection<Job>? Jobs { get; set; }
 }

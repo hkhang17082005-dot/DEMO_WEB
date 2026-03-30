@@ -12,22 +12,15 @@ public interface IMomoService
    Task<string> CreatePaymentAsync(long amount);
 }
 
-public class MomoService : IMomoService
+public class MomoService(
+   IOptions<PaymentOptions> paymentOptions,
+   IHttpClientFactory httpClientFactory,
+   IHashingService hashingService
+) : IMomoService
 {
-   private readonly IOptions<PaymentOptions> _paymentOptions;
-   private readonly IHttpClientFactory _httpClientFactory;
-   private readonly IHashingService _hashingService;
-
-   public MomoService(
-      IOptions<PaymentOptions> paymentOptions,
-      IHttpClientFactory httpClientFactory,
-      IHashingService hashingService
-   )
-   {
-      _paymentOptions = paymentOptions;
-      _httpClientFactory = httpClientFactory;
-      _hashingService = hashingService;
-   }
+   private readonly IOptions<PaymentOptions> _paymentOptions = paymentOptions;
+   private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
+   private readonly IHashingService _hashingService = hashingService;
 
    public void Health()
    {

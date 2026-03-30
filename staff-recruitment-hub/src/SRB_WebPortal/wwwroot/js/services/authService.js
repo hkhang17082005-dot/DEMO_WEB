@@ -9,8 +9,11 @@ const authService = {
       return apiClient.post('/auth/register', userData);
    },
 
+   logout: () => {
+      return apiClient.delete('/auth/logout');
+   },
+
    createProfile: (profileData) => {
-      // Nếu profileData là Object JSON
       return apiClient.post('/auth/create-profile', profileData);
 
       // FormData chứa file/ảnh

@@ -1,32 +1,84 @@
 using System.ComponentModel.DataAnnotations;
 
+using SRB_ViewModel.Entities;
+
 namespace SRB_WebPortal.Controllers.apis.post;
 
-public class CreateJobPostDTO
+public record ApplyJobPostReq(
+   [Required(ErrorMessage = "Job ID không được để trống")]
+   [StringLength(36, MinimumLength = 36, ErrorMessage = "Job ID phải đúng định dạng")]
+   string JobPostID
+);
+
+public class GetJobPostDTO
 {
-   [Required(ErrorMessage = "Mã định danh Doanh nghiệp không được để trống")]
-   public string BusinessID { get; set; } = string.Empty;
+   public string? LastPostID { get; set; }
+   public int GetSize { get; set; } = 5;
+}
+
+public class LoadJobPostsRequest
+{
+   public string? LastPostID { get; set; } = null;
+   public int PageSize { get; set; } = 10;
+}
+
+public record JobPostDTO
+{
+   public string JobPostID { get; init; } = null!;
+
+   public string Title { get; init; } = null!;
+
+   public string? BusinessID { get; init; }
+
+   public string? BusinessName { get; init; }
+
+   public string? BusinessLogoURL { get; init; }
+
+   public JobType JobType { get; init; }
+
+   public string? SalaryRange { get; init; }
+
+   public int? LocationID { get; init; }
+
+   public string? Address { get; init; }
+
+   public DateTime? CreatedAt { get; init; }
+}
+
+public record SaveJobPostRes(
+   string JobPostID
+);
+
+public class SaveJobPostDTO
+{
+   public string? JobPostID { get; set; }
 
    [Required(ErrorMessage = "Tiêu đề bài đăng không được để trống")]
    [StringLength(100, MinimumLength = 10, ErrorMessage = "Tiêu đề phải từ 10 đến 100 ký tự")]
    public string Title { get; set; } = string.Empty;
 
-   [Range(1, 1000, ErrorMessage = "Số lượng tuyển dụng phải từ 1 đến 1000")]
-   public int Quantity { get; set; }
-
    [Required(ErrorMessage = "Mức lương không được để trống")]
-   [StringLength(100, MinimumLength = 10, ErrorMessage = "Mức lương từ 10 đến 100 ký tự")]
+   [StringLength(100, MinimumLength = 8, ErrorMessage = "Mức lương từ 8 đến 100 ký tự")]
    public string SalaryRange { get; set; } = string.Empty;
+
+   [Required(ErrorMessage = "Khu vực tuyển dụng không được trống")]
+   public int LocationID { get; init; }
 
    [Required(ErrorMessage = "Địa điểm không được để trống")]
    [StringLength(255, ErrorMessage = "Địa điểm quá dài")]
-   public string Location { get; set; } = string.Empty;
+   public string Address { get; set; } = string.Empty;
 
    [Required(ErrorMessage = "Mô tả công việc không được để trống")]
    [MinLength(20, ErrorMessage = "Mô tả công việc quá ngắn (tối thiểu 20 ký tự)")]
    public string Description { get; set; } = string.Empty;
 
+   [Required(ErrorMessage = "Yêu cầu công việc không được để trống")]
+   [MinLength(20, ErrorMessage = "Yêu cầu công việc quá ngắn (tối thiểu 20 ký tự)")]
    public string Requirements { get; set; } = string.Empty;
+
+   [Required(ErrorMessage = "Đãi ngộ công việc không được để trống")]
+   [MinLength(20, ErrorMessage = "Đãi ngộ công việc quá ngắn (tối thiểu 20 ký tự)")]
+   public string Benefits { get; set; } = string.Empty;
 
    [EmailAddress(ErrorMessage = "Định dạng email liên hệ không hợp lệ")]
    public string? ContactEmail { get; set; }
@@ -40,3 +92,7 @@ public class UploadCVModel
    [Required(ErrorMessage = "File CV không phù hợp hoặc không tồn tại")]
    public required IFormFile FileCV { get; set; }
 }
+
+public record DeleteFileRequest(
+   [Required(ErrorMessage = "FileName không được để trống")] string FileName
+);

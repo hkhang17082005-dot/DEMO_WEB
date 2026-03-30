@@ -13,14 +13,26 @@ class ExceptionFilter(RequestDelegate next, ILogger<ExceptionFilter> logger)
       }
       catch (Exception ex)
       {
-         _logger.LogError(ex, "An unhandled exception occurred: {Message}", ex.Message);
+         _logger.LogError(ex, "An Exception: {Message}", ex.Message);
 
-         context.Response.ContentType = "application/json";
-         context.Response.StatusCode = 500;
+         bool isApiRequest = context.Request.Path.StartsWithSegments("/api") || context.Request.Headers.XRequestedWith == "XMLHttpRequest";
 
-         var response = BaseResponse.Failure("Hệ thống có lỗi xảy ra, vui lòng thử lại sau!");
+         if (isApiRequest)
+         {
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = 500;
 
-         await context.Response.WriteAsJsonAsync(response);
+            var response = BaseResponse.Failure("Hệ thống có lỗi xảy ra, vui lòng thử lại sau!");
+
+            await context.Response.WriteAsJsonAsync(response);
+         }
+         else
+         {
+            context.Response.StatusCode = 500;
+            context.Request.Path = "/Home/Error";
+
+            await _next(context);
+         }
       }
    }
 }

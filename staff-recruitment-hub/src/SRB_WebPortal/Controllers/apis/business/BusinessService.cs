@@ -1,5 +1,6 @@
 using SRB_WebPortal.Shared;
 using SRB_ViewModel.Entities;
+using SRB_WebPortal.Controllers.apis.post;
 
 namespace SRB_WebPortal.Controllers.apis.business;
 
@@ -28,13 +29,27 @@ public class BusinessService(IBusinessRepository businessRepository)
 
       return BaseResponse<Business>.Success(data, "Lấy thông tin thành công");
    }
+
    public async Task<BaseResponse<List<JobPost>>> GetMyJobs(string userId)
    {
       var profile = await _businessRepo.GetByUserId(userId);
+
       if (profile == null) return BaseResponse<List<JobPost>>.Failure("Không tìm thấy doanh nghiệp");
 
       var jobs = await _businessRepo.GetJobsByBusinessId(profile.BusinessID);
 
       return BaseResponse<List<JobPost>>.Success(jobs, "Lấy danh sách tin tuyển dụng thành công");
+   }
+
+   public async Task<BaseResponse<IEnumerable<JobPost>>> GetBusinessJobPost(GetJobPostDTO requestData, string businessID)
+   {
+      if (string.IsNullOrEmpty(requestData.LastPostID))
+      {
+         requestData.LastPostID = null;
+      }
+
+      var jobs = await _businessRepo.GetBusinessJobPosts(requestData.LastPostID, requestData.GetSize, businessID);
+
+      return BaseResponse<IEnumerable<JobPost>>.Success(jobs, "Lấy danh sách tin tuyển dụng thành công");
    }
 }

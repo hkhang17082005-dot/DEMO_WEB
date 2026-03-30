@@ -28,15 +28,13 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
-if (!app.Environment.IsDevelopment())
-{
-   app.UseExceptionHandler("/Home/Error");
-   app.UseHsts();
-}
+app.UseExceptionHandler("/Home/Error");
+app.UseHsts();
 
 // Sử dụng HTTPS
 // app.UseHttpsRedirection();
+
+app.UseMiddleware<ExceptionFilter>();
 
 app.UseStaticFiles();
 
@@ -56,8 +54,6 @@ app.MapControllerRoute(
    name: "default",
    pattern: "{controller=Home}/{action=Index}/{id?}"
 );
-
-app.UseMiddleware<ExceptionFilter>();
 
 app.MapControllers();
 

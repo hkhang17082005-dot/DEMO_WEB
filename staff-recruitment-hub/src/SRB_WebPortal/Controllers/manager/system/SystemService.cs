@@ -19,7 +19,7 @@ public class SystemService(
 
    public async Task<BaseResponse> UpdateUserRole(string userID, UpdateRoleRequest requestData)
    {
-      var cacheTasks = requestData.RoleSlugs.Select(slug => _redisService.GetAsync<int?>(RedisCacheKeys.RoleKey(slug)));
+      var cacheTasks = requestData.RoleSlugs.Select(slug => _redisService.GetAsync<int?>(RedisCacheKeys.RoleIDBySlug(slug)));
       var cachedResults = await Task.WhenAll(cacheTasks);
 
       var roleMap = requestData.RoleSlugs
@@ -39,7 +39,7 @@ public class SystemService(
             {
                roleMap[slug] = roleID;
 
-               _ = _redisService.SetAsync(RedisCacheKeys.RoleKey(slug), roleID);
+               _ = _redisService.SetAsync(RedisCacheKeys.RoleIDBySlug(slug), roleID);
             }
             else
             {

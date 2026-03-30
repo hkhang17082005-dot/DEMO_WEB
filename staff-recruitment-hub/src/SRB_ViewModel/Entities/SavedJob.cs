@@ -12,5 +12,5 @@ public class SavedJob
 
    public virtual User? User { get; set; }
 
-   public virtual Job? Job { get; set; }
+   public virtual JobPost? JobPost { get; set; }
 }

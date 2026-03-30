@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 
+using SRB_WebPortal.Consts;
 using SRB_WebPortal.Shared;
 using SRB_WebPortal.Controllers.apis.auth;
-using SRB_WebPortal.Consts;
 
 namespace SRB_WebPortal.Controllers;
 

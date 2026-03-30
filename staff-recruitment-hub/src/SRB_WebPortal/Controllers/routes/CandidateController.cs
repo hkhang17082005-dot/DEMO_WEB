@@ -31,7 +31,9 @@ namespace SRB_WebPortal.Controllers.routes
       [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
       public IActionResult Error()
       {
-         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+         var requestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+
+         return View(new ErrorViewModel(requestId, 500, "Đã có lỗi xảy ra"));
       }
    }
 }

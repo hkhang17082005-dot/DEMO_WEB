@@ -1,12 +1,14 @@
-﻿@model List<SRB_ViewModel.Entities.Job>
+﻿@using SRB_WebPortal.Controllers.apis.post
+@model List<JobPostDTO>
 @{
    ViewData["Title"] = "Trang chủ";
+
    var savedJobs = ViewBag.SavedJobs as List<int> ?? new List<int>();
 }
 
-<!-- HERO -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<section class="bg-gradient-to-r from-green-900 via-green-700 to-green-500 py-12 text-white relative rounded-3xl">
+
+<section class="bg-linear-to-r from-green-900 via-green-700 to-green-500 py-12 text-white relative rounded-3xl">
 
    <div class="max-w-7xl mx-auto px-4">
 
@@ -21,341 +23,108 @@
       </div>
 
       <div class="relative max-w-5xl mx-auto">
-
-         <!-- SEARCH CONTAINER -->
-         <div
-            class="bg-white rounded-2xl p-2 shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex flex-col md:flex-row gap-2 max-w-5xl mx-auto">
-            <!--Input-->
-            <div
-               class="flex-[1.5] flex items-center px-5 py-3 border-b md:border-b-0 md:border-r border-gray-100 group">
-               <i
-               class="fa-solid fa-magnifying-glass text-emerald-500 mr-3 group-focus-within:scale-110 transition-transform"></i>
-               <input type="text" id="jobSearch" value="@ViewBag.Keyword"
-                      placeholder="Vị trí tuyển dụng, tên công ty..."
-                      class="w-full text-gray-700 outline-none placeholder-gray-400 font-medium text-base">
-            </div>
-            <!--Location-->
-            <div class="flex-1 flex items-center px-5 py-3 group">
-               <i
-               class="fa-solid fa-location-dot text-emerald-500 mr-3 group-focus-within:bounce transition-transform"></i>
-               <div class="relative w-full">
-                  <select id="locationFilter"
-                          class="w-full text-gray-700 outline-none appearance-none font-medium bg-transparent cursor-pointer pr-8">
-                     <option value="">Tất cả địa điểm</option>
-                     @foreach (var location in ViewBag.Locations)
-                     {
-                        <option value="@location.LocationID" selected="@(ViewBag.CurrentLocation == location.LocationID)">
-                           @location.LocationName
-                        </option>
-                     }
-                  </select>
-                  <i
-                  class="fa-solid fa-chevron-down absolute right-0 top-1/2 -translate-y-1/2 text-[10px] text-gray-400 pointer-events-none"></i>
-               </div>
-            </div>
-            <!--button tim kiem -->
-            <button onclick="searchJobs()"
-                    class="bg-orange-500 hover:bg-orange-600 px-12 py-4 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-orange-200 active:scale-95 flex items-center justify-center gap-2">
-               <i class="fa-solid fa-paper-plane"></i>
-               <span>TÌM KIẾM</span>
-            </button>
-         </div>
-
-         <!-- SUGGEST DROPDOWN -->
-         <div id="suggestBox" class="absolute left-0 right-0 bg-white mt-2 rounded-xl shadow-lg hidden z-50">
-
-            <ul id="suggestList" class="divide-y">
-
-               <!-- JS sẽ render -->
-            </ul>
-         </div>
-
+         <partial name="~/Views/Home/Components/_SearchBar.cshtml" />
       </div>
 
       <!-- SUGGEST -->
-      <div class="flex gap-2 justify-center mt-4 flex-wrap">
-         <p class="text-green-100">Gợi ý:</p>
-         <span onclick="selectSuggestion('Nhân viên văn phòng')"
-               class="bg-white text-gray-700 px-3 py-1 rounded-full text-sm cursor-pointer hover:bg-green-100">
-            Nhân viên văn phòng
-         </span>
-         <span onclick="selectSuggestion('Dev frontend')"
-               class="bg-white text-gray-700 px-3 py-1 rounded-full text-sm cursor-pointer hover:bg-green-100">
-            Dev frontend
-         </span>
-         <span onclick="selectSuggestion('Developer')"
-               class="bg-white text-gray-700 px-3 py-1 rounded-full text-sm cursor-pointer hover:bg-green-100">
-            Developer
-         </div>
+      <partial name="~/Views/Home/Components/_SuggestTags.cshtml" />
 
-         <!-- MAIN GRID -->
-         <div class="grid md:grid-cols-3 gap-6 mt-8">
+      <div class="grid md:grid-cols-3 gap-6 mt-8">
+         <partial name="~/Views/Home/Components/_CategorySidebar.cshtml" />
 
-            <!-- SIDEBAR -->
-            <div class="bg-white text-gray-800 rounded-xl p-4 shadow">
-
-               <ul class="space-y-3">
-                  <li class="flex justify-between hover:text-green-600 cursor-pointer">
-                     Kinh doanh/Bán hàng <span>›</span>
-                  </li>
-                  <li class="flex justify-between hover:text-green-600 cursor-pointer">
-                     Marketing/PR/Quảng cáo <span>›</span>
-                  </li>
-                  <li class="flex justify-between hover:text-green-600 cursor-pointer">
-                     Chăm sóc khách hàng <span>›</span>
-                  </li>
-                  <li class="flex justify-between hover:text-green-600 cursor-pointer">
-                     Nhân sự/Hành chính <span>›</span>
-                  </li>
-                  <li class="flex justify-between hover:text-green-600 cursor-pointer">
-                     Công nghệ thông tin <span>›</span>
-                  </li>
-                  <li class="flex justify-between hover:text-green-600 cursor-pointer">
-                     Lao động phổ thông <span>›</span>
-                  </li>
-               </ul>
-            </div>
-            <div class="md:col-span-2">
-
-               <div class="swiper mySwiper rounded-2xl overflow-hidden shadow-lg">
-
-                  <div class="swiper-wrapper">
-
-                     <!-- SLIDE 1 -->
-                     <div class="swiper-slide relative">
-                        <img
-                        src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/banners/sxx8L9RaqTO4T2grC9rfuWMNKVbwI6JJ_1773376141____5f2e1844430b7050e70a42685115a9e0.jpg"
-                        class="w-full h-64 object-cover" />
-                     </div>
-
-                     <!-- SLIDE 2 -->
-                     <div class="swiper-slide">
-                        <img
-                        src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/banners/xEp5eqgt2LiHK5sUhQQPk6GodIG1Jz0Z_1772595560____c97d978be15f7784e1f58f0f63295a9a.jpg"
-                        class="w-full h-64 object-cover" />
-                     </div>
-
-                     <!-- SLIDE 3 -->
-                     <div class="swiper-slide">
-                        <img
-                        src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/banners/M83RcrgYdA4j6zNxizOOfa9vECwc7VnA_1773392799____91dbfa888de36df2f5528bf52177a31f.jpg"
-                        class="w-full h-64 object-cover" />
-                     </div>
-
-                  </div>
-
-                  <!-- DOT -->
-                  <div class="swiper-pagination"></div>
-
-                  <!-- BUTTON -->
-                  <div class="swiper-button-next text-white"></div>
-                  <div class="swiper-button-prev text-white"></div>
-
-               </div>
-            </div>
-
-         </div>
+         <partial name="~/Views/Home/Components/_BannerSlider.cshtml" />
       </div>
-   </section>
+   </div>
+</section>
 
-   <!-- JOB SECTION -->
-   <section class="max-w-7xl mx-auto py-12 px-4">
+<section class="max-w-7xl mx-auto py-12 px-4">
+   <h2 class="text-2xl font-bold text-green-600 mb-6">Việc làm phù h nhất</h2>
 
-      <!-- TITLE -->
-      <div class="flex justify-between items-center mb-6">
-         <h2 class="text-2xl font-bold text-green-600">
-            Việc làm tốt nhất
-         </h2>
-      </div>
+   @await Html.PartialAsync("_JobListPartial")
+</section>
 
-      <!-- JOB LIST -->
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+@section Scripts {
+   <script>
+      new Swiper(".mySwiper", {
+         loop: true,
+         autoplay: {
+            delay: 2500,
+         },
 
-         @foreach (var job in Model)
-         {
-            <div
-               class="bg-white rounded-2xl p-5 shadow-sm border hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group relative">
+         pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+         },
 
-               <!-- ❤️ SAVE -->
-               <button onclick="toggleSave(event, this, @job.JobID)" class="absolute top-4 right-4 text-xl">
-                  <span class="heart">
-                     @(savedJobs.Contains(job.JobID) ? "❤️" : "🤍")
-                  </span>
-               </button>
-
-               <!-- TOP -->
-               <div class="flex gap-4">
-
-                  <!-- LOGO (fake nếu chưa có) -->
-                  <div
-                     class="w-20 h-20 bg-gray-50 border border-gray-100 rounded-2xl flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300 relative overflow-hidden">
-                     <img src="@job.LogoUrl" alt="logo" class="w-full h-full object-cover" />
-                     <div
-                        class="absolute top-0 left-0 bg-red-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-br-lg uppercase">
-                        Hot</div>
-                     </div>
-
-                     <!-- INFO -->
-                     <div class="flex-1">
-
-                        <!-- TITLE -->
-                        <a href="/FindJobByID/GetJobById?id=@job.JobID"
-                           class="font-semibold text-lg text-gray-800 group-hover:text-green-600 line-clamp-2">
-                           @job.Title
-                        </a>
-
-                        <!-- COMPANY -->
-                        <p class="text-gray-500 text-sm mt-1">
-                           @job.CompanyName
-                        </p>
-                     </div>
-                  </div>
-
-                  <!-- SALARY -->
-                  <div class="mt-4 flex items-center justify-between">
-
-                     <p class="text-green-600 font-bold text-base">
-                        💰 @job.Salary
-                     </p>
-
-                     <!-- BADGE
-                     <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-md">
-                        Hot
-                     </span> -->
-                  </div>
-
-                  <!-- TAG -->
-                  <div class="flex flex-wrap gap-2 mt-4">
-
-                     <span class="bg-green-50 text-green-700 px-3 py-1 text-xs rounded-full">
-                        📍 @job.Location?.LocationName
-                     </span>
-
-                     <span class="bg-gray-100 text-gray-600 px-3 py-1 text-xs rounded-full">
-                        💼 @job.JobType
-                     </span>
-
-                  </div>
-
-                  <!-- FOOTER -->
-                  <div class="flex justify-between items-center mt-5 pt-4 border-t">
-
-                     <a href="/FindJobByID/GetJobById?id=@job.JobID" class="text-sm text-green-600 font-medium hover:underline">
-                        Xem chi tiết →
-                     </a>
-
-                     <span class="text-xs text-gray-400">
-                        🔥 Mới
-                     </span>
-
-                  </div>
-
-               </div>
-            }
-
-         </div>
-      </section>
-      <!-- FLOAT BUTTON -->
-      <div class="fixed right-4 bottom-20 flex flex-col gap-3">
-         <button class="bg-green-500 text-white w-12 h-12 rounded-full shadow">💬</button>
-         <button class="bg-green-500 text-white w-12 h-12 rounded-full shadow">👤</button>
-         <button class="bg-green-500 text-white w-12 h-12 rounded-full shadow">✔</button>
-      </div>
-
-      @section Scripts {
-         <script>
-            new Swiper(".mySwiper", {
-               loop: true,
-               autoplay: {
-                  delay: 2500,
-               },
-               pagination: {
-                  el: ".swiper-pagination",
-                  clickable: true,
-               },
-               navigation: {
-                  nextEl: ".swiper-button-next",
-                  prevEl: ".swiper-button-prev",
-               },
-            });
-         </script>
-         <script>
-            function selectSuggestion(value) {
-               document.getElementById("jobSearch").value = value;
-            }
-            function handleSuggest() {
-               let keyword = document.getElementById("jobSearch").value;
-               let box = document.getElementById("suggestBox");
-               let list = document.getElementById("suggestList");
-
-               if (keyword.length < 2) {
-                  box.classList.add("hidden");
-                  return;
-               }
-               // Fake data (sau bạn thay bằng API)
-               let suggestions = [
-                  "Frontend Developer",
-                  "Backend Developer",
-                  "Java Developer",
-                  "Nhân viên văn phòng",
-                  "Marketing Executive"
-               ];
-
-               let filtered = suggestions.filter(x =>
-                  x.toLowerCase().includes(keyword.toLowerCase())
-               );
-
-               list.innerHTML = "";
-
-               filtered.forEach(item => {
-                  let li = document.createElement("li");
-                  li.className = "px-4 py-2 hover:bg-green-50 cursor-pointer";
-                  li.innerText = item;
-
-                  li.onclick = () => {
-                     document.getElementById("jobSearch").value = item;
-                     box.classList.add("hidden");
-                  };
-
-                  list.appendChild(li);
-               });
-
-               box.classList.remove("hidden");
-            }
-            async function toggleSave(event, btn, jobId) {
-               event.stopPropagation();
-
-               const heart = btn.querySelector('.heart');
-               let isSaved = heart.textContent === "❤️";
-
-               const res = await fetch("/api/SavedJob/toggle", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ jobId: jobId })
-               });
-
-               if (res.ok) {
-                  heart.textContent = isSaved ? "🤍" : "❤️";
-               } else {
-                  alert("Bạn cần đăng nhập!");
-               }
-            }
-
-            function searchJobs() {
-               var keyword = document.getElementById("jobSearch").value;
-               var locationId = document.getElementById("locationFilter").value;
-
-               if (keyword === "" && locationId === "") {
-                  alert("Vui lòng nhập từ khóa hoặc chọn địa điểm");
-                  return;
-               }
-
-               var url = "/FindJobByID/Search?";
-
-               if (keyword) url += "keyword=" + encodeURIComponent(keyword);
-               if (locationId) url += (keyword ? "&" : "") + "locationId=" + locationId;
-
-               window.location.href = url;
-            }
-         </script>
+         navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+         },
+      });
+   </script>
+   <script>
+      // Tự động tìm kiếm khi chọn gợi ý
+      function selectSuggestion(value) {
+         document.getElementById("jobSearch").value = value;
+         loadJobs(1);
       }
+
+      function selectSuggestion(value) {
+         document.getElementById("jobSearch").value = value;
+      }
+
+      async function toggleSave(event, btn, jobId) {
+         // Ngăn chặn sự kiện click lan ra thẻ cha
+         event.preventDefault();
+         event.stopPropagation();
+
+         const heartIcon = btn.querySelector('i');
+         const isSaved = heartIcon.classList.contains('fa-solid');
+
+         // Hiệu ứng giao diện tức thì
+         if (isSaved) {
+            heartIcon.classList.replace('fa-solid', 'fa-regular');
+            heartIcon.classList.remove('text-rose-500');
+            heartIcon.classList.add('text-gray-400');
+            btn.classList.remove('bg-rose-50');
+         } else {
+            heartIcon.classList.replace('fa-regular', 'fa-solid');
+            heartIcon.classList.add('text-rose-500');
+            heartIcon.classList.remove('text-gray-400');
+            btn.classList.add('bg-rose-50');
+            // Thêm hiệu ứng nảy nhẹ khi tim đỏ
+            heartIcon.classList.add('animate-bounce-short');
+            setTimeout(() => heartIcon.classList.remove('animate-bounce-short'), 500);
+         }
+
+         try {
+            const res = await fetch("/api/SavedJob/toggle", {
+               method: "POST",
+               headers: { "Content-Type": "application/json" },
+               body: JSON.stringify({ jobId: jobId })
+            });
+
+            if (!res.ok) {
+               // Nếu lỗi (ví dụ 401 Unauthorized), yêu cầu đăng nhập và hoàn tác UI
+               if (res.status === 401) {
+                  alert("Vui lòng đăng nhập để lưu việc làm!");
+                  window.location.href = "/Login"; // Đường dẫn login
+               } else {
+                  throw new Error("Lỗi hệ thống");
+               }
+               throw new Error();
+            }
+         } catch (err) {
+            // Hoàn tác lại icon nếu gọi API thất bại
+            heartIcon.classList.toggle('fa-solid');
+            heartIcon.classList.toggle('fa-regular');
+            heartIcon.classList.toggle('text-rose-500');
+            heartIcon.classList.toggle('text-gray-400');
+         }
+      }
+      // Thay thế hàm searchJobs cũ trong Index.cshtml
+      function reloadjobs() {
+         loadJobs(1); // Gọi hàm AJAX thay vì load lại trang
+      }
+   </script>
+}

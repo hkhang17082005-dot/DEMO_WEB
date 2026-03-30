@@ -2,28 +2,26 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
 using SRB_ViewModel.Data;
+using SRB_WebPortal.Data;
 using SRB_WebPortal.Models;
+
 using SRB_WebPortal.Controllers.apis.auth;
-using SRB_ViewModel;
+using SRB_WebPortal.Shared;
 using SRB_ViewModel.Entities;
 
 namespace SRB_WebPortal.Controllers.routes;
 
 [AuthGuard(Roles = new[] {
-      Roles.BUSINESS_MANAGER,
-      Roles.HIRING_MANAGER,
-      Roles.HR_MANAGER,
-      Roles.INTERVIEWER,
-      Roles.RECRUITER
-   })]
-public class BusinessController : Controller
+   Roles.BUSINESS_MANAGER,
+   Roles.HIRING_MANAGER,
+   Roles.HR_MANAGER,
+   Roles.INTERVIEWER,
+   Roles.RECRUITER
+})]
+public class BusinessController(IShareRepository shareRepository) : Controller
 {
-   private readonly DatabaseContext _context;
+   private readonly IShareRepository _shareRepository = shareRepository;
 
-   public BusinessController(DatabaseContext context)
-   {
-      _context = context;
-   }
    public IActionResult Index()
    {
       // Trang Dashboard tổng quan của Doanh nghiệp
@@ -35,58 +33,38 @@ public class BusinessController : Controller
       // Trang chỉnh sửa thông tin công ty
       return View();
    }
-   public IActionResult PostJob()
+   public async Task<IActionResult> PostJob()
    {
+      var locations = await _shareRepository.GetLocations();
+
+      ViewBag.Locations = locations;
+
       return View();
    }
 
-   [HttpPost]
-   public async Task<IActionResult> PostJob(CreateJobViewModel model)
+   public IActionResult MyJobPost(string? lastPostID = null, int postSize = 10)
    {
-      if (!ModelState.IsValid)
+      var allJobs = JobMock.GetMockJobPosts();
+
+      IEnumerable<JobPost> pagedJobs;
+
+      if (!string.IsNullOrEmpty(lastPostID))
       {
-         return View(model);
+         pagedJobs = [.. allJobs
+            .SkipWhile(j => j.JobPostID != lastPostID)
+            .Skip(1)
+            .Take(postSize)]; ;
+      }
+      else
+      {
+         pagedJobs = allJobs.Take(postSize);
       }
 
-      // Xử lý ghép mức lương từ 2 ô Min và Max thành 1 chuỗi "SalaryRange"
-      string salaryRange = "Thỏa thuận";
-      if (model.MinSalary.HasValue || model.MaxSalary.HasValue)
-      {
-         salaryRange = $"{model.MinSalary:N0} - {model.MaxSalary:N0} VND";
-      }
+      ViewBag.PostSize = postSize;
+      ViewBag.LastID = pagedJobs.LastOrDefault()?.JobPostID;
+      ViewBag.HasNext = allJobs.Count > (allJobs.ToList().FindIndex(j => j.JobPostID == ViewBag.LastID) + 1);
 
-      // Tạo Entity mới để chuẩn bị lưu xuống SQL
-      var newJob = new JobPost
-      {
-         JobPostID = Guid.NewGuid().ToString(), // Tự phát sinh mã ngẫu nhiên
-         Title = model.Title,
-         Description = model.Description,
-         Location = model.Location,
-         SalaryRange = salaryRange,             // Lưu chuỗi lương vừa ghép
-         IsActive = true,                       // Mặc định cho tin hiển thị luôn
-         CreatedAt = DateTime.UtcNow,
-         UpdatedAt = DateTime.UtcNow,
-
-         // TẠM THỜI GẮN CỨNG ID CHO ĐẾN KHI LÀM LOGIN:
-         // Vì ID của bạn là string, nên mình gắn 1 chuỗi tạm.
-         BusinessID = "BUSS_TEMP_01",
-         CreatedByID = "USER_TEMP_01"
-      };
-
-      // Thêm vào DbContext và Lưu
-      _context.JobPosts.Add(newJob);
-      await _context.SaveChangesAsync();
-
-      // Lưu thành công -> Chuyển hướng về trang danh sách
-      return RedirectToAction("MyJobs");
-   }
-
-
-   public IActionResult MyJobs()
-   {
-      var mockJobs = SRB_WebPortal.Data.JobMock.GetMockJobPosts();
-      // Trang quản lý danh sách tin tuyển dụng
-      return View(mockJobs);
+      return View(pagedJobs);
    }
 
    public IActionResult CVList(string jobId)
@@ -116,7 +94,9 @@ public class BusinessController : Controller
    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
    public IActionResult Error()
    {
-      return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+      var requestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+
+      return View(new ErrorViewModel(requestId, 500, "Đã có lỗi xảy ra"));
    }
 
    public IActionResult RegisterBusiness()

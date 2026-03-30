@@ -1,13 +1,8 @@
 namespace SRB_WebPortal.Controllers.payments;
 
-public class PaymentFactory : IPaymentFactory
+public class PaymentFactory(IEnumerable<IPaymentGateway> gateways) : IPaymentFactory
 {
-   private readonly IEnumerable<IPaymentGateway> _gateways;
-
-   public PaymentFactory(IEnumerable<IPaymentGateway> gateways)
-   {
-      _gateways = gateways;
-   }
+   private readonly IEnumerable<IPaymentGateway> _gateways = gateways;
 
    public IPaymentGateway GetGateway(string method)
    {

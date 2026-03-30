@@ -387,19 +387,40 @@ function changeFontSize(v){document.getElementById('cvBody').style.fontSize=v+'p
 function changeLineH(v){document.getElementById('cvBody').style.lineHeight=v;document.getElementById('lineHVal').textContent=parseFloat(v).toFixed(1);}
 
 // Save/Load
-function doSave(){
-  try{
-    var obj={
-      name:document.getElementById('cvNameInput').value,
-      headerHTML:document.getElementById('cvHeader').innerHTML,
-      bodyHTML:document.getElementById('cvBody').innerHTML,
-      paperFF:document.getElementById('cvPaper').style.fontFamily,
-      bodyFS:document.getElementById('cvBody').style.fontSize,
-      bodyLH:document.getElementById('cvBody').style.lineHeight
-    };
-    localStorage.setItem('cvb3',JSON.stringify(obj));
-    showToast('✅ Đã lưu CV thành công!');
-  }catch(e){showToast('❌ Lỗi: '+e.message);}
+function doSave() {
+  try {
+    var cvTitle = document.getElementById('cvNameInput').value?.trim();
+    if (!cvTitle) cvTitle = 'CV chưa đặt tên';
+
+    fetch('/Create_CV/SaveCV', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        title: cvTitle,
+        userId: 'USER_DEMO_01',
+        status: 'Đang dùng'
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        showToast('✅ Đã lưu CV thành công!');
+        setTimeout(function () {
+          window.location.href = '/Create_CV/CV_Management';
+        }, 800);
+      } else {
+        showToast('❌ Lưu CV thất bại!');
+      }
+    })
+    .catch(error => {
+      console.error(error);
+      showToast('❌ Có lỗi khi lưu CV!');
+    });
+  } catch (e) {
+    showToast('❌ Lỗi: ' + e.message);
+  }
 }
 
 function doLoad(){

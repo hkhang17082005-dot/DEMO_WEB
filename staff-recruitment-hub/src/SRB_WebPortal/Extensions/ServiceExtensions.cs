@@ -1,11 +1,12 @@
 using SRB_WebPortal.Services;
 
+using SRB_WebPortal.Shared;
+
 using SRB_WebPortal.Controllers.payments;
 using SRB_WebPortal.Controllers.apis.auth;
 using SRB_WebPortal.Controllers.apis.post;
 using SRB_WebPortal.Controllers.apis.business;
 using SRB_WebPortal.Controllers.manager.system;
-using SRB_WebPortal.Shared;
 
 namespace SRB_WebPortal.Extensions;
 
@@ -15,6 +16,8 @@ public static class ServiceExtensions
    {
       services.AddScoped<IRedisService, RedisService>();
       services.AddScoped<IHashingService, HashingService>();
+
+      services.AddScoped<IBunnyCNDService, BunnyCNDService>();
 
       services.AddScoped<IShareRepository, ShareRepository>();
 
