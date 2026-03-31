@@ -1,9 +1,871 @@
 @{
-   ViewData["Title"] = "Dashboard";
+    ViewData["Title"] = "Quản lý Doanh nghiệp";
+    Layout = "_Layout"; // Giữ layout gốc của bạn, hoặc đổi thành null nếu muốn full-page
 }
 
-<div class="bg-blue-50 p-10 rounded-xl shadow-lg">
-   <h1 class="text-3xl font-bold text-blue-700">Đây là trang Dashboard Business</h1>
-   <p class="mt-4 text-gray-600">Đã chạy Router thành công!</p>
-</div>
+<!-- ════════════════════════════════════════════════
+     GOOGLE FONTS (bỏ nếu _Layout đã có)
+════════════════════════════════════════════════ -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
+<!-- ════════════════════════════════════════════════
+     SCOPED STYLES — prefix .mb- tránh xung đột
+════════════════════════════════════════════════ -->
+<style>
+/* ── RESET SCOPED ── */
+.mb-page *, .mb-page *::before, .mb-page *::after {
+  box-sizing: border-box; margin: 0; padding: 0;
+}
+.mb-page { font-family: 'Be Vietnam Pro', sans-serif; background: #f0faf4; color: #1e293b; position: fixed; inset: 0; overflow: hidden; z-index: 9999; }
+
+/* ── LAYOUT ── */
+.mb-wrap    { display: flex; height: 100vh; width: 100vw; overflow: hidden; }
+.mb-sidebar { width: 240px; background: #e8f7ef; border-right: 1.5px solid #c3e9d5; display: flex; flex-direction: column; flex-shrink: 0; height: 100vh; overflow-y: auto; }
+.mb-main    { flex: 1; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; }
+
+/* ── SIDEBAR ── */
+.mb-sidebar-logo {
+  padding: 24px 20px 18px;
+  border-bottom: 1px solid #c3e9d5;
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none;
+}
+.mb-sidebar-logo-icon {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg,#a855f7,#ec4899);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 800; color: #fff;
+  flex-shrink: 0;
+}
+.mb-sidebar-logo-name { font-size: 15px; font-weight: 700; line-height: 1; }
+.mb-sidebar-logo-name .ln-z { background: linear-gradient(90deg,#a855f7,#ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.mb-sidebar-logo-name .ln-d { color: #0ea5e9; }
+
+.mb-sidebar-section { padding: 16px 16px 5px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #6b9e82; }
+
+.mb-nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 16px; margin: 2px 8px;
+  border-radius: 8px;
+  font-size: 13.5px; font-weight: 500; color: #2d6a4f;
+  text-decoration: none; cursor: pointer;
+  transition: background .15s, color .15s;
+  border: none; background: none; width: calc(100% - 16px); text-align: left;
+}
+.mb-nav-item svg { width: 17px; height: 17px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.mb-nav-item:hover { background: #d1f0e0; color: #00b14f; }
+.mb-nav-item.active { color: #fff; background: linear-gradient(135deg, #a855f7, #ec4899); box-shadow: 0 3px 10px rgba(168,85,247,.3); }
+.mb-nav-badge { margin-left: auto; background: #ef4444; color: #fff; font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 99px; }
+
+.mb-sidebar-footer { margin-top: auto; padding: 16px 12px; border-top: 1px solid #c3e9d5; }
+
+/* ── TOPBAR ── */
+.mb-topbar {
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 0 24px;
+  height: 56px;
+  display: flex; align-items: center; gap: 16px;
+  position: sticky; top: 0; z-index: 100;
+  flex-shrink: 0;
+}
+/* Search */
+.mb-topbar-search {
+  flex: 1; max-width: 360px;
+  display: flex; align-items: center; gap: 8px;
+  background: #f1f5f9; border: 1.5px solid #e2e8f0; border-radius: 9px;
+  padding: 8px 14px; transition: border-color .15s;
+}
+.mb-topbar-search:focus-within { border-color: #00b14f; background: #fff; }
+.mb-topbar-search svg { width: 15px; height: 15px; stroke: #94a3b8; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.mb-topbar-search input { border: none; background: none; font-size: 13px; color: #374151; width: 100%; outline: none; font-family: inherit; }
+/* Right group */
+.mb-topbar-actions { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+/* User chip */
+.mb-user-chip {
+  display: flex; align-items: center; gap: 8px;
+  padding: 5px 12px 5px 5px;
+  border: 1.5px solid #e2e8f0; border-radius: 99px;
+  cursor: pointer; transition: border-color .15s;
+  background: #fff;
+}
+.mb-user-chip:hover { border-color: #00b14f; }
+.mb-user-chip-name { font-size: 13px; font-weight: 600; color: #374151; }
+.mb-user-chip svg { width: 14px; height: 14px; stroke: #94a3b8; fill: none; stroke-width: 2; }
+.mb-avatar {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: linear-gradient(135deg,#a855f7,#ec4899);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 12px; font-weight: 700;
+  flex-shrink: 0;
+}
+/* Icon buttons */
+.mb-icon-btn {
+  position: relative; background: none; border: 1.5px solid #e2e8f0; border-radius: 9px;
+  cursor: pointer; color: #64748b; padding: 7px; display: flex; align-items: center; justify-content: center;
+  transition: border-color .15s, color .15s;
+}
+.mb-icon-btn:hover { border-color: #00b14f; color: #00b14f; }
+.mb-icon-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.mb-bell-dot { position: absolute; top: 4px; right: 4px; width: 7px; height: 7px; background: #ef4444; border-radius: 50%; border: 2px solid #fff; }
+
+/* ── CONTENT ── */
+.mb-content { padding: 28px 32px; }
+
+/* ── SECTION HEADER ── */
+.mb-section-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 18px;
+}
+.mb-section-head h2 { font-size: 16px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px; }
+.mb-section-head h2 svg { width: 18px; height: 18px; stroke: #00b14f; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.mb-section-head h2::before { content: ''; display: block; width: 4px; height: 18px; background: #00b14f; border-radius: 2px; }
+
+/* ── STAT CARDS ── */
+.mb-stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 28px; }
+
+.mb-stat-card {
+  background: #fff; border-radius: 14px; padding: 22px 24px;
+  border: 1px solid #e2e8f0;
+  display: flex; align-items: flex-start; gap: 16px;
+  position: relative; overflow: hidden;
+  animation: mb-fadeup .4s ease both;
+}
+.mb-stat-card:nth-child(2) { animation-delay: .08s; }
+.mb-stat-card:nth-child(3) { animation-delay: .16s; }
+
+@@keyframes mb-fadeup { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+.mb-stat-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; border-radius: 14px 14px 0 0; }
+.mb-stat-card.green::after { background: linear-gradient(90deg, #00b14f, #34d399); }
+.mb-stat-card.blue::after  { background: linear-gradient(90deg, #0ea5e9, #38bdf8); }
+.mb-stat-card.purple::after{ background: linear-gradient(90deg, #a855f7, #ec4899); }
+
+.mb-stat-icon {
+  width: 48px; height: 48px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.mb-stat-icon svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.mb-stat-card.green .mb-stat-icon { background: #e6f9ef; color: #00b14f; }
+.mb-stat-card.blue  .mb-stat-icon { background: #e0f2fe; color: #0ea5e9; }
+.mb-stat-card.purple .mb-stat-icon { background: #f5f3ff; color: #a855f7; }
+
+.mb-stat-body {}
+.mb-stat-label { font-size: 12.5px; color: #64748b; font-weight: 500; margin-bottom: 4px; }
+.mb-stat-value { font-size: 30px; font-weight: 800; color: #0f172a; line-height: 1; }
+.mb-stat-sub   { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+.mb-stat-sub b { color: #00b14f; }
+
+/* ── JOB MANAGEMENT ── */
+.mb-card { background: #fff; border-radius: 14px; border: 1px solid #e2e8f0; margin-bottom: 28px; overflow: hidden; animation: mb-fadeup .5s ease both; animation-delay: .2s; }
+.mb-card-head {
+  padding: 16px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid #f1f5f9;
+}
+.mb-card-head-title { font-size: 15px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px; }
+.mb-card-head-title svg { width: 17px; height: 17px; stroke: #00b14f; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Buttons */
+.mb-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600;
+  cursor: pointer; border: none; font-family: inherit; transition: all .15s;
+  text-decoration: none;
+}
+.mb-btn svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.mb-btn-primary { background: #00b14f; color: #fff; }
+.mb-btn-primary:hover { background: #009a44; }
+.mb-btn-outline { background: #fff; color: #374151; border: 1.5px solid #d1d5db; }
+.mb-btn-outline:hover { border-color: #00b14f; color: #00b14f; }
+.mb-btn-sm { padding: 5px 11px; font-size: 12px; }
+.mb-btn-danger { background: #fee2e2; color: #dc2626; }
+.mb-btn-danger:hover { background: #fecaca; }
+.mb-btn-warning { background: #fef3c7; color: #d97706; }
+.mb-btn-warning:hover { background: #fde68a; }
+.mb-btn-info { background: #e0f2fe; color: #0284c7; }
+.mb-btn-info:hover { background: #bae6fd; }
+
+/* Search bar */
+.mb-toolbar { padding: 14px 24px; display: flex; gap: 10px; align-items: center; border-bottom: 1px solid #f1f5f9; flex-wrap: wrap; }
+.mb-search { display: flex; align-items: center; gap: 8px; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 8px 14px; flex: 1; min-width: 180px; }
+.mb-search svg { width: 15px; height: 15px; stroke: #94a3b8; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.mb-search input { border: none; background: none; font-size: 13px; color: #374151; width: 100%; outline: none; font-family: inherit; }
+.mb-select { padding: 9px 12px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 13px; color: #374151; background: #f8fafc; font-family: inherit; cursor: pointer; outline: none; }
+.mb-select:focus { border-color: #00b14f; }
+
+/* Table */
+.mb-table-wrap { overflow-x: auto; }
+.mb-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.mb-table thead th { background: #f8fafc; font-weight: 600; color: #64748b; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; padding: 12px 20px; text-align: left; border-bottom: 1px solid #e2e8f0; white-space: nowrap; }
+.mb-table tbody tr { border-bottom: 1px solid #f1f5f9; transition: background .12s; }
+.mb-table tbody tr:hover { background: #fafcff; }
+.mb-table tbody td { padding: 14px 20px; vertical-align: middle; }
+
+/* Status badges */
+.mb-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 99px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.mb-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.mb-badge-active   { background: #e6f9ef; color: #00b14f; }
+.mb-badge-closed   { background: #f1f5f9; color: #94a3b8; }
+.mb-badge-expired  { background: #fee2e2; color: #dc2626; }
+.mb-badge-pending  { background: #fef3c7; color: #d97706; }
+.mb-badge-new      { background: #e0f2fe; color: #0284c7; }
+.mb-badge-review   { background: #f5f3ff; color: #7c3aed; }
+.mb-badge-invited  { background: #e6f9ef; color: #00b14f; }
+.mb-badge-rejected { background: #fee2e2; color: #dc2626; }
+.mb-badge-hired    { background: #0f172a; color: #f0fdf4; }
+
+.mb-job-title { font-weight: 600; color: #0f172a; margin-bottom: 3px; }
+.mb-job-meta  { font-size: 12px; color: #94a3b8; }
+
+.mb-action-row { display: flex; gap: 6px; flex-wrap: wrap; }
+
+/* Pagination */
+.mb-pagination { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; border-top: 1px solid #f1f5f9; }
+.mb-page-info { font-size: 12.5px; color: #94a3b8; }
+.mb-page-btns { display: flex; gap: 4px; }
+.mb-page-btn  { width: 32px; height: 32px; border-radius: 7px; border: 1.5px solid #e2e8f0; background: #fff; font-size: 13px; font-weight: 600; color: #374151; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .15s; }
+.mb-page-btn:hover, .mb-page-btn.active { background: #00b14f; border-color: #00b14f; color: #fff; }
+
+/* ── CANDIDATE TABLE ── */
+.mb-cv-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg,#a855f7,#ec4899); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+.mb-cv-info   { display: flex; align-items: center; gap: 10px; }
+.mb-cv-name   { font-weight: 600; color: #0f172a; font-size: 13.5px; }
+.mb-cv-role   { font-size: 12px; color: #94a3b8; }
+
+/* ── PROFILE FORM ── */
+.mb-profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; padding: 24px; }
+.mb-profile-full  { grid-column: 1 / -1; }
+.mb-form-group {}
+.mb-form-label { font-size: 12.5px; font-weight: 700; color: #374151; text-transform: uppercase; letter-spacing: .4px; margin-bottom: 7px; display: block; }
+.mb-form-input, .mb-form-textarea, .mb-form-select {
+  width: 100%; padding: 10px 14px;
+  border: 1.5px solid #e2e8f0; border-radius: 9px;
+  font-size: 13.5px; color: #0f172a; font-family: inherit;
+  background: #f8fafc; outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+.mb-form-input:focus, .mb-form-textarea:focus, .mb-form-select:focus {
+  border-color: #00b14f; background: #fff;
+  box-shadow: 0 0 0 3px rgba(0,177,79,.12);
+}
+.mb-form-textarea { resize: vertical; min-height: 100px; }
+
+.mb-logo-upload {
+  display: flex; align-items: center; gap: 16px; margin-bottom: 18px; padding: 20px 24px;
+  border-bottom: 1px solid #f1f5f9;
+}
+.mb-logo-preview {
+  width: 72px; height: 72px; border-radius: 14px; border: 2px dashed #d1d5db;
+  background: #f8fafc;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  overflow: hidden;
+}
+.mb-logo-preview svg { width: 28px; height: 28px; stroke: #cbd5e1; fill: none; stroke-width: 1.5; }
+.mb-logo-upload-info h4 { font-size: 14px; font-weight: 600; color: #0f172a; margin-bottom: 4px; }
+.mb-logo-upload-info p  { font-size: 12px; color: #94a3b8; margin-bottom: 10px; }
+
+/* ── BENEFIT TAGS ── */
+.mb-benefit-wrap { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 14px; border: 1.5px solid #e2e8f0; border-radius: 9px; background: #f8fafc; }
+.mb-benefit-tag { display: flex; align-items: center; gap: 6px; padding: 5px 12px; background: #e6f9ef; color: #00b14f; border-radius: 99px; font-size: 12px; font-weight: 600; }
+.mb-benefit-tag button { background: none; border: none; cursor: pointer; color: #00b14f; font-size: 14px; line-height: 1; padding: 0; }
+.mb-benefit-add { display: flex; align-items: center; gap: 6px; padding: 5px 12px; border: 1.5px dashed #d1d5db; border-radius: 99px; font-size: 12px; font-weight: 600; color: #94a3b8; cursor: pointer; background: none; font-family: inherit; }
+.mb-benefit-add:hover { border-color: #00b14f; color: #00b14f; }
+
+/* ── PROFILE SAVE ROW ── */
+.mb-profile-actions { padding: 16px 24px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; gap: 10px; }
+
+/* ── TAB NAV ── */
+.mb-tabs { display: flex; gap: 2px; padding: 0 24px; background: #fff; border-bottom: 1px solid #e2e8f0; }
+.mb-tab { padding: 13px 18px; font-size: 13.5px; font-weight: 600; color: #64748b; border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; display: flex; align-items: center; gap: 7px; font-family: inherit; transition: color .15s; }
+.mb-tab svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.mb-tab:hover { color: #00b14f; }
+.mb-tab.active { color: #00b14f; border-bottom-color: #00b14f; }
+.mb-tab-count { background: #e6f9ef; color: #00b14f; font-size: 10px; padding: 1px 6px; border-radius: 99px; }
+
+/* ── RESPONSIVE ── */
+@@media (max-width: 900px) {
+  .mb-sidebar { display: none; }
+  .mb-stat-grid { grid-template-columns: 1fr 1fr; }
+  .mb-profile-grid { grid-template-columns: 1fr; }
+}
+@@media (max-width: 600px) {
+  .mb-content { padding: 18px 16px; }
+  .mb-topbar { padding: 12px 16px; }
+  .mb-stat-grid { grid-template-columns: 1fr; }
+}
+</style>
+
+<!-- ════════════════════════════════════════════════
+     MARKUP
+════════════════════════════════════════════════ -->
+<div class="mb-page">
+  <div class="mb-wrap">
+
+    <!-- ──────────────────
+         SIDEBAR
+    ────────────────── -->
+    <aside class="mb-sidebar">
+      <a href="/" class="mb-sidebar-logo">
+        <div class="mb-sidebar-logo-icon">Z</div>
+        <span class="mb-sidebar-logo-name"><span class="ln-z">Zeion</span> <span class="ln-d">Dev</span></span>
+      </a>
+
+      <span class="mb-sidebar-section">Tổng quan</span>
+      <button class="mb-nav-item active" onclick="showTab('dashboard')">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+      </button>
+
+      <span class="mb-sidebar-section">Quản lý</span>
+      <button class="mb-nav-item" onclick="showTab('jobs')">
+        <svg viewBox="0 0 24 24"><path d="M9 12h6M9 16h6M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/></svg>
+        Tin tuyển dụng
+        <span class="mb-nav-badge">4</span>
+      </button>
+      <button class="mb-nav-item" onclick="showTab('candidates')">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Hồ sơ ứng viên
+        <span class="mb-nav-badge">7</span>
+      </button>
+      <button class="mb-nav-item" onclick="showTab('profile')">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Hồ sơ Công ty
+      </button>
+
+      <span class="mb-sidebar-section">Khác</span>
+      <a href="#" class="mb-nav-item">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Hỗ trợ
+      </a>
+      <a href="#" class="mb-nav-item">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93A10 10 0 1 0 4.93 19.07M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0"/></svg>
+        Cài đặt
+      </a>
+
+      <div class="mb-sidebar-footer">
+        <div class="mb-nav-item" style="color:#ef4444;cursor:pointer;">
+          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+          Đăng xuất
+        </div>
+      </div>
+    </aside>
+
+    <!-- ──────────────────
+         MAIN
+    ────────────────── -->
+    <div class="mb-main">
+
+      <!-- TOPBAR -->
+      <div class="mb-topbar">
+        <!-- Search -->
+        <div class="mb-topbar-search">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" placeholder="Tìm kiếm ứng viên, tin đăng..." />
+        </div>
+
+        <!-- Action buttons + user -->
+        <div class="mb-topbar-actions">
+          <a href="/Create/Index" class="mb-btn mb-btn-primary mb-btn-sm">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Tạo tin đăng
+          </a>
+          <a href="/Create_CV/Index" class="mb-btn mb-btn-outline mb-btn-sm">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Tạo CV doanh nghiệp
+          </a>
+
+          <!-- Bell -->
+          <button class="mb-icon-btn" title="Thông báo">
+            <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span class="mb-bell-dot"></span>
+          </button>
+
+          <!-- Chat -->
+          <button class="mb-icon-btn" title="Tin nhắn">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </button>
+
+          <!-- User chip -->
+          <div class="mb-user-chip">
+            <div class="mb-avatar">FP</div>
+            <span class="mb-user-chip-name">FPT Software</span>
+            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTENT -->
+      <div class="mb-content">
+
+        <!-- ══════════════ DASHBOARD TAB ══════════════ -->
+        <div id="tab-dashboard">
+          <!-- Stat cards -->
+          <div class="mb-stat-grid">
+            <div class="mb-stat-card green">
+              <div class="mb-stat-icon">
+                <svg viewBox="0 0 24 24"><path d="M9 12h6M9 16h6M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/></svg>
+              </div>
+              <div class="mb-stat-body">
+                <div class="mb-stat-label">Tin tuyển dụng đang chạy</div>
+                <div class="mb-stat-value">12</div>
+                <div class="mb-stat-sub"><b>+2</b> so với tuần trước</div>
+              </div>
+            </div>
+            <div class="mb-stat-card blue">
+              <div class="mb-stat-icon">
+                <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              </div>
+              <div class="mb-stat-body">
+                <div class="mb-stat-label">CV chưa đọc</div>
+                <div class="mb-stat-value">7</div>
+                <div class="mb-stat-sub"><b>+7</b> trong hôm nay</div>
+              </div>
+            </div>
+            <div class="mb-stat-card purple">
+              <div class="mb-stat-icon">
+                <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </div>
+              <div class="mb-stat-body">
+                <div class="mb-stat-label">Tổng lượt xem tin</div>
+                <div class="mb-stat-value">4,821</div>
+                <div class="mb-stat-sub"><b>+312</b> trong 7 ngày qua</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick info cards -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:28px;">
+            <!-- Lịch phỏng vấn -->
+            <div class="mb-card" style="margin-bottom:0;">
+              <div class="mb-card-head">
+                <span class="mb-card-head-title">
+                  <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  Lịch phỏng vấn sắp tới
+                </span>
+                <a href="#" class="mb-btn mb-btn-outline mb-btn-sm">Xem tất cả</a>
+              </div>
+              <div style="padding:0 8px;">
+                @foreach (var item in new[] {
+                  new { Name="Nguyễn Văn A", Role="Frontend Developer", Time="Hôm nay, 14:00", Color="#e6f9ef", Tc="#00b14f", Init="VA" },
+                  new { Name="Trần Thị B",   Role="Backend .NET",       Time="Ngày mai, 09:30", Color="#e0f2fe", Tc="#0284c7", Init="TB" },
+                  new { Name="Lê Minh C",    Role="DevOps Engineer",    Time="28/07 – 10:00",  Color="#f5f3ff", Tc="#7c3aed", Init="MC" },
+                })
+                {
+                <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid #f1f5f9;">
+                  <div style="width:38px;height:38px;border-radius:50%;background:@item.Color;color:@item.Tc;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;">@item.Init</div>
+                  <div style="flex:1;">
+                    <div style="font-weight:600;font-size:13.5px;color:#0f172a;">@item.Name</div>
+                    <div style="font-size:12px;color:#94a3b8;">@item.Role</div>
+                  </div>
+                  <div style="text-align:right;">
+                    <div style="font-size:12px;font-weight:600;color:#374151;">@item.Time</div>
+                    <span class="mb-badge mb-badge-invited" style="margin-top:3px;">Phỏng vấn</span>
+                  </div>
+                </div>
+                }
+              </div>
+            </div>
+
+            <!-- CV mới nhất -->
+            <div class="mb-card" style="margin-bottom:0;">
+              <div class="mb-card-head">
+                <span class="mb-card-head-title">
+                  <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  CV mới nộp hôm nay
+                </span>
+                <button class="mb-btn mb-btn-outline mb-btn-sm" onclick="showTab('candidates')">Quản lý</button>
+              </div>
+              <div style="padding:0 8px;">
+                @foreach (var cv in new[] {
+                  new { Name="Phạm Quang D", Role="React Developer", Applied="Senior Frontend", Time="09:14", IsNew=true  },
+                  new { Name="Hoàng Thu E",  Role="Node.js Dev",     Applied="Backend Lead",   Time="10:32", IsNew=true  },
+                  new { Name="Vũ Trọng F",   Role="Data Engineer",   Applied="Senior Backend", Time="11:55", IsNew=false },
+                  new { Name="Đỗ Lan G",     Role="UX/UI Designer",  Applied="Product Design", Time="13:20", IsNew=false },
+                })
+                {
+                <div style="display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid #f1f5f9;">
+                  <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#a855f7,#ec4899);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">@cv.Name.Substring(0,1)@cv.Name.Split(' ').Last().Substring(0,1)</div>
+                  <div style="flex:1;">
+                    <div style="font-weight:600;font-size:13px;color:#0f172a;">@cv.Name</div>
+                    <div style="font-size:12px;color:#94a3b8;">Ứng tuyển: @cv.Applied</div>
+                  </div>
+                  <div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:3px;">
+                    <span style="font-size:11.5px;color:#94a3b8;">@cv.Time</span>
+                    @if (cv.IsNew) { <span class="mb-badge mb-badge-new">Mới</span> } else { <span class="mb-badge mb-badge-review">Đang xem</span> }
+                  </div>
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /tab-dashboard -->
+
+        <!-- ══════════════ JOB TAB ══════════════ -->
+        <div id="tab-jobs" style="display:none;">
+          <div class="mb-card">
+            <div class="mb-card-head">
+              <span class="mb-card-head-title">
+                <svg viewBox="0 0 24 24"><path d="M9 12h6M9 16h6M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/></svg>
+                Quản lý Tin Tuyển Dụng
+              </span>
+              <a href="/Create/Index" class="mb-btn mb-btn-primary">
+                <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Thêm tin mới
+              </a>
+            </div>
+            <div class="mb-toolbar">
+              <div class="mb-search">
+                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" placeholder="Tìm kiếm vị trí, từ khóa..." />
+              </div>
+              <select class="mb-select">
+                <option>Tất cả trạng thái</option>
+                <option>Đang chạy</option>
+                <option>Đã đóng</option>
+                <option>Hết hạn</option>
+                <option>Chờ duyệt</option>
+              </select>
+              <select class="mb-select">
+                <option>Tất cả vị trí</option>
+                <option>Frontend</option>
+                <option>Backend</option>
+                <option>Fullstack</option>
+                <option>DevOps</option>
+              </select>
+            </div>
+            <div class="mb-table-wrap">
+              <table class="mb-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Vị trí & thông tin</th>
+                    <th>Trạng thái</th>
+                    <th>Hạn nộp</th>
+                    <th>Lượt xem</th>
+                    <th>CV nộp</th>
+                    <th>Hành động</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @{
+                    var jobs = new[] {
+                      new { Id=1, Title="Senior Frontend Developer",  Level="Senior",   Status="Đang chạy", Badge="active",  Deadline="31/07/2025", Views=1420, CVs=18 },
+                      new { Id=2, Title="Backend Engineer (.NET Core)",Level="Mid",      Status="Đang chạy", Badge="active",  Deadline="25/07/2025", Views=980,  CVs=11 },
+                      new { Id=3, Title="DevOps / Cloud Engineer",    Level="Senior",   Status="Chờ duyệt", Badge="pending", Deadline="20/08/2025", Views=0,    CVs=0  },
+                      new { Id=4, Title="React Native Developer",     Level="Mid",      Status="Hết hạn",   Badge="expired", Deadline="10/07/2025", Views=760,  CVs=9  },
+                      new { Id=5, Title="Data Engineer (Spark)",      Level="Junior",   Status="Đã đóng",   Badge="closed",  Deadline="01/07/2025", Views=530,  CVs=6  },
+                    };
+                  }
+                  @foreach (var j in jobs)
+                  {
+                  <tr>
+                    <td style="color:#94a3b8;font-size:13px;">@j.Id</td>
+                    <td>
+                      <div class="mb-job-title">@j.Title</div>
+                      <div class="mb-job-meta">@j.Level · FPT Software</div>
+                    </td>
+                    <td><span class="mb-badge mb-badge-@j.Badge">@j.Status</span></td>
+                    <td style="font-size:13px;color:#374151;">@j.Deadline</td>
+                    <td style="font-size:13px;color:#374151;">@j.Views.ToString("N0")</td>
+                    <td style="font-size:13px;color:#374151;font-weight:600;">@j.CVs</td>
+                    <td>
+                      <div class="mb-action-row">
+                        <a href="/FindJobByID/Index?id=@j.Id" class="mb-btn mb-btn-sm mb-btn-info">Xem</a>
+                        <a href="/Create/Edit?id=@j.Id" class="mb-btn mb-btn-sm mb-btn-warning">Sửa</a>
+                        @if (j.Badge == "active") {
+                          <button class="mb-btn mb-btn-sm mb-btn-danger" onclick="confirmClose(@j.Id)">Đóng</button>
+                        } else if (j.Badge == "expired") {
+                          <button class="mb-btn mb-btn-sm mb-btn-outline" onclick="confirmHide(@j.Id)">Ẩn</button>
+                        }
+                      </div>
+                    </td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+            <div class="mb-pagination">
+              <span class="mb-page-info">Hiển thị 1–5 trong tổng số 12 tin</span>
+              <div class="mb-page-btns">
+                <button class="mb-page-btn">‹</button>
+                <button class="mb-page-btn active">1</button>
+                <button class="mb-page-btn">2</button>
+                <button class="mb-page-btn">3</button>
+                <button class="mb-page-btn">›</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /tab-jobs -->
+
+        <!-- ══════════════ CANDIDATE TAB ══════════════ -->
+        <div id="tab-candidates" style="display:none;">
+          <div class="mb-card">
+            <div class="mb-card-head">
+              <span class="mb-card-head-title">
+                <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg>
+                Quản lý Hồ Sơ Ứng Viên
+              </span>
+            </div>
+
+            <!-- Tabs lọc trạng thái -->
+            <div class="mb-tabs">
+              <button class="mb-tab active">
+                <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                Tất cả <span class="mb-tab-count">24</span>
+              </button>
+              <button class="mb-tab">
+                <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                Chưa đọc <span class="mb-tab-count">7</span>
+              </button>
+              <button class="mb-tab">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Đang xem xét
+              </button>
+              <button class="mb-tab">
+                <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
+                Mời phỏng vấn
+              </button>
+              <button class="mb-tab">
+                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                Trúng tuyển
+              </button>
+              <button class="mb-tab">
+                <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                Từ chối
+              </button>
+            </div>
+
+            <div class="mb-toolbar">
+              <div class="mb-search">
+                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" placeholder="Tìm theo tên ứng viên, kỹ năng..." />
+              </div>
+              <select class="mb-select">
+                <option>Tất cả vị trí</option>
+                <option>Senior Frontend Developer</option>
+                <option>Backend Engineer</option>
+                <option>DevOps Engineer</option>
+              </select>
+            </div>
+
+            <div class="mb-table-wrap">
+              <table class="mb-table">
+                <thead>
+                  <tr>
+                    <th>Ứng viên</th>
+                    <th>Ứng tuyển vị trí</th>
+                    <th>Ngày nộp</th>
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @{
+                    var candidates = new[] {
+                      new { Init="VA", Name="Nguyễn Văn A", Skill="5 năm React / Vue",    Role="Senior Frontend Developer",  Date="21/07/2025", Status="Chưa đọc",     Badge="new"      },
+                      new { Init="TB", Name="Trần Thị B",   Skill="3 năm .NET Core",       Role="Backend Engineer (.NET)",    Date="21/07/2025", Status="Chưa đọc",     Badge="new"      },
+                      new { Init="MC", Name="Lê Minh C",    Skill="AWS / GCP / Docker",     Role="DevOps / Cloud Engineer",   Date="20/07/2025", Status="Đang xem xét", Badge="review"   },
+                      new { Init="QD", Name="Phạm Quang D", Skill="React Native 4 năm",    Role="React Native Developer",    Date="19/07/2025", Status="Mời PV",        Badge="invited"  },
+                      new { Init="TH", Name="Hoàng Thu E",  Skill="Node.js / PostgreSQL",  Role="Backend Engineer (.NET)",   Date="18/07/2025", Status="Trúng tuyển",  Badge="hired"    },
+                      new { Init="VF", Name="Vũ Trọng F",   Skill="Spark / Kafka / Python", Role="Data Engineer",            Date="15/07/2025", Status="Từ chối",      Badge="rejected" },
+                    };
+                  }
+                  @foreach (var c in candidates)
+                  {
+                  <tr>
+                    <td>
+                      <div class="mb-cv-info">
+                        <div class="mb-cv-avatar">@c.Init</div>
+                        <div>
+                          <div class="mb-cv-name">@c.Name</div>
+                          <div class="mb-cv-role">@c.Skill</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td style="font-size:13px;color:#374151;max-width:200px;">@c.Role</td>
+                    <td style="font-size:13px;color:#94a3b8;">@c.Date</td>
+                    <td><span class="mb-badge mb-badge-@c.Badge">@c.Status</span></td>
+                    <td>
+                      <div class="mb-action-row">
+                        <a href="/Candidate/Detail" class="mb-btn mb-btn-sm mb-btn-info">Xem CV</a>
+                        <select class="mb-select" style="padding:5px 10px;font-size:12px;">
+                          <option>Đổi trạng thái</option>
+                          <option>Đang xem xét</option>
+                          <option>Mời phỏng vấn</option>
+                          <option>Trúng tuyển</option>
+                          <option>Từ chối</option>
+                        </select>
+                      </div>
+                    </td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+
+            <div class="mb-pagination">
+              <span class="mb-page-info">Hiển thị 1–6 trong tổng số 24 hồ sơ</span>
+              <div class="mb-page-btns">
+                <button class="mb-page-btn">‹</button>
+                <button class="mb-page-btn active">1</button>
+                <button class="mb-page-btn">2</button>
+                <button class="mb-page-btn">3</button>
+                <button class="mb-page-btn">4</button>
+                <button class="mb-page-btn">›</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /tab-candidates -->
+
+        <!-- ══════════════ PROFILE TAB ══════════════ -->
+        <div id="tab-profile" style="display:none;">
+          <div class="mb-card">
+            <div class="mb-card-head">
+              <span class="mb-card-head-title">
+                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                Hồ Sơ Công Ty
+              </span>
+              <span style="font-size:12px;color:#94a3b8;">Cập nhật thông tin để thu hút Developer tốt hơn</span>
+            </div>
+
+            <!-- Logo upload -->
+            <div class="mb-logo-upload">
+              <div class="mb-logo-preview">
+                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+              </div>
+              <div class="mb-logo-upload-info">
+                <h4>Logo công ty</h4>
+                <p>PNG, JPG tối đa 2MB · Khuyến nghị 300×300px</p>
+                <button class="mb-btn mb-btn-outline mb-btn-sm">
+                  <svg viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+                  Tải ảnh lên
+                </button>
+              </div>
+            </div>
+
+            <div class="mb-profile-grid">
+              <div class="mb-form-group">
+                <label class="mb-form-label">Tên công ty</label>
+                <input class="mb-form-input" type="text" value="FPT Software" />
+              </div>
+              <div class="mb-form-group">
+                <label class="mb-form-label">Website</label>
+                <input class="mb-form-input" type="url" value="https://fptsoftware.com" />
+              </div>
+              <div class="mb-form-group">
+                <label class="mb-form-label">Quy mô công ty</label>
+                <select class="mb-form-select">
+                  <option>1 – 50 nhân viên</option>
+                  <option>51 – 200 nhân viên</option>
+                  <option selected>201 – 1000 nhân viên</option>
+                  <option>1000+ nhân viên</option>
+                </select>
+              </div>
+              <div class="mb-form-group">
+                <label class="mb-form-label">Lĩnh vực</label>
+                <select class="mb-form-select">
+                  <option selected>Công nghệ thông tin</option>
+                  <option>Tài chính / Ngân hàng</option>
+                  <option>Thương mại điện tử</option>
+                  <option>Giáo dục</option>
+                </select>
+              </div>
+              <div class="mb-form-group mb-profile-full">
+                <label class="mb-form-label">Địa chỉ văn phòng</label>
+                <input class="mb-form-input" type="text" value="Tòa nhà FPT, Đường Duy Tân, Cầu Giấy, Hà Nội" />
+              </div>
+              <div class="mb-form-group mb-profile-full">
+                <label class="mb-form-label">Mô tả công ty</label>
+                <textarea class="mb-form-textarea" rows="4">FPT Software là công ty công nghệ hàng đầu Việt Nam, chuyên cung cấp các giải pháp phần mềm và dịch vụ CNTT cho khách hàng trên toàn thế giới. Với hơn 20 năm kinh nghiệm và đội ngũ hơn 20,000 kỹ sư...</textarea>
+              </div>
+              <div class="mb-form-group mb-profile-full">
+                <label class="mb-form-label">Chế độ đãi ngộ & Phúc lợi</label>
+                <div class="mb-benefit-wrap" id="benefitWrap">
+                  @foreach (var b in new[]{ "Lương tháng 13","Bảo hiểm sức khỏe","Remote 2 ngày/tuần","Macbook Pro","Stock option","English training","Team building","Free lunch" })
+                  {
+                  <span class="mb-benefit-tag">@b <button onclick="removeBenefit(this)" type="button">×</button></span>
+                  }
+                  <button class="mb-benefit-add" onclick="addBenefit()" type="button">+ Thêm phúc lợi</button>
+                </div>
+              </div>
+              <div class="mb-form-group">
+                <label class="mb-form-label">Email liên hệ tuyển dụng</label>
+                <input class="mb-form-input" type="email" value="hr@fptsoftware.com" />
+              </div>
+              <div class="mb-form-group">
+                <label class="mb-form-label">Điện thoại</label>
+                <input class="mb-form-input" type="tel" value="024 7300 1234" />
+              </div>
+            </div>
+
+            <div class="mb-profile-actions">
+              <button class="mb-btn mb-btn-outline">Hủy thay đổi</button>
+              <button class="mb-btn mb-btn-primary">
+                <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                Lưu thay đổi
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- /tab-profile -->
+
+      </div><!-- /mb-content -->
+    </div><!-- /mb-main -->
+  </div><!-- /mb-wrap -->
+</div><!-- /mb-page -->
+
+<!-- ════════════════════════════════════════════════
+     SCRIPTS (vanilla JS, không cần jQuery)
+════════════════════════════════════════════════ -->
+<script>
+// ── Tab navigation ──
+function showTab(name) {
+  ['dashboard','jobs','candidates','profile'].forEach(t => {
+    document.getElementById('tab-' + t).style.display = (t === name) ? '' : 'none';
+  });
+  document.querySelectorAll('.mb-nav-item').forEach(el => el.classList.remove('active'));
+  const map = { dashboard: 0, jobs: 1, candidates: 2, profile: 3 };
+  document.querySelectorAll('.mb-nav-item')[map[name]]?.classList.add('active');
+}
+
+// ── Sub-tabs (candidate status filter) ──
+document.querySelectorAll('.mb-tab').forEach(btn => {
+  btn.addEventListener('click', function () {
+    document.querySelectorAll('.mb-tab').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+// ── Benefit tags ──
+function removeBenefit(btn) { btn.closest('.mb-benefit-tag').remove(); }
+
+function addBenefit() {
+  const val = prompt('Nhập phúc lợi mới:');
+  if (!val) return;
+  const wrap = document.getElementById('benefitWrap');
+  const addBtn = wrap.querySelector('.mb-benefit-add');
+  const tag = document.createElement('span');
+  tag.className = 'mb-benefit-tag';
+  tag.innerHTML = val + ' <button onclick="removeBenefit(this)" type="button">×</button>';
+  wrap.insertBefore(tag, addBtn);
+}
+
+// ── Confirm dialogs ──
+function confirmClose(id) {
+  if (confirm('Bạn có chắc muốn đóng tin #' + id + ' không? Ứng viên sẽ không thấy tin này nữa.')) {
+    alert('Đã đóng tin #' + id + ' — tích hợp API tại đây!');
+  }
+}
+function confirmHide(id) {
+  if (confirm('Ẩn tin hết hạn #' + id + ' khỏi trang chủ?')) {
+    alert('Đã ẩn tin #' + id + ' — tích hợp API tại đây!');
+  }
+}
+</script>

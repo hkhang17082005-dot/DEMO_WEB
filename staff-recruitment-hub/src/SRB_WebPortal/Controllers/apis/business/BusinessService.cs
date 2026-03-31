@@ -52,4 +52,26 @@ public class BusinessService(IBusinessRepository businessRepository)
 
       return BaseResponse<IEnumerable<JobPost>>.Success(jobs, "Lấy danh sách tin tuyển dụng thành công");
    }
+
+   public async Task<BaseResponse> UpdateStatusApplyJob(UpdateStatusApplyJobDTO formData)
+   {
+      try
+      {
+         var result = await _businessRepo.UpdateApplicationStatusAsync(formData.ApplicationID, formData.Status);
+
+         if (!result)
+         {
+            return BaseResponse.Failure("Không tìm thấy hồ sơ ứng tuyển hoặc cập nhật thất bại!");
+         }
+
+         return BaseResponse.Success("Cập nhật trạng thái ứng viên thành công");
+      }
+      catch (Exception ex)
+      {
+         Console.WriteLine($"Error in UpdateStatusApplyJob: {ex.Message}");
+
+         return BaseResponse.Failure("Đã xảy ra lỗi hệ thống khi cập nhật!");
+      }
+   }
+
 }

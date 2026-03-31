@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
+using SRB_ViewModel.Entities;
+
 namespace SRB_WebPortal.Controllers.apis.business;
 
 public class RegisterBusinessDTO
@@ -38,3 +40,36 @@ public class UpdateBusinessDTO
    public string CompanyName { get; set; } = null!;
    public string? Website { get; set; }
 }
+
+public class JobPostApprovalDTO
+{
+   public required string ApplicationID { get; set; }
+   public required string JobPostID { get; set; }
+   public required string Title { get; set; }
+   public required string UserID { get; set; }
+   public string CandidateName { get; set; } = null!;
+   public string CandidateEmail { get; set; } = null!;
+   public required string CVPath { get; set; }
+   public DateTime AppliedAt { get; set; }
+   public ApplicationStatus Status { get; set; }
+}
+
+public class CVReviewDetailDTO
+{
+   public required string ApplicationID { get; set; }
+   public required string UserID { get; set; }
+   public string FullName { get; set; } = null!;
+   public string Email { get; set; } = null!;
+   public string Phone { get; set; } = null!;
+   public required string JobTitle { get; set; }
+   public required string CVPath { get; set; }
+   public string? CoverLetter { get; set; }
+   public DateTime AppliedAt { get; set; }
+   public ApplicationStatus Status { get; set; }
+   public required string StatusName { get; set; }
+}
+
+public record UpdateStatusApplyJobDTO(
+   string ApplicationID,
+   ApplicationStatus Status
+);

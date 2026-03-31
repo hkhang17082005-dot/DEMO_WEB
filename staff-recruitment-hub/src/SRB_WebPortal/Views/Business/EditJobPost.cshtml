@@ -1,0 +1,316 @@
+@using SRB_ViewModel.Entities
+@using SRB_WebPortal.Controllers.apis.post
+@model JobPostDTO
+@{
+   ViewData["Title"] = "Chỉnh sửa chiến dịch tuyển dụng";
+   Layout = "~/Views/Shared/_BusinessLayout.cshtml";
+}
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+   <div class="mb-6">
+      <nav class="flex items-center text-sm text-gray-500">
+         <a href="/Business/Index" class="hover:text-green-600 transition">Dashboard</a>
+         <i class="fa-solid fa-chevron-right mx-3 text-xs"></i>
+         <a href="/Business/MyJobPost" class="hover:text-green-600 transition">Quản lý chiến dịch</a>
+         <i class="fa-solid fa-chevron-right mx-3 text-xs"></i>
+         <a href="/Business/DetailJobPost?jobPostId=@Model.JobPostID"
+            class="hover:text-green-600 transition">@Model.Title</a>
+         <i class="fa-solid fa-chevron-right mx-3 text-xs"></i>
+         <span class="text-gray-800 font-medium">Chỉnh sửa</span>
+      </nav>
+   </div>
+
+   <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+      <div class="bg-linear-to-r from-green-50 to-emerald-50 px-6 py-6 border-b border-gray-200">
+         <div class="flex items-center gap-3">
+            <i class="fa-solid fa-pen-to-square text-2xl text-green-600"></i>
+            <h1 class="text-2xl font-bold text-gray-900">Chỉnh sửa chiến dịch tuyển dụng</h1>
+         </div>
+         <p class="text-gray-600 mt-2">Cập nhật thông tin chiến dịch tuyển dụng của bạn</p>
+      </div>
+
+      <form id="editJobPostForm" class="p-6 space-y-6">
+         @Html.AntiForgeryToken()
+         <input type="hidden" id="JobPostID" name="JobPostID" value="@Model.JobPostID" />
+
+         <!-- Basic Information -->
+         <div class="space-y-4">
+            <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2 border-b border-gray-200 pb-2">
+               <i class="fa-solid fa-info-circle text-green-600"></i>
+               Thông tin cơ bản
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+               <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                     Tiêu đề chiến dịch <span class="text-red-500">*</span>
+                  </label>
+                  <input type="text" id="Title" name="Title" value="@Model.Title"
+                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                         required maxlength="200">
+               </div>
+
+               <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                     Loại công việc <span class="text-red-500">*</span>
+                  </label>
+                  <select id="JobType" name="JobType"
+                          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                     <option value="FullTime" selected="@@(Model.JobType == " Full-time")">FullTime</option>
+                     <option value="PartTime" selected="@@(Model.JobType == " Part-time")">PartTime</option>
+                     <option value="Contract" selected="@@(Model.JobType == " Contract")">Contract</option>
+                     <option value="Internship" selected="@@(Model.JobType == " Internship")">Internship</option>
+                     <option value="Remote" selected="@@(Model.JobType == " Remote")">Remote</option>
+                     <option value="Freelance" selected="@@(Model.JobType == " Freelance")">Freelance</option>
+                  </select>
+               </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+               <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                     Mức lương <span class="text-red-500">*</span>
+                  </label>
+                  <input type="text" id="SalaryRange" name="SalaryRange" value="@Model.SalaryRange"
+                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                         placeholder="Ví dụ: 10,000,000 - 15,000,000 VND" required>
+               </div>
+
+               <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                     Địa điểm <span class="text-red-500">*</span>
+                  </label>
+                  <input type="text" id="Address" name="Address" value="@Model.Address"
+                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                         required>
+               </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+               <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                     Vị trí làm việc
+                  </label>
+                  <select id="LocationID" name="LocationID"
+                          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                     <option value="">Chọn vị trí làm việc</option>
+                     @if (ViewBag.Locations != null)
+                     {
+                        foreach (var location in (List<Location>)ViewBag.Locations)
+                        {
+                           <option value="@location.LocationID" selected="@(Model.LocationID == location.LocationID)">
+                              @location.LocationName
+                           </option>
+                        }
+                     }
+                  </select>
+               </div>
+
+               <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                     Ngày hết hạn <span class="text-red-500">*</span>
+                  </label>
+                  <input type="date" id="ExpiryDate" name="ExpiryDate" value="@Model.ExpiryDate.ToString("yyyy-MM-dd")"
+                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                         min="@DateTime.Now.ToString("yyyy-MM-dd")" required>
+               </div>
+            </div>
+         </div>
+
+         <!-- Description -->
+         <div class="space-y-4">
+            <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2 border-b border-gray-200 pb-2">
+               <i class="fa-solid fa-align-left text-green-600"></i>
+               Mô tả công việc <span class="text-red-500">*</span>
+            </h2>
+            <textarea id="Description" name="Description" rows="8"
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      placeholder="Mô tả chi tiết về công việc...">@Model.Description</textarea>
+            <p class="text-xs text-gray-500">Hỗ trợ xuống dòng và định dạng văn bản cơ bản</p>
+         </div>
+
+         <!-- Requirements -->
+         <div class="space-y-4">
+            <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2 border-b border-gray-200 pb-2">
+               <i class="fa-solid fa-list-check text-green-600"></i>
+               Yêu cầu ứng viên <span class="text-red-500">*</span>
+            </h2>
+            <textarea id="Requirements" name="Requirements" rows="6"
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      placeholder="Yêu cầu về kinh nghiệm, kỹ năng, bằng cấp...">@Model.Requirements</textarea>
+         </div>
+
+         <!-- Benefits -->
+         <div class="space-y-4">
+            <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2 border-b border-gray-200 pb-2">
+               <i class="fa-solid fa-gift text-green-600"></i>
+               Quyền lợi
+            </h2>
+            <textarea id="Benefits" name="Benefits" rows="4"
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      placeholder="Quyền lợi dành cho ứng viên...">@Model.Benefits</textarea>
+         </div>
+
+         <!-- Form Actions -->
+         <div class="flex justify-end gap-3 pt-6 border-t border-gray-200">
+            <a href="/Business/JobPostDetail?jobPostId=@Model.JobPostID"
+               class="px-6 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition font-medium">
+               Hủy bỏ
+            </a>
+            <button type="submit"
+                    class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition font-medium flex items-center gap-2">
+               <i class="fa-regular fa-save"></i>
+               Lưu thay đổi
+            </button>
+         </div>
+      </form>
+   </div>
+</div>
+
+<script type="module">
+   import postService from '/js/services/postService.js';
+
+   // Form submission handler
+   document.getElementById('editJobPostForm').addEventListener('submit', async function (e) {
+   e.preventDefault();
+
+   // Show loading state
+   const submitBtn = this.querySelector('button[type="submit"]');
+   const originalText = submitBtn.innerHTML;
+   submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
+   submitBtn.disabled = true;
+
+   try {
+   // Get form data
+   const formData = {
+   JobPostID: document.getElementById('JobPostID').value,
+   Title: document.getElementById('Title').value,
+   JobType: document.getElementById('JobType').value,
+   SalaryRange: document.getElementById('SalaryRange').value,
+   Address: document.getElementById('Address').value,
+   LocationID: document.getElementById('LocationID').value || null,
+   ExpiryDate: document.getElementById('ExpiryDate').value,
+   Description: document.getElementById('Description').value,
+   Requirements: document.getElementById('Requirements').value,
+   Benefits: document.getElementById('Benefits').value
+   };
+
+   // Validate form
+   if (!formData.Title.trim()) {
+   alert('Vui lòng nhập tiêu đề chiến dịch');
+   return;
+   }
+   if (!formData.SalaryRange.trim()) {
+   alert('Vui lòng nhập mức lương');
+   return;
+   }
+   if (!formData.Address.trim()) {
+   alert('Vui lòng nhập địa chỉ');
+   return;
+   }
+   if (!formData.Description.trim()) {
+   alert('Vui lòng nhập mô tả công việc');
+   return;
+   }
+   if (!formData.Requirements.trim()) {
+   alert('Vui lòng nhập yêu cầu ứng viên');
+   return;
+   }
+
+   const response = await postService.savePost(formData);
+
+   if (response.isSuccess) {
+   alert('Cập nhật chiến dịch thành công!');
+   } else {
+   alert(result.message || 'Có lỗi xảy ra, vui lòng thử lại!');
+   }
+   } catch (error) {
+   console.error('Error:', error);
+   alert('Có lỗi xảy ra, vui lòng thử lại!');
+   } finally {
+   // Restore button state
+   submitBtn.innerHTML = originalText;
+   submitBtn.disabled = false;
+   }
+   });
+
+   // Toast notification function
+   function showToast(message, type = 'success') {
+   const toast = document.createElement('div');
+   toast.className = `fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg text-white z-50 transition-all duration-300 ${type === 'success' ? 'bg-green-600' : 'bg-red-600'}`;
+   toast.innerHTML = `
+   <div class="flex items-center gap-2">
+   <i class="fa-solid fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+   <span>${message}</span>
+   </div>
+   `;
+   document.body.appendChild(toast);
+
+   setTimeout(() => {
+   toast.style.opacity = '0';
+   setTimeout(() => toast.remove(), 300);
+   }, 3000);
+   }
+
+   // Auto-resize textareas
+   document.querySelectorAll('textarea').forEach(textarea => {
+   textarea.addEventListener('input', function () {
+   this.style.height = 'auto';
+   this.style.height = this.scrollHeight + 'px';
+   });
+
+   // Initial resize
+   setTimeout(() => {
+   textarea.style.height = 'auto';
+   textarea.style.height = textarea.scrollHeight + 'px';
+   }, 0);
+   });
+
+   // Validate expiry date
+   document.getElementById('ExpiryDate').addEventListener('change', function () {
+   const selectedDate = new Date(this.value);
+   const today = new Date();
+   today.setHours(0, 0, 0, 0);
+
+   if (selectedDate < today) {
+   showToast('Ngày hết hạn không thể nhỏ hơn ngày hiện tại', 'error');
+   this.value = '';
+   }
+   });
+</script>
+
+<style>
+   textarea {
+      resize: vertical;
+      min-height: 100px;
+   }
+
+   .transition {
+      transition: all 0.2s ease;
+   }
+
+   input:focus,
+   select:focus,
+   textarea:focus {
+      outline: none;
+   }
+
+   /* Custom scrollbar */
+   textarea::-webkit-scrollbar {
+      width: 8px;
+   }
+
+   textarea::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+   }
+
+   textarea::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 4px;
+   }
+
+   textarea::-webkit-scrollbar-thumb:hover {
+      background: #a8a8a8;
+   }
+</style>

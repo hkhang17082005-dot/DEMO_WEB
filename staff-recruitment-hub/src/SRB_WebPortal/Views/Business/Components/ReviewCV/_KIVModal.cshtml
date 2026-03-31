@@ -1,0 +1,28 @@
+<div id="kivModal" class="fixed inset-0 bg-gray-900/50 modal-overlay flex items-center justify-center z-50 hidden">
+   <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden modal-content">
+      <div class="bg-linear-to-r from-yellow-400 to-orange-400 px-6 py-4 flex justify-between items-center">
+         <h3 class="font-bold text-lg text-white">
+            <i class="fa-regular fa-clock mr-2"></i> Lưu vào danh sách chờ
+         </h3>
+         <button onclick="closeKIVModal()" class="text-white/80 hover:text-white">
+            <i class="fa-solid fa-xmark text-2xl"></i>
+         </button>
+      </div>
+      <div class="p-6">
+         <label class="block text-sm font-medium text-gray-700 mb-2">Ghi chú (Lý do đưa vào KIV)</label>
+         <textarea id="txtKIVReason" rows="3"
+                   class="w-full border border-gray-300 rounded-xl p-3 text-sm focus:ring-2 focus:ring-yellow-400 focus:border-transparent outline-none transition"
+                   placeholder="VD: Cần xem xét thêm, profile tốt nhưng chưa phù hợp thời điểm..."></textarea>
+      </div>
+      <div class="bg-gray-50 px-6 py-4 flex justify-end gap-3">
+         <button onclick="closeKIVModal()"
+                 class="px-5 py-2 bg-white border border-gray-300 rounded-xl text-gray-700 font-medium hover:bg-gray-50 transition">
+            Hủy
+         </button>
+         <button onclick="confirmKIV()"
+                 class="px-5 py-2 bg-linear-to-r from-yellow-400 to-orange-400 text-white rounded-xl font-semibold hover:shadow-lg transition">
+            Xác nhận
+         </button>
+      </div>
+   </div>
+</div>

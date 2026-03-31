@@ -1,12 +1,12 @@
-using SRB_ViewModel.Entities;
+using SRB_ViewModel.Entities; 
 
-namespace SRB_WebPortal.Data;
-
-public static class LocationMock
+namespace SRB_WebPortal.Data
 {
-   public static List<Location> GetLocations()
-   {
-      return new List<Location>
+    public static class LocationDataMock
+    {
+        public static List<Location> GetMockLocations()
+        {
+            return new List<Location>
             {
                 new Location { LocationID = 1, LocationName = "Hà Nội" },
                 new Location { LocationID = 2, LocationName = "TP. Hồ Chí Minh" },
@@ -72,5 +72,6 @@ public static class LocationMock
                 new Location { LocationID = 62, LocationName = "Vĩnh Phúc" },
                 new Location { LocationID = 63, LocationName = "Yên Bái" }
             };
-   }
+        }
+    }
 }

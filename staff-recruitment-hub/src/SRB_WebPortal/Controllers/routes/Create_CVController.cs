@@ -36,7 +36,25 @@ public class Create_CVController(DatabaseContext context) : Controller
    {
       return View("Preview/Index");
    }
+    public async Task<IActionResult> All_CV_Style()
+   {
+      return View("All_CV_Style/Index");
+   }
 
+   public async Task<IActionResult> CVChuyenNghiep()
+   {
+      return View("CVChuyenNghiep/Index");
+   }
+
+   public async Task<IActionResult> Simple_CV()
+   {
+      return View("Simple_CV/Index");
+   }
+
+   public async Task<IActionResult> Modern_CV()
+   {
+      return View("Modern_CV/Index");
+   }
    // ===================== SAVE =====================
 
    // [HttpPost]
@@ -66,4 +84,6 @@ public class Create_CVController(DatabaseContext context) : Controller
    {
       return RedirectToAction("CV_Management");
    }
+
+  
 }

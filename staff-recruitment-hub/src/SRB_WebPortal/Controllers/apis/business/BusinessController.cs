@@ -74,4 +74,12 @@ public class BusinessController(BusinessService businessService) : BaseAPIContro
 
       return HandleResult(result);
    }
+
+   [HttpPost("update-status-apply")]
+   public async Task<IActionResult> UpdateStatusApplyJob([FromBody] UpdateStatusApplyJobDTO formData)
+   {
+      var result = await _businessService.UpdateStatusApplyJob(formData);
+
+      return HandleResult(result);
+   }
 }

@@ -1,0 +1,353 @@
+@using SRB_ViewModel.Entities
+@using SRB_WebPortal.Controllers.apis.post
+@model JobPostDTO
+@{
+   ViewData["Title"] = "Chi tiết chiến dịch tuyển dụng";
+
+   Layout = "~/Views/Shared/_BusinessLayout.cshtml";
+}
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+   <div class="mb-6">
+      <nav class="flex items-center text-sm text-gray-500">
+         <a href="/Business/Index" class="hover:text-green-600 transition">Dashboard</a>
+         <i class="fa-solid fa-chevron-right mx-3 text-xs"></i>
+         <a href="/Business/MyJobPost" class="hover:text-green-600 transition">Quản lý chiến dịch</a>
+         <i class="fa-solid fa-chevron-right mx-3 text-xs"></i>
+         <span class="text-gray-800 font-medium">@Model.Title</span>
+      </nav>
+   </div>
+
+   <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden mb-6">
+      <div class="bg-linear-to-r from-green-50 to-emerald-50 px-6 py-6 border-b border-gray-200">
+         <div class="flex flex-wrap items-start justify-between gap-4">
+            <div class="flex-1">
+               <div class="flex items-center gap-3 mb-3">
+                  <span
+                     class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full uppercase tracking-wide">
+                     Đang hoạt động
+                  </span>
+                  <span class="text-sm text-gray-500">
+                     <i class="fa-regular fa-calendar-alt mr-1"></i>
+                     Ngày đăng: @Model.CreatedAt?.ToString("dd/MM/yyyy")
+                  </span>
+                  <span class="text-sm text-gray-500">
+                     <i class="fa-regular fa-clock mr-1"></i>
+                     Hết hạn: @Model.ExpiryDate.ToString("dd/MM/yyyy")
+                  </span>
+               </div>
+               <h1 class="text-3xl font-bold text-gray-900 mb-2">@Model.Title</h1>
+               <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600">
+                  <span class="flex items-center">
+                     <i class="fa-solid fa-building mr-2 text-gray-400"></i>
+                     @Model.BusinessName
+                  </span>
+                  <span class="flex items-center">
+                     <i class="fa-solid fa-location-dot mr-2 text-gray-400"></i>
+                     @Model.Address
+                  </span>
+                  <span class="flex items-center">
+                     <i class="fa-solid fa-briefcase mr-2 text-gray-400"></i>
+                     @Model.JobType
+                  </span>
+                  <span class="flex items-center">
+                     <i class="fa-solid fa-sack-dollar mr-2 text-gray-400"></i>
+                     @Model.SalaryRange
+                  </span>
+               </div>
+            </div>
+            <div class="flex gap-3">
+               <button onclick="copyLink()"
+                       class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition flex items-center gap-2">
+                  <i class="fa-regular fa-copy"></i>
+                  Sao chép link
+               </button>
+               <a href="/Business/EditJobPost?jobPostId=@Model.JobPostID"
+                  class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition flex items-center gap-2">
+                  <i class="fa-regular fa-pen-to-square"></i>
+                  Chỉnh sửa
+               </a>
+            </div>
+         </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-gray-200">
+         <div class="px-6 py-4 text-center">
+            <p class="text-2xl font-bold text-gray-800">0</p>
+            <p class="text-sm text-gray-500 mt-1">Lượt xem</p>
+         </div>
+         <div class="px-6 py-4 text-center">
+            <a href="/Business/CVList?jobPostId=@Model.JobPostID"
+               class="block hover:bg-gray-50 transition rounded-lg -m-2 p-2">
+               <p class="text-2xl font-bold text-green-600">0</p>
+               <p class="text-sm text-gray-500 mt-1">CV ứng tuyển</p>
+            </a>
+         </div>
+         <div class="px-6 py-4 text-center">
+            <p class="text-2xl font-bold text-gray-800">0</p>
+            <p class="text-sm text-gray-500 mt-1">Ngày còn lại</p>
+         </div>
+      </div>
+   </div>
+
+   <!-- Main Content -->
+   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Left Column - Job Details -->
+      <div class="lg:col-span-2 space-y-6">
+         <!-- Description Card -->
+         <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+               <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                  <i class="fa-solid fa-align-left text-green-600"></i>
+                  Mô tả công việc
+               </h2>
+            </div>
+            <div class="px-6 py-5">
+               <div class="prose max-w-none text-gray-700 leading-relaxed">
+                  @Html.Raw(Model.Description?.Replace("\n", "<br/>"))
+               </div>
+            </div>
+         </div>
+
+         <!-- Requirements Card -->
+         <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+               <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                  <i class="fa-solid fa-list-check text-green-600"></i>
+                  Yêu cầu ứng viên
+               </h2>
+            </div>
+            <div class="px-6 py-5">
+               <div class="prose max-w-none text-gray-700 leading-relaxed">
+                  @Html.Raw(Model.Requirements?.Replace("\n", "<br/>"))
+               </div>
+            </div>
+         </div>
+
+         <!-- Benefits Card -->
+         <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+               <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                  <i class="fa-solid fa-gift text-green-600"></i>
+                  Quyền lợi
+               </h2>
+            </div>
+            <div class="px-6 py-5">
+               <div class="prose max-w-none text-gray-700 leading-relaxed">
+                  @Html.Raw(Model.Benefits?.Replace("\n", "<br/>"))
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <!-- Right Column - Sidebar -->
+      <div class="space-y-6">
+         <!-- Company Info Card -->
+         <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden sticky top-6">
+            <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+               <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                  <i class="fa-solid fa-building text-green-600"></i>
+                  Thông tin công ty
+               </h2>
+            </div>
+            <div class="px-6 py-5">
+               <div class="flex items-center gap-4 mb-4">
+                  @if (!string.IsNullOrEmpty(Model.BusinessLogoURL))
+                  {
+                     <img src="@Model.BusinessLogoURL" alt="@Model.BusinessName"
+                          class="w-16 h-16 rounded-lg object-cover border border-gray-200">
+                  }
+                  else
+                  {
+                     <div
+                        class="w-16 h-16 rounded-lg bg-linear-to-br from-green-100 to-emerald-100 flex items-center justify-center">
+                        <i class="fa-solid fa-building text-2xl text-green-600"></i>
+                     </div>
+                  }
+                  <div>
+                     <h3 class="font-semibold text-gray-800">@Model.BusinessName</h3>
+                     <a href="/Business/Profile" class="text-sm text-green-600 hover:underline">Xem trang công ty</a>
+                  </div>
+               </div>
+            </div>
+         </div>
+
+         <!-- Location Info Card -->
+         <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+               <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                  <i class="fa-solid fa-location-dot text-green-600"></i>
+                  Địa điểm làm việc
+               </h2>
+            </div>
+            <div class="px-6 py-5">
+               <div class="flex items-start gap-3">
+                  <i class="fa-solid fa-map-pin text-green-600 mt-1"></i>
+                  <div>
+                     <p class="text-gray-800 font-medium">@Model.Address</p>
+                     @if (Model.LocationID.HasValue && ViewBag.Locations != null)
+                     {
+                        var location = ((List<Location>)ViewBag.Locations).FirstOrDefault(l => l.LocationID ==
+                     Model.LocationID);
+                        if (location != null)
+                        {
+                           <p class="text-sm text-gray-500 mt-1">@location.LocationName</p>
+                        }
+                     }
+                  </div>
+               </div>
+            </div>
+         </div>
+
+         <!-- Action Buttons -->
+         <div class="flex flex-col gap-3">
+            <a href="/Business/CVList?jobId=@Model.JobPostID"
+               class="w-full px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl font-medium transition text-center">
+               <i class="fa-solid fa-users mr-2"></i>
+               Xem danh sách ứng viên
+            </a>
+            <button onclick="toggleJobStatus('@Model.JobPostID')"
+                    class="w-full px-4 py-3 bg-yellow-50 hover:bg-yellow-100 text-yellow-700 rounded-xl font-medium transition border border-yellow-200">
+               <i class="fa-regular fa-eye-slash mr-2"></i>
+               Tạm ẩn chiến dịch
+            </button>
+            <button onclick="deleteJobPost('@Model.JobPostID')"
+                    class="w-full px-4 py-3 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl font-medium transition border border-red-200">
+               <i class="fa-regular fa-trash-alt mr-2"></i>
+               Xóa chiến dịch
+            </button>
+         </div>
+      </div>
+   </div>
+</div>
+
+<script>
+   // Copy link function
+   function copyLink() {
+      const url = window.location.href;
+      navigator.clipboard.writeText(url).then(() => {
+         showToast('Đã sao chép link thành công!', 'success');
+      }).catch(() => {
+         showToast('Không thể sao chép link', 'error');
+      });
+   }
+
+   // Toggle job status
+   async function toggleJobStatus(jobPostId) {
+      if (confirm('Bạn có chắc chắn muốn thay đổi trạng thái của chiến dịch này?')) {
+         try {
+            // Call API to toggle status
+            const response = await fetch(`/api/JobPosts/${jobPostId}/toggle-status`, {
+               method: 'PUT',
+               headers: {
+                  'Content-Type': 'application/json'
+               }
+            });
+
+            if (response.ok) {
+               showToast('Cập nhật trạng thái thành công!', 'success');
+               setTimeout(() => location.reload(), 1500);
+            } else {
+               showToast('Có lỗi xảy ra, vui lòng thử lại!', 'error');
+            }
+         } catch (error) {
+            console.error('Error:', error);
+            showToast('Có lỗi xảy ra, vui lòng thử lại!', 'error');
+         }
+      }
+   }
+
+   // Delete job post
+   async function deleteJobPost(jobPostId) {
+      if (confirm('Bạn có chắc chắn muốn xóa chiến dịch này? Hành động này không thể hoàn tác!')) {
+         try {
+            const response = await fetch(`/api/JobPosts/${jobPostId}`, {
+               method: 'DELETE'
+            });
+
+            if (response.ok) {
+               showToast('Xóa chiến dịch thành công!', 'success');
+               setTimeout(() => {
+                  window.location.href = '/Business/JobPosts';
+               }, 1500);
+            } else {
+               showToast('Có lỗi xảy ra, vui lòng thử lại!', 'error');
+            }
+         } catch (error) {
+            console.error('Error:', error);
+            showToast('Có lỗi xảy ra, vui lòng thử lại!', 'error');
+         }
+      }
+   }
+
+   // Toast notification
+   function showToast(message, type = 'success') {
+      const toast = document.createElement('div');
+      toast.className = `fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg text-white z-50 transition-all duration-300 ${type === 'success' ? 'bg-green-600' : 'bg-red-600'
+         }`;
+      toast.innerHTML = `
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                <span>${message}</span>
+            </div>
+        `;
+      document.body.appendChild(toast);
+
+      setTimeout(() => {
+         toast.style.opacity = '0';
+         setTimeout(() => toast.remove(), 300);
+      }, 3000);
+   }
+
+   // Calculate days remaining
+   function calculateDaysRemaining(expiryDate) {
+      const today = new Date();
+      const expiry = new Date(expiryDate);
+      const diffTime = expiry - today;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return diffDays > 0 ? diffDays : 0;
+   }
+
+   // Update days remaining display
+   document.addEventListener('DOMContentLoaded', function () {
+      const expiryDate = '@Model.ExpiryDate.ToString("yyyy-MM-dd")';
+      const daysRemaining = calculateDaysRemaining(expiryDate);
+      const daysElement = document.querySelector('.grid > div:last-child .text-2xl');
+
+      if (daysElement) {
+         if (daysRemaining <= 0) {
+            daysElement.textContent = "Đã hết hạn";
+            daysElement.classList.replace('text-2xl', 'text-lg');
+            daysElement.classList.add('text-red-600', 'font-semibold');
+         } else {
+            daysElement.textContent = daysRemaining;
+         }
+      }
+   });
+</script>
+
+<style>
+   .prose {
+      font-size: 0.95rem;
+      line-height: 1.6;
+   }
+
+   .prose p {
+      margin-bottom: 0.75rem;
+   }
+
+   .prose ul,
+   .prose ol {
+      margin-left: 1.5rem;
+      margin-bottom: 0.75rem;
+   }
+
+   .prose li {
+      margin-bottom: 0.25rem;
+   }
+
+   /* Smooth transitions */
+   .transition {
+      transition: all 0.2s ease;
+   }
+</style>

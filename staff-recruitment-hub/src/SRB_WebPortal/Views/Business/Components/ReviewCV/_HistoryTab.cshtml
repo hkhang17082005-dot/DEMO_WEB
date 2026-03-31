@@ -1,0 +1,38 @@
+@using SRB_ViewModel.Entities
+@using SRB_WebPortal.Controllers.apis.business
+@model CVReviewDetailDTO
+
+<div id="history-content" class="flex-1 overflow-y-auto custom-scrollbar hidden">
+   <div class="p-6">
+      <div class="space-y-4">
+         <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center shrink-0">
+               <i class="fa-regular fa-paper-plane text-green-600"></i>
+            </div>
+            <div class="flex-1">
+               <p class="font-medium text-gray-800">Ứng tuyển</p>
+               <p class="text-sm text-gray-500">Đã gửi CV ứng tuyển vào vị trí @Model.JobTitle</p>
+               <p class="text-xs text-gray-400 mt-1">@Model.AppliedAt.ToString("dd/MM/yyyy HH:mm")</p>
+            </div>
+         </div>
+
+         @if (Model.Status != ApplicationStatus.Submitted)
+         {
+            <div class="flex items-start gap-3">
+               <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+                  <i class="fa-regular fa-eye text-blue-600"></i>
+               </div>
+               <div class="flex-1">
+                  <p class="font-medium text-gray-800">Xét duyệt hồ sơ</p>
+                  <p class="text-sm text-gray-500">Hồ sơ đã được xem xét</p>
+                  <p class="text-xs text-gray-400 mt-1">@DateTime.Now.ToString("dd/MM/yyyy HH:mm")</p>
+               </div>
+            </div>
+         }
+
+         <div id="history-timeline">
+            <!-- Dynamic history will be loaded here -->
+         </div>
+      </div>
+   </div>
+</div>

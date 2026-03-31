@@ -1,4 +1,4 @@
-@* @using SRB_ViewModel.Entities
+ @using SRB_ViewModel.Entities
 @model List<JobPost>
 
 @{
@@ -142,7 +142,7 @@
 
                             <div class="flex gap-6">
                                 <div class="w-20 h-20 bg-gray-50 border border-gray-100 rounded-2xl flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300 relative overflow-hidden">
-                                    <img src="@job.LogoUrl" alt="logo" class="w-full h-full object-cover" />
+                                    @*<img src="@job.LogoUrl" alt="logo" class="w-full h-full object-cover" />*@
                                     <div class="absolute top-0 left-0 bg-red-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-br-lg uppercase">Hot</div>
                                 </div>
 
@@ -151,7 +151,7 @@
                                         @job.Title
                                     </h3>
                                     <p class="text-gray-400 font-bold text-sm uppercase tracking-tight flex items-center gap-2">
-                                        @job.CompanyName
+                                        @job.Business.BusinessName
                                         <i class="fa-solid fa-circle-check text-blue-400 text-[10px]" title="Nhà tuyển dụng xác thực"></i>
                                     </p>
 
@@ -163,7 +163,7 @@
                                             <i class="fa-solid fa-briefcase"></i> @job.JobType
                                         </span>
                                         <span class="bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-lg text-xs font-extrabold flex items-center gap-1.5">
-                                            <i class="fa-solid fa-coins"></i> @job.Salary
+                                            <i class="fa-solid fa-coins"></i> @job.SalaryRange
                                         </span>
                                     </div>
                                 </div>
@@ -176,7 +176,7 @@
                                         15/10/2024
                                     </span>
                                 </div>
-                                <a href="/jobs/details/@job.JobID"
+                                <a href="/jobs/details/@job.JobPostID"
                                    class="bg-emerald-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-emerald-700 shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] transition-all active:scale-95">
                                     Ứng tuyển
                                 </a>
@@ -225,4 +225,4 @@ function searchJobs() {
         0%, 100% { transform: translateY(0); }
         50% { transform: translateY(-3px); }
     }
-</style> *@
+</style> 

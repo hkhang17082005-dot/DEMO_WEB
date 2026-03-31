@@ -17,7 +17,8 @@ public class HomeController(
 
    public IActionResult Index()
    {
-      ViewBag.Locations = LocationMock.GetLocations();
+      var locations = _context.Locations.ToList();
+      ViewBag.Locations = locations;
 
       // Logic lưu trạng thái trái tim (Tạm thời để trống hoặc giữ nguyên nếu db SavedJobs đã có)
       ViewBag.SavedJobs = new List<string>();
@@ -36,5 +37,15 @@ public class HomeController(
       var requestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
 
       return View(new ErrorViewModel(requestId, 500, "Đã có lỗi xảy ra"));
+   }
+
+   public async Task<IActionResult> Detail()
+   {
+         return View("Detail/Index");
+   }
+
+   public async Task<IActionResult> PV_ChuyenSau()
+   {
+         return View("PV_ChuyenSau/Index");
    }
 }

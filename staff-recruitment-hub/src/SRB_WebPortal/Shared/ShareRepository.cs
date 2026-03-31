@@ -1,9 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 
 using SRB_ViewModel;
-using SRB_ViewModel.Entities;
 using SRB_WebPortal.Consts;
+using SRB_ViewModel.Entities;
 using SRB_WebPortal.Services;
+
+using SRB_WebPortal.Controllers.apis.business;
+using SRB_ViewModel.Data;
 
 namespace SRB_WebPortal.Shared;
 
@@ -13,6 +16,8 @@ public interface IShareRepository
    Task<int?> GetRoleIDBySlug(string roleSlug);
    Task<IEnumerable<Location>> GetLocations();
    Task<JobPost?> GetJobPost(string jobPostID);
+   Task<IEnumerable<JobPostApprovalDTO>> GetPendingJobPostsAsync(string jobPostID);
+   Task<CVReviewDetailDTO?> GetApplicationDetailAsync(string applicationID);
 }
 
 public class ShareRepository(
@@ -22,6 +27,63 @@ public class ShareRepository(
 {
    private readonly DatabaseContext _context = context;
    private readonly IRedisService _redisService = redisService;
+
+   public async Task<CVReviewDetailDTO?> GetApplicationDetailAsync(string applicationID)
+   {
+      try
+      {
+         return await _context.JobApplications
+            .Include(a => a.JobPost)
+            .Include(a => a.User)
+               .ThenInclude(u => u.UserProfile)
+            .Where(a => a.ApplicationID == applicationID)
+            .Select(a => new CVReviewDetailDTO
+            {
+               ApplicationID = a.ApplicationID,
+               UserID = a.UserID,
+               FullName = (a.User != null && a.User.UserProfile != null) ? a.User.UserProfile.FullName : "Không rõ",
+               Email = (a.User != null && a.User.UserProfile != null) ? a.User.UserProfile.Email : "Không rõ",
+               Phone = (a.User != null && a.User.UserProfile != null) ? a.User.UserProfile.PhoneNumber ?? "Không rõ" : "Không rõ",
+               JobTitle = a.JobPost.Title,
+               CVPath = a.CVPath,
+               CoverLetter = a.CoverLetter,
+               AppliedAt = a.AppliedAt,
+               Status = a.Status,
+               StatusName = JobTypeHelper.GetApplicationStatusName((int)a.Status)
+            })
+            .FirstOrDefaultAsync();
+      }
+      catch (Exception ex)
+      {
+         Console.WriteLine($"Error in GetApplicationDetailAsync: {ex.Message}");
+
+         return null;
+      }
+   }
+
+   public async Task<IEnumerable<JobPostApprovalDTO>> GetPendingJobPostsAsync(string jobPostID)
+   {
+      var pendingApplications = await _context.JobApplications
+         .Include(a => a.User)
+         .ThenInclude(u => u.UserProfile)
+         .Where(a => a.JobPostID == jobPostID && a.Status == ApplicationStatus.Submitted)
+         .OrderByDescending(a => a.AppliedAt)
+         .Select(a => new JobPostApprovalDTO
+         {
+            ApplicationID = a.ApplicationID,
+            JobPostID = a.JobPostID,
+            Title = a.JobPost.Title,
+            UserID = a.UserID,
+            CandidateName = (a.User != null && a.User.UserProfile != null) ? a.User.UserProfile.FullName : "Không rõ",
+            CandidateEmail = (a.User != null && a.User.UserProfile != null) ? a.User.UserProfile.Email : "Không rõ",
+            CVPath = a.CVPath,
+            AppliedAt = a.AppliedAt,
+            Status = a.Status
+         })
+         .ToListAsync();
+
+      return pendingApplications;
+   }
 
    public async Task<JobPost?> GetJobPost(string jobPostID)
    {

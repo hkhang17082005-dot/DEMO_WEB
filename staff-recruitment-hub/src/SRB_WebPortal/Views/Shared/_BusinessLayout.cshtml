@@ -45,15 +45,16 @@
                class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium transition @GetActiveClass("Index")">
                <i class="fa-solid fa-chart-pie w-5 text-center"></i> Bảng tin
             </a>
+
             <a href="/Business/MyJobPost"
                class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium transition @GetActiveClass("MyJobs", "PostJob")">
-               <i class="fa-solid fa-briefcase w-5 text-center"></i> Chiến dịch tuyển dụng
+               <i class="fa-solid fa-briefcase w-5 text-center"></i> Chiến dịch
             </a>
-            
-            @* <a href="/Business/FindCandidates"
-               class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium transition @GetActiveClass("FindCandidates")">
-               <i class="fa-solid fa-briefcase w-5 text-center"></i> Săn nhân tài
-            </a> *@
+
+            <a href="/Business/MyJobPost"
+               class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium transition @GetActiveClass("MyJobs", "PostJob")">
+               <i class="fa-solid fa-circle-check w-5 text-center"></i> Xét duyệt
+            </a>
 
             <div class="pt-6 mt-6 border-t border-gray-100">
                <p class="px-2 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Cài đặt</p>
@@ -76,15 +77,6 @@
                <button class="text-gray-400 hover:text-blue-600 transition">
                   <i class="fa-solid fa-bell text-xl"></i>
                </button>
-               <div class="flex items-center gap-3 pl-6 border-l border-gray-200 cursor-pointer">
-                  <img src="https://ui-avatars.com/api/?name=HR&background=2563eb&color=fff" alt="Avatar"
-                       class="w-9 h-9 rounded-full border border-gray-200 shadow-sm" />
-                  <div>
-                     <p class="text-sm font-bold text-gray-700 leading-tight">HR Manager</p>
-                     <p class="text-xs text-gray-500">Mã: NTD-12345</p>
-                  </div>
-                  <i class="fa-solid fa-chevron-down text-gray-400 text-xs ml-1"></i>
-               </div>
             </div>
          </header>
 

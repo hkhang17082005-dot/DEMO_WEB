@@ -24,9 +24,7 @@
 </div>
 
 <div class="space-y-4">
-   <!-- Chỉ cần một Container trống để JS đổ dữ liệu vào -->
    <div id="jobContainer" class="space-y-4">
-      <!-- Loading spinner hiển thị mặc định khi mới vào trang -->
       <div id="loading" class="text-center py-10">
          <i class="fa-solid fa-circle-notch animate-spin text-3xl text-green-500"></i>
       </div>
@@ -110,7 +108,8 @@
    </div>
 
    <h3 class="text-lg font-bold text-gray-800 hover:text-green-600 transition cursor-pointer mb-2">
-   ${job.title || "Không có tiêu đề"}
+   @* <a href="/business/detail?jobPostId=${job.jobPostID}">${job.title}</a> *@
+   <a href="/Business/DetailJobPost?jobPostId=${job.jobPostID}">${job.title}</a>
    </h3>
 
    <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600">

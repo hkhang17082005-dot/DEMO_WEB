@@ -3,11 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 
 using SRB_ViewModel.Data;
 using SRB_WebPortal.Data;
+using SRB_WebPortal.Shared;
 using SRB_WebPortal.Models;
+using SRB_ViewModel.Entities;
 
 using SRB_WebPortal.Controllers.apis.auth;
-using SRB_WebPortal.Shared;
-using SRB_ViewModel.Entities;
+using SRB_WebPortal.Controllers.apis.post;
 
 namespace SRB_WebPortal.Controllers.routes;
 
@@ -67,28 +68,109 @@ public class BusinessController(IShareRepository shareRepository) : Controller
       return View(pagedJobs);
    }
 
-   public IActionResult CVList(string jobId)
+   public async Task<IActionResult> EditJobPost([FromQuery] string jobPostId)
    {
-      if (string.IsNullOrEmpty(jobId))
+      var foundJobPost = await _shareRepository.GetJobPost(jobPostId);
+
+      if (foundJobPost is null)
       {
-         return RedirectToAction("MyJobs");
+         return NotFound();
       }
 
-      // 1. Tìm tên chiến dịch để hiển thị lên tiêu đề
-      var job = SRB_WebPortal.Data.JobMock.GetMockJobPosts().FirstOrDefault(j => j.JobPostID == jobId);
-      ViewBag.JobTitle = job != null ? job.Title : "Chiến dịch không xác định";
+      var resPost = new JobPostDTO
+      {
+         JobPostID = jobPostId,
+         Title = foundJobPost.Title,
+         BusinessID = foundJobPost.BusinessID,
+         BusinessName = foundJobPost.Business.BusinessName,
+         BusinessLogoURL = foundJobPost.Business.LogoUrl,
+         JobType = foundJobPost.JobType,
+         SalaryRange = foundJobPost.SalaryRange,
+         Description = foundJobPost.Description,
+         Requirements = foundJobPost.Requirements,
+         Benefits = foundJobPost.Benefits,
+         LocationID = foundJobPost.LocationID,
+         Address = foundJobPost.Address,
+         ExpiryDate = foundJobPost.ExpiryDate,
+         CreatedAt = foundJobPost.CreatedAt
+      };
 
-      // 2. Lấy danh sách CV nộp cho đúng cái jobId này
-      var cvList = SRB_WebPortal.Data.JobMock.GetMockApplications(jobId);
+      ViewBag.Locations = await _shareRepository.GetLocations();
 
-      // 3. Truyền danh sách CV ra ngoài Giao diện
+      return View(resPost);
+   }
+
+   public async Task<IActionResult> DetailJobPost([FromQuery] string jobPostId)
+   {
+      var foundJobPost = await _shareRepository.GetJobPost(jobPostId);
+
+      if (foundJobPost is null)
+      {
+         return NotFound();
+      }
+
+      var resPost = new JobPostDTO
+      {
+         JobPostID = jobPostId,
+         Title = foundJobPost.Title,
+         BusinessID = foundJobPost.BusinessID,
+         BusinessName = foundJobPost.Business.BusinessName,
+         BusinessLogoURL = foundJobPost.Business.LogoUrl,
+         JobType = foundJobPost.JobType,
+         SalaryRange = foundJobPost.SalaryRange,
+         Description = foundJobPost.Description,
+         Requirements = foundJobPost.Requirements,
+         Benefits = foundJobPost.Benefits,
+         LocationID = foundJobPost.LocationID,
+         Address = foundJobPost.Address,
+         ExpiryDate = foundJobPost.ExpiryDate,
+         CreatedAt = foundJobPost.CreatedAt
+      };
+
+      ViewBag.Locations = await _shareRepository.GetLocations();
+
+      return View(resPost);
+   }
+
+   public async Task<IActionResult> CVList([FromQuery] string jobPostId)
+   {
+      if (string.IsNullOrWhiteSpace(jobPostId))
+      {
+         return RedirectToAction("MyJobPost");
+      }
+
+      var cvList = await _shareRepository.GetPendingJobPostsAsync(jobPostId);
+
+      var jobPost = await _shareRepository.GetJobPost(jobPostId);
+
+      if (jobPost == null)
+      {
+         TempData["Error"] = "Chiến dịch không tồn tại!";
+         return RedirectToAction("MyJobPost");
+      }
+
+      ViewBag.JobPostId = jobPostId;
+      ViewBag.JobTitle = jobPost.Title;
+
       return View(cvList);
    }
 
-   public IActionResult ReviewCV(int id = 1)
+   public async Task<IActionResult> ReviewCV([FromQuery] string applicationID)
    {
-      // Trang chi tiết chia đôi màn hình để duyệt 1 CV
-      return View();
+      Console.WriteLine($"NQHxLog: {applicationID}");
+
+      if (string.IsNullOrEmpty(applicationID)) return NotFound();
+
+      var cvDetail = await _shareRepository.GetApplicationDetailAsync(applicationID);
+
+      if (cvDetail == null)
+      {
+         TempData["Error"] = "Không tìm thấy hồ sơ ứng viên!";
+
+         return RedirectToAction("MyJobPost");
+      }
+
+      return View(cvDetail);
    }
 
    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -1,0 +1,57 @@
+@using SRB_WebPortal.Controllers.apis.business
+@model CVReviewDetailDTO
+
+<div class="w-4/5 h-full relative flex flex-col">
+   <!-- PDF Viewer Header -->
+   <div class="h-14 bg-gray-800 text-white flex items-center justify-between px-6 border-b border-gray-700 z-10">
+      <div class="flex items-center gap-4">
+         <button onclick="window.close()"
+                 class="text-gray-400 hover:text-white hover:bg-gray-700 p-2 rounded-lg transition" title="Đóng tab">
+            <i class="fa-solid fa-arrow-left text-lg"></i>
+         </button>
+         <div class="h-6 w-px bg-gray-700"></div>
+         <i class="fa-regular fa-file-pdf text-red-400 text-xl"></i>
+         <span class="font-medium text-sm truncate max-w-md">
+            @(Model.CVPath?.Split('/').Last() ?? "CV_Applicant.pdf")
+         </span>
+      </div>
+      <div class="flex gap-2">
+         <a href="@Model.CVPath" download
+            class="text-gray-400 hover:text-white hover:bg-gray-700 p-2 rounded-lg transition" title="Tải xuống">
+            <i class="fa-solid fa-download"></i>
+         </a>
+         <button onclick="window.print()"
+                 class="text-gray-400 hover:text-white hover:bg-gray-700 p-2 rounded-lg transition" title="In CV">
+            <i class="fa-solid fa-print"></i>
+         </button>
+         <button onclick="shareCV()" class="text-gray-400 hover:text-white hover:bg-gray-700 p-2 rounded-lg transition"
+                 title="Chia sẻ">
+            <i class="fa-solid fa-share-alt"></i>
+         </button>
+      </div>
+   </div>
+
+   <!-- PDF Content -->
+   <div class="flex-1 overflow-y-auto p-8 flex justify-center custom-scrollbar pdf-viewer">
+      @if (!string.IsNullOrEmpty(Model.CVPath) && (Model.CVPath.EndsWith(".pdf") || Model.CVPath.Contains("pdf")))
+      {
+         <embed src="@Model.CVPath" type="application/pdf" class="w-full max-w-4xl h-full rounded-lg shadow-2xl"
+                style="min-height: 600px;" />
+      }
+      else if (!string.IsNullOrEmpty(Model.CVPath) && (Model.CVPath.EndsWith(".jpg") || Model.CVPath.EndsWith(".png")
+   || Model.CVPath.EndsWith(".jpeg")))
+      {
+         <img src="@Model.CVPath" alt="CV Image" class="max-w-full h-auto rounded-lg shadow-2xl object-contain" />
+      }
+      else
+      {
+         <div class="flex flex-col items-center justify-center text-gray-400">
+            <i class="fa-regular fa-file-alt text-6xl mb-4"></i>
+            <p class="text-lg">Không thể xem trước CV</p>
+            <a href="@Model.CVPath" download class="mt-4 text-blue-400 hover:text-blue-300 underline">
+               Tải xuống CV
+            </a>
+         </div>
+      }
+   </div>
+</div>

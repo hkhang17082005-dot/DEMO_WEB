@@ -37,7 +37,7 @@ public enum ApplicationStatus
 {
    Submitted = 0,    // Đã nộp
    UnderReview = 1,  // Đang xem xét
-   Interviewing = 2, // Đang phỏng vấn
+   Interviewing = 2, // Chờ phỏng vấn
    Offered = 3,      // Đã mời làm việc
    Rejected = 4,     // Bị từ chối
    Withdrawn = 5     // Ứng viên tự rút đơn
