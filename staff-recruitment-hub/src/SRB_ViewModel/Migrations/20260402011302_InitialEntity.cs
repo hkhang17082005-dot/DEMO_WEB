@@ -149,6 +149,7 @@ namespace SRB_ViewModel.Migrations
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     CreatedByID = table.Column<string>(type: "char(36)", nullable: false),
                     UpdatedByID = table.Column<string>(type: "char(36)", nullable: true),
+                    ExpiryDate = table.Column<DateTime>(type: "datetime2(0)", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     CreatedAt = table.Column<DateTime>(type: "datetime2(0)", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2(0)", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -196,7 +197,7 @@ namespace SRB_ViewModel.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "JobApplication",
+                name: "JobApplications",
                 columns: table => new
                 {
                     ApplicationID = table.Column<string>(type: "char(36)", nullable: false),
@@ -211,15 +212,15 @@ namespace SRB_ViewModel.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_JobApplication", x => x.ApplicationID);
+                    table.PrimaryKey("PK_JobApplications", x => x.ApplicationID);
                     table.ForeignKey(
-                        name: "FK_JobApplication_JobPosts_JobPostID",
+                        name: "FK_JobApplications_JobPosts_JobPostID",
                         column: x => x.JobPostID,
                         principalTable: "JobPosts",
                         principalColumn: "JobPostID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_JobApplication_Users_UserID",
+                        name: "FK_JobApplications_Users_UserID",
                         column: x => x.UserID,
                         principalTable: "Users",
                         principalColumn: "UserID",
@@ -305,6 +306,24 @@ namespace SRB_ViewModel.Migrations
                         principalTable: "Users",
                         principalColumn: "UserID",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Locations",
+                columns: new[] { "LocationID", "LocationName" },
+                values: new object[,]
+                {
+                    { 1, "TP. HCM" },
+                    { 2, "Hà Nội" },
+                    { 3, "Đà Nẵng" },
+                    { 4, "Cần Thơ" },
+                    { 5, "Quảng Ninh" },
+                    { 6, "Hải Phòng" },
+                    { 7, "Đà Lạt" },
+                    { 8, "Huế" },
+                    { 9, "Nha Trang" },
+                    { 10, "Vũng Tàu" },
+                    { 11, "Phú Quốc" }
                 });
 
             migrationBuilder.InsertData(
@@ -417,13 +436,13 @@ namespace SRB_ViewModel.Migrations
                 column: "CreatedByID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_JobApplication_JobPostID",
-                table: "JobApplication",
+                name: "IX_JobApplications_JobPostID",
+                table: "JobApplications",
                 column: "JobPostID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_JobApplication_UserID",
-                table: "JobApplication",
+                name: "IX_JobApplications_UserID",
+                table: "JobApplications",
                 column: "UserID");
 
             migrationBuilder.CreateIndex(
@@ -531,7 +550,7 @@ namespace SRB_ViewModel.Migrations
                 table: "Businesses");
 
             migrationBuilder.DropTable(
-                name: "JobApplication");
+                name: "JobApplications");
 
             migrationBuilder.DropTable(
                 name: "RolePermission");

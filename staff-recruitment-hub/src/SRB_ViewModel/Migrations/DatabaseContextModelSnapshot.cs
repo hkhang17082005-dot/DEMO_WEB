@@ -235,6 +235,63 @@ namespace SRB_ViewModel.Migrations
                     b.HasKey("LocationID");
 
                     b.ToTable("Locations");
+
+                    b.HasData(
+                        new
+                        {
+                            LocationID = 1,
+                            LocationName = "TP. HCM"
+                        },
+                        new
+                        {
+                            LocationID = 2,
+                            LocationName = "Hà Nội"
+                        },
+                        new
+                        {
+                            LocationID = 3,
+                            LocationName = "Đà Nẵng"
+                        },
+                        new
+                        {
+                            LocationID = 4,
+                            LocationName = "Cần Thơ"
+                        },
+                        new
+                        {
+                            LocationID = 5,
+                            LocationName = "Quảng Ninh"
+                        },
+                        new
+                        {
+                            LocationID = 6,
+                            LocationName = "Hải Phòng"
+                        },
+                        new
+                        {
+                            LocationID = 7,
+                            LocationName = "Đà Lạt"
+                        },
+                        new
+                        {
+                            LocationID = 8,
+                            LocationName = "Huế"
+                        },
+                        new
+                        {
+                            LocationID = 9,
+                            LocationName = "Nha Trang"
+                        },
+                        new
+                        {
+                            LocationID = 10,
+                            LocationName = "Vũng Tàu"
+                        },
+                        new
+                        {
+                            LocationID = 11,
+                            LocationName = "Phú Quốc"
+                        });
                 });
 
             modelBuilder.Entity("SRB_ViewModel.Entities.Permission", b =>

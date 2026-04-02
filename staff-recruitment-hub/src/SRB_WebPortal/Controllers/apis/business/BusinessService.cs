@@ -41,7 +41,7 @@ public class BusinessService(IBusinessRepository businessRepository)
       return BaseResponse<List<JobPost>>.Success(jobs, "Lấy danh sách tin tuyển dụng thành công");
    }
 
-   public async Task<BaseResponse<IEnumerable<JobPost>>> GetBusinessJobPost(GetJobPostDTO requestData, string businessID)
+   public async Task<BaseResponse<IEnumerable<JobPostDTO>>> GetBusinessJobPost(GetJobPostDTO requestData, string businessID)
    {
       if (string.IsNullOrEmpty(requestData.LastPostID))
       {
@@ -50,7 +50,7 @@ public class BusinessService(IBusinessRepository businessRepository)
 
       var jobs = await _businessRepo.GetBusinessJobPosts(requestData.LastPostID, requestData.GetSize, businessID);
 
-      return BaseResponse<IEnumerable<JobPost>>.Success(jobs, "Lấy danh sách tin tuyển dụng thành công");
+      return BaseResponse<IEnumerable<JobPostDTO>>.Success(jobs, "Lấy danh sách tin tuyển dụng thành công");
    }
 
    public async Task<BaseResponse> UpdateStatusApplyJob(UpdateStatusApplyJobDTO formData)

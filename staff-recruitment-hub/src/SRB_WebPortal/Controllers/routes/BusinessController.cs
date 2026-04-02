@@ -9,6 +9,8 @@ using SRB_ViewModel.Entities;
 
 using SRB_WebPortal.Controllers.apis.auth;
 using SRB_WebPortal.Controllers.apis.post;
+using SRB_WebPortal.Consts;
+using SRB_WebPortal.Extensions;
 
 namespace SRB_WebPortal.Controllers.routes;
 
@@ -23,9 +25,21 @@ public class BusinessController(IShareRepository shareRepository) : Controller
 {
    private readonly IShareRepository _shareRepository = shareRepository;
 
-   public IActionResult Index()
+   public async Task<IActionResult> Index()
    {
-      // Trang Dashboard tổng quan của Doanh nghiệp
+      var tokenPayload = HttpContext.GetItem<TokenPayload>(ServerKey.CONTEXT_ITEM_TOKEN_INFO);
+
+      if (tokenPayload is null || string.IsNullOrEmpty(tokenPayload.User.BusinessID))
+      {
+         return RedirectToAction("Index");
+      }
+
+      var (ActivePosts, NewCVs, Interviews) = await _shareRepository.GetBusinessDashboardStats(tokenPayload.User.BusinessID);
+
+      ViewBag.ActivePosts = ActivePosts;
+      ViewBag.NewCVs = NewCVs;
+      ViewBag.Interviews = Interviews;
+
       return View();
    }
 
@@ -41,6 +55,13 @@ public class BusinessController(IShareRepository shareRepository) : Controller
       ViewBag.Locations = locations;
 
       return View();
+   }
+
+   public async Task<IActionResult> ApprovedUsers(string? search, string? jobType, string? status)
+   {
+      var users = await _shareRepository.GetApprovedJobPostsAsync(search, jobType, status);
+
+      return View(users);
    }
 
    public IActionResult MyJobPost(string? lastPostID = null, int postSize = 10)
@@ -127,6 +148,10 @@ public class BusinessController(IShareRepository shareRepository) : Controller
          CreatedAt = foundJobPost.CreatedAt
       };
 
+      var (ApprovedCount, TotalApplications) = await _shareRepository.GetJobApplicationStats(jobPostId);
+
+      ViewBag.ApprovedCount = ApprovedCount;
+      ViewBag.TotalApplications = TotalApplications;
       ViewBag.Locations = await _shareRepository.GetLocations();
 
       return View(resPost);

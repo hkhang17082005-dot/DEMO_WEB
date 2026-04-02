@@ -9,6 +9,21 @@ public static class DatabaseInitializer
 {
    public static void InitCoreData(this ModelBuilder modelBuilder)
    {
+      // Seed Locations
+      modelBuilder.Entity<Location>().HasData(
+         new Location { LocationID = 1, LocationName = "TP. HCM" },
+         new Location { LocationID = 2, LocationName = "Hà Nội" },
+         new Location { LocationID = 3, LocationName = "Đà Nẵng" },
+         new Location { LocationID = 4, LocationName = "Cần Thơ" },
+         new Location { LocationID = 5, LocationName = "Quảng Ninh" },
+         new Location { LocationID = 6, LocationName = "Hải Phòng" },
+         new Location { LocationID = 7, LocationName = "Đà Lạt" },
+         new Location { LocationID = 8, LocationName = "Huế" },
+         new Location { LocationID = 9, LocationName = "Nha Trang" },
+         new Location { LocationID = 10, LocationName = "Vũng Tàu" },
+         new Location { LocationID = 11, LocationName = "Phú Quốc" }
+      );
+
       // Seed TypeRole
       modelBuilder.Entity<TypeRole>().HasData(
          new TypeRole { TypeRoleID = 1, TypeName = "System", TypeSlug = RoleTypes.SYSTEM },

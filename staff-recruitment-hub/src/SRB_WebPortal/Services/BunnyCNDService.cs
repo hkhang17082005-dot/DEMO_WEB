@@ -47,7 +47,6 @@ public class BunnyCNDService(
       return BaseResponse<Uri>.Failure($"Lỗi: {response.ReasonPhrase}", HttpStatusCode.BadRequest);
    }
 
-
    public async Task<BaseResponse<Uri>> UploadToBunny(IFormFile file, string folderPath)
    {
       var storageZoneName = _bunnyOptions.Value.StorageZoneName;

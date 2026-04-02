@@ -1,17 +1,7 @@
-<!--
-  ╔══════════════════════════════════════════════════════╗
-  ║  ZEION DEVELOPER — FOOTER (chỉ dán phần này vào)    ║
-  ║  • Toàn bộ CSS dùng prefix .zd-footer               ║
-  ║  → KHÔNG xung đột với CSS trang hiện tại            ║
-  ╚══════════════════════════════════════════════════════╝
--->
-
-<!-- ① FONT (bỏ qua nếu site đã load Google Fonts) -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
-<!-- ② SCOPED STYLES — an toàn 100% -->
 <style>
 /* ── RESET chỉ bên trong .zd-footer ── */
 .zd-footer *, .zd-footer *::before, .zd-footer *::after {
@@ -68,7 +58,7 @@
   font-weight: 700;
   line-height: 1;
 }
-.zd-footer__logo-name .zn-z { 
+.zd-footer__logo-name .zn-z {
   background: linear-gradient(90deg,#a855f7,#ec4899);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -268,14 +258,33 @@
 
     <!-- BRAND -->
     <div class="zd-footer__brand">
-      <a href="/" class="zd-footer__logo">
-        <div class="zd-footer__logo-icon">Z</div>
-        <span class="zd-footer__logo-name">
-          <span class="zn-z">Zeion</span>&nbsp;<span class="zn-d">Developer</span>
-        </span>
-        <span class="zd-footer__logo-spark">✦</span>
-      </a>
-      <p class="zd-footer__tagline">Kết nối lập trình viên – Kiến tạo tương lai</p>
+      <div class="flex flex-col gap-3">
+   <!-- Logo SRB (Phiên bản Footer) -->
+         <a href="/" class="group flex items-center gap-3">
+            <!-- Icon Logo: Giữ nguyên logic hiệu ứng nhưng có thể cho nhỏ lại xíu nếu muốn -->
+            <div class="relative w-9 h-9 flex items-center justify-center bg-green-600 rounded-lg shadow-md shadow-green-100 group-hover:bg-green-500 transition-all duration-500">
+               <span class="text-white text-lg font-black italic">S</span>
+
+               <!-- Hiệu ứng Glow mờ phía sau -->
+               <div class="absolute inset-0 rounded-lg bg-linear-to-tr from-green-400 to-emerald-300 blur-md opacity-0 group-hover:opacity-30 group-hover:scale-150 transition-all duration-500 -z-10"></div>
+            </div>
+
+            <div class="flex flex-col">
+               <div class="flex items-center gap-1">
+                  <span class="text-xl font-black tracking-tight text-gray-700 group-hover:text-green-600 transition-colors">
+                     RB
+                  </span>
+                  <!-- Dấu chấm nhỏ xanh neon -->
+                  <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+               </div>
+            </div>
+         </a>
+
+         <!-- Sửa lại Tagline cho phù hợp với tên mới -->
+         <p class="text-sm text-gray-500 font-medium max-w-62.5 leading-relaxed">
+            <span class="text-green-600 font-semibold">— Kết nối tài năng, kiến tạo giá trị</span>
+         </p>
+      </div>
 
       <div class="zd-footer__badges">
         <span class="zd-footer__badge zd-footer__badge--green">Tech Jobs</span>
@@ -417,4 +426,3 @@
     </div>
   </div>
 </footer>
-<!-- ④ KHÔNG CÓ JS nào — footer hoạt động thuần HTML/CSS -->

@@ -62,41 +62,39 @@ public class PostController(
 
       _ = Task.Run(async () =>
       {
-         using (var scope = _scopeFactory.CreateScope())
+         using var scope = _scopeFactory.CreateScope();
+         var postServiceInsideTask = scope.ServiceProvider.GetRequiredService<IPostService>();
+         var bunnyServiceInsideTask = scope.ServiceProvider.GetRequiredService<IBunnyCNDService>();
+
+         using (ms)
          {
-            var postServiceInsideTask = scope.ServiceProvider.GetRequiredService<IPostService>();
-            var bunnyServiceInsideTask = scope.ServiceProvider.GetRequiredService<IBunnyCNDService>();
-
-            using (ms)
+            try
             {
-               try
-               {
-                  var uploadResult = await bunnyServiceInsideTask.UploadToBunnyRunBackground(ms, requestData.CVFile.FileName, CloudCNDKey.FOLDER_APPLY_JOB_CV);
+               var uploadResult = await bunnyServiceInsideTask.UploadToBunnyRunBackground(ms, requestData.CVFile.FileName, CloudCNDKey.FOLDER_APPLY_JOB_CV);
 
-                  if (uploadResult.IsSuccess)
+               if (uploadResult.IsSuccess)
+               {
+                  var applyJobPost = new JobApplication
                   {
-                     var applyJobPost = new JobApplication
-                     {
-                        ApplicationID = Guid.CreateVersion7().ToString(),
-                        JobPostID = requestData.JobPostID,
-                        UserID = userID,
-                        CVPath = uploadResult?.Data?.ToString() ?? string.Empty,
-                        Status = ApplicationStatus.Submitted,
-                        AppliedAt = DateTime.Now
-                     };
+                     ApplicationID = Guid.CreateVersion7().ToString(),
+                     JobPostID = requestData.JobPostID,
+                     UserID = userID,
+                     CVPath = uploadResult?.Data?.ToString() ?? string.Empty,
+                     Status = ApplicationStatus.Submitted,
+                     AppliedAt = DateTime.Now
+                  };
 
-                     await postServiceInsideTask.ApplyJobPost(applyJobPost);
-                  }
+                  await postServiceInsideTask.ApplyJobPost(applyJobPost);
                }
-               catch (Exception ex)
-               {
-                  Console.WriteLine($"Background Upload Failed for JobID: {requestData.JobPostID} - Error: {ex}");
-               }
+            }
+            catch (Exception ex)
+            {
+               Console.WriteLine($"Background Upload Failed for JobID: {requestData.JobPostID} - Error: {ex}");
             }
          }
       });
 
-      return BaseResponse.Success("Hồ sơ của bạn đang được xử lý!");
+      return BaseResponse.Success("Bài đăng đang được xử lý!");
    }
 
    [HttpPost("save-post")]

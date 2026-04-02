@@ -1,0 +1,58 @@
+<div class="relative group mb-12">
+   <div class="flex items-center gap-3">
+      <button onclick="scrollFilters(-200)" class="
+         shrink-0 hidden md:flex items-center justify-center w-10 h-10 rounded-full
+         bg-white border border-gray-200 shadow-sm text-gray-500 hover:bg-green-500
+         hover:text-white hover:border-green-500 transition-all duration-300
+         ">
+         <i class="fa-solid fa-chevron-left"></i>
+      </button>
+
+      <div id="filterTagsContainer"
+           class="flex flex-nowrap items-center gap-3 overflow-x-auto no-scrollbar scroll-smooth py-2"></div>
+
+      <button onclick="scrollFilters(200)" class="
+         shrink-0 hidden md:flex items-center justify-center w-10 h-10 rounded-full
+         bg-white border border-gray-200 shadow-sm text-gray-500 hover:bg-green-500
+         hover:text-white hover:border-green-500 transition-all duration-300
+         ">
+         <i class="fa-solid fa-chevron-right"></i>
+      </button>
+   </div>
+   <div class="absolute inset-y-0 left-12 w-8 bg-linear-to-r from-gray-50/50 to-transparent pointer-events-none"></div>
+   <div class="absolute inset-y-0 right-12 w-8 bg-linear-to-l from-gray-50/50 to-transparent pointer-events-none"></div>
+</div>
+
+<script>
+   function updateFilterTags() {
+      const type = document.getElementById("filterType").value;
+      const container = document.getElementById("filterTagsContainer");
+      const items = filterData[type];
+
+      if (!items) return;
+
+      container.innerHTML = items.map(item => `
+         <button type="button"
+            onclick="applyQuickFilter('${item.id}', '${type}', this)"
+            class="
+            shrink-0 filter-pill px-4 py-2 rounded-full border border-gray-100 bg-gray-50 text-gray-600
+            text-sm font-medium whitespace-nowrap hover:border-green-500 hover:text-green-600 transition-all
+            "> ${item.name}
+         </button>
+      `).join('');
+
+      @* const firstBtn = container.querySelector('button');
+      if (firstBtn) {
+         applyQuickFilter(items[0].id, type, firstBtn);
+      } *@
+   }
+
+   function scrollFilters(distance) {
+      const container = document.getElementById('filterTagsContainer');
+
+      container.scrollBy({
+         left: distance,
+         behavior: 'smooth'
+      });
+   }
+</script>

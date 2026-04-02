@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SRB_ViewModel;
 using SRB_ViewModel.Data;
 using SRB_ViewModel.Entities;
+using SRB_WebPortal.Controllers.apis.post;
 using SRB_WebPortal.Shared;
 
 namespace SRB_WebPortal.Controllers.apis.business;
@@ -17,7 +18,7 @@ public interface IBusinessRepository
 
    Task<bool> ExistingUserBusiness(string userID);
 
-   Task<IEnumerable<JobPost>> GetBusinessJobPosts(string? lastPostID, int postSize, string businessID);
+   Task<IEnumerable<JobPostDTO>> GetBusinessJobPosts(string? lastPostID, int postSize, string businessID);
 
    Task<bool> UpdateApplicationStatusAsync(string applicationId, ApplicationStatus status);
 }
@@ -117,25 +118,42 @@ public class BusinessRepository(
          .ToListAsync();
    }
 
-   public async Task<IEnumerable<JobPost>> GetBusinessJobPosts(string? lastPostID, int postSize, string businessID)
+   public async Task<IEnumerable<JobPostDTO>> GetBusinessJobPosts(string? lastPostID, int postSize, string businessID)
    {
       try
       {
          var query = _context.JobPosts
             .AsNoTracking()
-            .Where(j => j.BusinessID == businessID)
-            .OrderByDescending(j => j.CreatedAt);
+            .Where(j => j.BusinessID == businessID);
 
          if (!string.IsNullOrEmpty(lastPostID))
          {
             var lastPost = await _context.JobPosts.FindAsync(lastPostID);
             if (lastPost != null)
             {
-               query = (IOrderedQueryable<JobPost>)query.Where(j => j.CreatedAt < lastPost.CreatedAt);
+               query = query.Where(j => j.CreatedAt < lastPost.CreatedAt);
             }
          }
 
-         return await query.Take(postSize).ToListAsync();
+         return await query
+            .OrderByDescending(j => j.CreatedAt)
+            .Take(postSize)
+            .Select(j => new JobPostDTO
+            {
+               JobPostID = j.JobPostID,
+               Title = j.Title,
+               BusinessID = j.BusinessID,
+               JobType = j.JobType,
+               SalaryRange = j.SalaryRange,
+               LocationID = j.LocationID,
+               Address = j.Address,
+               ExpiryDate = j.ExpiryDate,
+               CreatedAt = j.CreatedAt,
+
+               TotalApplications = _context.JobApplications.Count(a => a.JobPostID == j.JobPostID),
+               ApprovedCount = _context.JobApplications.Count(a => a.JobPostID == j.JobPostID && a.Status != ApplicationStatus.Submitted)
+            })
+            .ToListAsync();
       }
       catch (Exception ex)
       {

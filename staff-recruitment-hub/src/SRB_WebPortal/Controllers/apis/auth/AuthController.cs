@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SRB_ViewModel.Data;
 using SRB_WebPortal.Consts;
 using SRB_WebPortal.Extensions;
+using SRB_WebPortal.Shared;
 
 namespace SRB_WebPortal.Controllers.apis.auth;
 
@@ -14,7 +15,10 @@ public static class CookieKeys
 
 [ApiController]
 [Route("api/[controller]")]
-public class AuthController(IAuthService authService, IServiceScopeFactory serviceScopeFactory) : BaseAPIController
+public class AuthController(
+   IAuthService authService,
+   IServiceScopeFactory serviceScopeFactory
+) : BaseAPIController
 {
    private readonly IAuthService _authService = authService;
    private readonly IServiceScopeFactory _scopeFactory = serviceScopeFactory;
@@ -103,34 +107,56 @@ public class AuthController(IAuthService authService, IServiceScopeFactory servi
       return HandleResult(result);
    }
 
-   [IgnoreAntiforgeryToken]
    [HttpPost("create-profile")]
-   public IActionResult CreateProfile([FromBody] CreateProfileDTO formData)
+   public async Task<BaseResponse> CreateProfile([FromForm] CreateProfileDTO formData)
    {
-      if (!ModelState.IsValid)
-         return BadRequest(ModelState);
+      if (!ModelState.IsValid || string.IsNullOrEmpty(CurrentUserID))
+         return BaseResponse.BadRequest("Dữ liệu không hợp lệ");
 
-      if (HttpContext.Items[ServerKey.CONTEXT_ITEM_TOKEN_INFO] is not TokenPayload tokenPayload)
-         return Unauthorized();
+      var userID = CurrentUserID;
 
-      string userID = tokenPayload.User.UserID;
+      // Copy stream của file ra bộ nhớ trước khi Request kết thúc
+      Stream? avatarStream = null;
+      string? avatarName = null;
+      if (formData.AvatarFile != null)
+      {
+         avatarStream = new MemoryStream();
+         await formData.AvatarFile.CopyToAsync(avatarStream);
+         avatarStream.Position = 0;
+         avatarName = formData.AvatarFile.FileName;
+      }
 
+      Stream? cvStream = null;
+      string? cvName = null;
+      if (formData.CVFile != null)
+      {
+         cvStream = new MemoryStream();
+         await formData.CVFile.CopyToAsync(cvStream);
+         cvStream.Position = 0;
+
+         cvName = formData.CVFile.FileName;
+      }
+
+      // Chạy ngầm an toàn
       _ = Task.Run(async () =>
       {
-         // Tạo một Scope mới tách biệt hoàn toàn với Request hiện tại
          using var scope = _scopeFactory.CreateScope();
          try
          {
-            var scopedAuthService = scope.ServiceProvider.GetRequiredService<IAuthService>();
-
-            await scopedAuthService.HandleCreateProfileAsync(formData, userID);
+            var authService = scope.ServiceProvider.GetRequiredService<IAuthService>();
+            await authService.HandleCreateProfileAsync(formData, userID, avatarStream, avatarName, cvStream, cvName);
          }
          catch (Exception ex)
          {
-            Console.WriteLine($"Lỗi chạy ngầm: {ex.Message}");
+            Console.WriteLine($"[Background Error]: {ex.Message}");
+         }
+         finally
+         {
+            avatarStream?.Dispose();
+            cvStream?.Dispose();
          }
       });
 
-      return Ok(new { message = "Hồ sơ đang được xử lý!" });
+      return BaseResponse.Success("Hồ sơ của bạn đang được xử lý!");
    }
 }

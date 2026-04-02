@@ -58,7 +58,6 @@ public class CreateProfileDTO
    public string? Summary { get; set; }
 
    public IFormFile? CVFile { get; set; }
-
 }
 
 public class UserMeResponse

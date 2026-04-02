@@ -188,30 +188,23 @@ public class AuthRepository(DatabaseContext context) : IAuthRepository
       }
    }
 
-   public async Task SaveProfile(CreateProfileDTO profileDTO, string userID, string? avatarURL, string? cvURL)
+   public async Task SaveProfile(CreateProfileDTO data, string userID, string? avatarURL, string? cvURL)
    {
-      try
+      var profile = new UserProfile
       {
-         var newUserProfile = new UserProfile
-         {
-            UserID = userID,
-            FullName = profileDTO.FullName,
-            Email = profileDTO.Email,
-            PhoneNumber = profileDTO.PhoneNumber,
-            Summary = profileDTO.Summary,
-            CVPath = cvURL,
-            AvatarURL = avatarURL,
-            Gender = profileDTO.Gender,
-            Birthday = profileDTO.Birthday,
-            Address = profileDTO.Address
-         };
+         UserID = userID,
+         FullName = data.FullName,
+         Email = data.Email,
+         PhoneNumber = data.PhoneNumber,
+         Summary = data.Summary,
+         CVPath = cvURL,
+         AvatarURL = avatarURL,
+         Gender = data.Gender,
+         Birthday = data.Birthday,
+         Address = data.Address
+      };
 
-         await _context.UserProfiles.AddAsync(newUserProfile);
-         await _context.SaveChangesAsync();
-      }
-      catch (Exception ex)
-      {
-         Console.Error.WriteLine($"Error in Create New UserProfile: {ex.Message}");
-      }
+      await _context.UserProfiles.AddAsync(profile);
+      await _context.SaveChangesAsync();
    }
 }

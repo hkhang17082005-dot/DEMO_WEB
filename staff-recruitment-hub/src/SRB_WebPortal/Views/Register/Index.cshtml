@@ -56,9 +56,10 @@
                <label for="username" class="block mb-1 text-sm font-medium text-gray-700">
                   Tên đăng nhập
                </label>
-               <input type="text" id="username" name="username" required
-                      class="w-full px-4 py-3 transition-all duration-200 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-400 placeholder:text-sm "
-                      placeholder="Tên đăng nhập">
+               <input type="text" id="username" name="username" required class="
+               w-full px-4 py-3 transition-all duration-200 border border-gray-200 rounded-lg
+               focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-400 placeholder:text-sm
+               " placeholder="Tên đăng nhập">
             </div>
 
             <!-- Password Field -->
@@ -66,9 +67,10 @@
                <label for="password" class="block mb-1 text-sm font-medium text-gray-700">
                   Mật khẩu
                </label>
-               <input type="password" id="password" name="password" required
-                      class="w-full px-4 py-3 transition-all duration-200 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-400 placeholder:text-sm"
-                      placeholder="Tối thiểu 8 ký tự">
+               <input type="password" id="password" name="password" required class="
+               w-full px-4 py-3 transition-all duration-200 border border-gray-200 rounded-lg
+               focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-400 placeholder:text-sm
+               " placeholder="Tối thiểu 8 ký tự">
             </div>
 
             <!-- Confirm Password Field -->
@@ -76,37 +78,37 @@
                <label for="confirmPassword" class="block mb-1 text-sm font-medium text-gray-700">
                   Xác nhận mật khẩu
                </label>
-               <input type="password" id="confirmPassword" name="confirmPassword" required
-                      class="w-full px-4 py-3 transition-all duration-200 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-400 placeholder:text-sm"
-                      placeholder="Nhập lại mật khẩu">
+               <input type="password" id="confirmPassword" name="confirmPassword" required class="
+               w-full px-4 py-3 transition-all duration-200 border border-gray-200 rounded-lg
+               focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-400 placeholder:text-sm
+               " placeholder="Nhập lại mật khẩu">
             </div>
          </div>
 
-         <!-- Password Strength Indicator -->
          <div class="space-y-2">
             <div class="flex h-1 gap-1">
-               <div class="flex-1 bg-gray-200 rounded-l-full"></div>
-               <div class="flex-1 bg-gray-200"></div>
-               <div class="flex-1 bg-gray-200"></div>
-               <div class="flex-1 bg-gray-200 rounded-r-full"></div>
+               <div id="bar1" class="flex-1 bg-gray-200 rounded-l-full transition-all"></div>
+               <div id="bar2" class="flex-1 bg-gray-200 transition-all"></div>
+               <div id="bar3" class="flex-1 bg-gray-200 transition-all"></div>
+               <div id="bar4" class="flex-1 bg-gray-200 rounded-r-full transition-all"></div>
             </div>
-            <p class="text-xs text-gray-400">Mật khẩu mạnh bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt</p>
+            <p id="passwordHint" class="text-xs text-gray-400">
+               Độ mạnh của Mật khẩu
+            </p>
          </div>
 
          <!-- Terms and Conditions -->
          <div class="space-y-3">
             <div class="flex items-start">
-               <input type="checkbox" id="terms" name="terms" required
-                      class="w-4 h-4 mt-1 text-green-500 transition-all duration-200 border-gray-300 rounded focus:ring-green-200">
+               <input type="checkbox" id="terms" name="terms" required class="
+               w-4 h-4 mt-1 text-green-500 transition-all duration-200
+               border-gray-300 rounded focus:ring-green-200
+               ">
                <label for="terms" class="block ml-2 text-sm text-gray-600">
-                  Tôi xác nhận đã đọc và đồng ý với
-                  <a href="#" class="text-green-600 transition-all duration-200 hover:text-green-500">Điều khoản dịch
-                     vụ
-                  </a>
+                  Đồng ý với
+                  <a href="#" class="text-green-600 transition-all duration-200 hover:text-green-500">Điều khoản</a>
                   <span class="mx-1">và</span>
-                  <a href="#" class="text-green-600 transition-all duration-200 hover:text-green-500">Chính sách bảo
-                     mật
-                  </a>
+                  <a href="#" class="text-green-600 transition-all duration-200 hover:text-green-500">Chính sách</a>
                </label>
             </div>
          </div>
@@ -121,7 +123,7 @@
       </form>
 
       <!-- Login Link -->
-      <div class="pt-4 text-center border-t border-gray-100">
+      <div class="text-center border-t border-gray-100">
          <p class="text-sm text-gray-500">
             Đã có tài khoản?
             <a href="/login" class="font-medium text-green-600 transition-all duration-200 hover:text-green-500">
@@ -146,7 +148,7 @@
 
    // Optional: Simple password match validation UI
    const password = document.getElementById('password');
-   const confirmPassword = document.getElementById('confirm_password');
+   const confirmPassword = document.getElementById('confirmPassword');
 
    if (confirmPassword) {
       confirmPassword.addEventListener('input', function () {
@@ -159,6 +161,53 @@
          }
       });
    }
+
+   const pwdInput = document.getElementById("password");
+   const bars = [
+      document.getElementById("bar1"),
+      document.getElementById("bar2"),
+      document.getElementById("bar3"),
+      document.getElementById("bar4"),
+   ];
+   const hint = document.getElementById("passwordHint");
+
+   pwdInput.addEventListener("input", function () {
+      const val = this.value;
+
+      let score = 0;
+
+      if (val.length >= 6) score++;
+      if (/[A-Z]/.test(val)) score++;
+      if (/[0-9]/.test(val)) score++;
+      if (/[^A-Za-z0-9]/.test(val)) score++;
+
+      // Reset
+      bars.forEach(bar => {
+         bar.className = "flex-1 bg-gray-200 transition-all";
+      });
+
+      // Color theo level
+      for (let i = 0; i < score; i++) {
+         if (score === 1) bars[i].classList.add("bg-red-400");
+         if (score === 2) bars[i].classList.add("bg-orange-400");
+         if (score === 3) bars[i].classList.add("bg-yellow-400");
+         if (score === 4) bars[i].classList.add("bg-green-500");
+      }
+
+      // Text hint
+      const messages = [
+         "Rất yếu",
+         "Yếu",
+         "Trung bình",
+         "Mạnh"
+      ];
+
+      hint.textContent = val ? messages[score - 1] || "Rất yếu" : "Độ mạnh của Mật khẩu";
+
+      // Fix bo góc lại
+      bars[0].classList.add("rounded-l-full");
+      bars[3].classList.add("rounded-r-full");
+   });
 </script>
 
 <script type="module">

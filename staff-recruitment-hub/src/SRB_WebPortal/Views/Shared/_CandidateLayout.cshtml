@@ -1,109 +1,102 @@
 @using System.Security.Claims
 @{
-    var fullName = User.FindFirst(ClaimTypes.Name)?.Value ?? User.FindFirst("FullName")?.Value ?? User.Identity?.Name ?? "Ứng Viên";
-    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("Id")?.Value ?? "00000";
+   var fullName = User.FindFirst(ClaimTypes.Name)?.Value ?? User.FindFirst("FullName")?.Value ?? User.Identity?.Name ??
+"Ứng Viên";
+   var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("Id")?.Value ?? "00000";
 
-    var nameParts = fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-    var initials = nameParts.Length > 1 
-                   ? $"{nameParts.First()[0]}{nameParts.Last()[0]}" 
-                   : (fullName.Length > 0 ? fullName.Substring(0, 1).ToUpper() : "U");
+   var nameParts = fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+   var initials = nameParts.Length > 1
+                  ? $"{nameParts.First()[0]}{nameParts.Last()[0]}"
+                  : (fullName.Length > 0 ? fullName.Substring(0, 1).ToUpper() : "U");
 
-    var shortId = userId.Length > 5 ? userId.Substring(0, 5).ToUpper() : userId;
+   var shortId = userId.Length > 5 ? userId.Substring(0, 5).ToUpper() : userId;
 }
 
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Candidate Portal</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="~/css/output.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script src="https://cdn.tailwindcss.com"></script>
+   <meta charset="utf-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <title>@ViewData["Title"] - Candidate Portal</title>
+
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link
+   href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+   rel="stylesheet">
+
+   <link rel="stylesheet" href="~/css/output.css" asp-append-version="true" />
+   <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+   <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-50 text-gray-800 antialiased font-sans flex flex-col min-h-screen">
 
-    <header class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
-                <div class="flex items-center gap-8">
-                    <a href="/Home" class="text-2xl font-bold text-blue-600 flex items-center gap-2">
-                        <i class="fa-solid fa-briefcase"></i> Zeion Devloper
-                    </a>
-                    
-                    <nav class="hidden md:flex space-x-1">
-                        <a href="/FindJobByID/Search" class="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-blue-600 transition-colors">
-                            Việc làm
-                        </a>
-                        <a href="/Candidate/Profile" class="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-blue-600 transition-colors">
-                            Hồ sơ & CV
-                        </a>
-                        <a href="/Business" class="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-blue-600 transition-colors">
-                            Công ty
-                        </a>
-                    </nav>
-                </div>
+   <header class="bg-white shadow-sm sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+         <div class="flex justify-between items-center h-20">
+            <div class="flex items-center gap-8">
+               <a href="/Home" class="text-2xl font-bold text-blue-600 flex items-center gap-2">
+                  <i class="fa-solid fa-briefcase"></i> Candidate
+               </a>
 
-                <div class="flex items-center gap-6">
-                    <div class="hidden lg:flex items-center gap-2 bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-full">
-                        <span class="text-xs font-medium text-gray-600 whitespace-nowrap">Trạng thái tìm việc</span>
-                        
-                        <label class="relative inline-flex items-center cursor-pointer shrink-0" style="min-width: 44px; height: 24px;">
-                            <input type="checkbox" value="" class="sr-only peer" checked>
-                            <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                        </label>
-                    </div>
-
-                    <div class="flex items-center gap-4">
-                        <button class="text-gray-500 hover:text-blue-600 relative bg-gray-100 p-2 rounded-full h-10 w-10 flex items-center justify-center transition">
-                            <i class="fa-regular fa-comment-dots text-lg"></i>
-                        </button>
-                        <button class="text-gray-500 hover:text-blue-600 relative bg-gray-100 p-2 rounded-full h-10 w-10 flex items-center justify-center transition">
-                            <i class="fa-regular fa-bell text-lg"></i>
-                            <span class="absolute top-0 right-0 flex h-3 w-3 mt-1 mr-1">
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500 border-2 border-white"></span>
-                            </span>
-                        </button>
-                    </div>
-
-                    <a href="/Candidate/Profile" class="relative group cursor-pointer pl-4 border-l border-gray-200 block hover:opacity-80 transition">
-                        <div class="flex items-center gap-2">
-                            <img src="https://ui-avatars.com/api/?name=@initials&background=2563eb&color=fff&bold=true" alt="Avatar" class="h-10 w-10 rounded-full border border-gray-200 object-cover shadow-sm" />
-                            <div class="hidden sm:block text-left">
-                                <p class="text-sm font-semibold text-gray-700 leading-none group-hover:text-blue-600 transition">@fullName</p>
-                                <p class="text-xs text-gray-500 mt-1">Mã: #@shortId</p>
-                            </div>
-                        </div>
-                    </a>
-
-                </div>
+               <nav class="hidden md:flex space-x-1">
+                  <a href="/FindJobByID/Search"
+                     class="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-blue-600 transition-colors">
+                     Việc làm
+                  </a>
+                  <a href="/Candidate/Profile"
+                     class="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-blue-600 transition-colors">
+                     Hồ sơ & CV
+                  </a>
+                  <a href="/Business"
+                     class="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-blue-600 transition-colors">
+                     Công ty
+                  </a>
+               </nav>
             </div>
-        </div>
-    </header>
 
-    <main class="flex-1 w-full max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        @RenderBody()
-    </main>
-    
-    <footer class="bg-white border-t border-gray-200 mt-auto">
-        <div class="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p class="text-sm text-gray-500">&copy; @DateTime.Now.Year Staff Recruitment Hub.</p>
-            <div class="flex space-x-4 text-sm text-gray-500">
-                <a href="#" class="hover:text-blue-600">Quy định bảo mật</a>
-                <a href="#" class="hover:text-blue-600">Thỏa thuận sử dụng</a>
-                <a href="#" class="hover:text-blue-600">Quy chế hoạt động</a>
+            <div class="flex items-center gap-6">
+               <div class="flex items-center gap-4">
+                  <button
+                     class="text-gray-500 hover:text-blue-600 relative bg-gray-100 p-2 rounded-full h-10 w-10 flex items-center justify-center transition">
+                     <i class="fa-regular fa-comment-dots text-lg"></i>
+                  </button>
+                  <button
+                     class="text-gray-500 hover:text-blue-600 relative bg-gray-100 p-2 rounded-full h-10 w-10 flex items-center justify-center transition">
+                     <i class="fa-regular fa-bell text-lg"></i>
+                     <span class="absolute top-0 right-0 flex h-3 w-3 mt-1 mr-1">
+                        <span
+                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500 border-2 border-white"></span>
+                     </span>
+                  </button>
+               </div>
             </div>
-        </div>
-    </footer>
+         </div>
+      </div>
+   </header>
 
-    @await RenderSectionAsync("Scripts", required: false)
+   <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      @RenderBody()
+   </main>
+
+   <footer class="bg-white border-t border-gray-200 mt-auto">
+      <div
+         class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
+         <p class="text-sm text-gray-500">&copy; @DateTime.Now.Year Staff Recruitment Hub.</p>
+         <div class="flex space-x-4 text-sm text-gray-500">
+            <a href="#" class="hover:text-blue-600">Quy định bảo mật</a>
+            <a href="#" class="hover:text-blue-600">Thỏa thuận sử dụng</a>
+            <a href="#" class="hover:text-blue-600">Quy chế hoạt động</a>
+         </div>
+      </div>
+   </footer>
+
+   @await RenderSectionAsync("Scripts", required: false)
 </body>
+
 </html>

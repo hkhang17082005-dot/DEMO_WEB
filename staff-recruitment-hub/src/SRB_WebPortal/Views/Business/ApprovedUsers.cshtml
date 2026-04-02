@@ -1,0 +1,423 @@
+@using SRB_ViewModel.Entities
+@using SRB_WebPortal.Controllers.apis.business
+@model List<ApprovedJobPostDTO>
+@{
+   ViewData["Title"] = "Quản lý bài đăng và ứng viên";
+}
+
+@{
+   // Pagination parameters
+   var currentPage = ViewBag.CurrentPage ?? 1;
+   var pageSize = ViewBag.PageSize ?? 5;
+   var totalItems = Model?.Count ?? 0;
+   var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+   var pagedData = Model?.Skip(((int)currentPage - 1) * (int)pageSize).Take((int)pageSize).ToList();
+}
+
+<div class="container mx-auto px-4 py-8">
+   <!-- Header -->
+   <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-800">Quản lý bài đăng và ứng viên</h1>
+      <p class="text-gray-600 mt-2">Danh sách các bài đăng đã duyệt và ứng viên ứng tuyển</p>
+   </div>
+
+   <!-- Stats Cards -->
+   @if (ViewBag.Stats != null)
+   {
+      var stats = ViewBag.Stats;
+      <div class="grid grid-cols-1 md:grid-cols-6 gap-4 mb-8">
+         <div class="bg-white rounded-lg shadow p-4">
+            <p class="text-gray-500 text-sm">Tổng bài đăng</p>
+            <p class="text-2xl font-bold text-gray-800">@stats.TotalJobPosts</p>
+         </div>
+         <div class="bg-white rounded-lg shadow p-4">
+            <p class="text-gray-500 text-sm">Tổng đơn ứng tuyển</p>
+            <p class="text-2xl font-bold text-gray-800">@stats.TotalApplications</p>
+         </div>
+         <div class="bg-white rounded-lg shadow p-4">
+            <p class="text-gray-500 text-sm">Ứng viên duy nhất</p>
+            <p class="text-2xl font-bold text-gray-800">@stats.TotalUniqueUsers</p>
+         </div>
+         <div class="bg-white rounded-lg shadow p-4 border-l-4 border-yellow-400">
+            <p class="text-gray-500 text-sm">Chờ xem xét</p>
+            <p class="text-2xl font-bold text-yellow-600">@stats.PendingReviews</p>
+         </div>
+         <div class="bg-white rounded-lg shadow p-4 border-l-4 border-blue-400">
+            <p class="text-gray-500 text-sm">Đang phỏng vấn</p>
+            <p class="text-2xl font-bold text-blue-600">@stats.InterviewingCount</p>
+         </div>
+         <div class="bg-white rounded-lg shadow p-4 border-l-4 border-green-400">
+            <p class="text-gray-500 text-sm">Đã mời làm việc</p>
+            <p class="text-2xl font-bold text-green-600">@stats.OfferedCount</p>
+         </div>
+      </div>
+   }
+
+   <!-- Search and Filter Bar -->
+   <div class="bg-white rounded-lg shadow mb-6 p-4">
+      <form method="get" class="flex flex-col md:flex-row gap-4">
+         <div class="flex-1">
+            <input type="text" name="search" value="@ViewBag.SearchTerm"
+                   placeholder="Tìm kiếm theo tên bài đăng, công ty..."
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+         </div>
+         <div class="w-full md:w-48">
+            <select name="jobType"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+               <option value="">Tất cả loại hình</option>
+               <option value="FullTime" selected="@(ViewBag.JobType == "FullTime")">Toàn thời gian</option>
+               <option value="PartTime" selected="@(ViewBag.JobType == "PartTime")">Bán thời gian</option>
+               <option value="Remote" selected="@(ViewBag.JobType == "Remote")">Làm việc từ xa</option>
+               <option value="Hybrid" selected="@(ViewBag.JobType == "Hybrid")">Kết hợp</option>
+               <option value="Internship" selected="@(ViewBag.JobType == "Internship")">Thực tập</option>
+            </select>
+         </div>
+         <div class="w-full md:w-48">
+            <select name="status"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+               <option value="">Tất cả trạng thái</option>
+               <option value="Submitted" selected="@(ViewBag.Status == "Submitted")">Đã nộp</option>
+               <option value="UnderReview" selected="@(ViewBag.Status == "UnderReview")">Đang xem xét</option>
+               <option value="Interviewing" selected="@(ViewBag.Status == "Interviewing")">Chờ phỏng vấn</option>
+               <option value="Offered" selected="@(ViewBag.Status == "Offered")">Đã mời làm việc</option>
+               <option value="Rejected" selected="@(ViewBag.Status == "Rejected")">Bị từ chối</option>
+            </select>
+         </div>
+         <div>
+            <button type="submit"
+                    class="w-full md:w-auto px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+               Lọc
+            </button>
+         </div>
+      </form>
+   </div>
+
+   <!-- Job Posts List -->
+   @if (pagedData != null && pagedData.Any())
+   {
+      foreach (var jobPost in pagedData)
+      {
+         <div class="bg-white rounded-lg shadow mb-6 overflow-hidden">
+            <!-- Job Post Header -->
+            <div class="bg-linear-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b">
+               <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                  <div class="flex-1">
+                     <div class="flex items-center gap-3 mb-2">
+                        @if (!string.IsNullOrEmpty(jobPost.BusinessLogo))
+                        {
+                           <img src="@jobPost.BusinessLogo" alt="@jobPost.BusinessName" class="h-8 w-8 rounded object-cover">
+                        }
+                        <h2 class="text-xl font-bold text-gray-800">@jobPost.Title</h2>
+                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                           @jobPost.JobTypeName
+                        </span>
+                     </div>
+                     <div class="flex flex-wrap gap-4 text-sm text-gray-600">
+                        <span class="flex items-center gap-1">
+                           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                              </path>
+                           </svg>
+                           @jobPost.BusinessName
+                        </span>
+                        <span class="flex items-center gap-1">
+                           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
+                              </path>
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                           </svg>
+                           @jobPost.LocationName
+                        </span>
+                        <span class="flex items-center gap-1">
+                           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                           </svg>
+                           Hết hạn: @jobPost.ExpiryDate.ToString("dd/MM/yyyy")
+                        </span>
+                        <span class="flex items-center gap-1 text-blue-600 font-medium">
+                           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                              </path>
+                           </svg>
+                           @jobPost.TotalApplications đơn ứng tuyển
+                        </span>
+                     </div>
+                  </div>
+               </div>
+            </div>
+
+            <!-- Applicants Table -->
+            <div class="overflow-x-auto">
+               <table class="w-full divide-y divide-gray-200">
+                  <thead class="bg-gray-50">
+                     <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ứng viên
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Liên hệ
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thông tin
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trạng thái
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ngày ứng
+                           tuyển</th>
+                           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thao tác
+                           </th>
+                        </tr>
+                     </thead>
+                     <tbody class="bg-white divide-y divide-gray-200">
+                        @if (jobPost.Applicants != null && jobPost.Applicants.Any())
+                        {
+                           foreach (var applicant in jobPost.Applicants)
+                           {
+                              <tr class="hover:bg-gray-50 transition">
+                                 <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                       <div class="shrink-0 h-10 w-10">
+                                          @if (!string.IsNullOrEmpty(applicant.AvatarURL))
+                                          {
+                                             <img class="h-10 w-10 rounded-full object-cover" src="@applicant.AvatarURL"
+                                                  alt="@applicant.FullName">
+                                          }
+                                          else
+                                          {
+                                             <div class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                                                <span class="text-gray-500 text-sm">@(applicant.FullName.Substring(0, 1))</span>
+                                             </div>
+                                          }
+                                       </div>
+                                       <div>
+                                          <div class="text-sm font-medium text-gray-900">@applicant.FullName</div>
+                                          <div class="text-xs text-gray-400 mt-1 max-w-xs truncate" title="@applicant.Summary">
+                                             @(applicant.Summary?.Length > 50 ? applicant.Summary.Substring(0, 50) + "..." :
+                   applicant.Summary)
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </td>
+                                 <td class="px-6 py-4">
+                                    <div class="flex flex-col space-y-1">
+                                       <div class="text-sm text-gray-900">@applicant.Email</div>
+                                       <div class="text-sm text-gray-500">@(applicant.PhoneNumber ?? "Chưa cập nhật")</div>
+                                    </div>
+                                 </td>
+                                 <td class="px-6 py-4">
+                                    <div class="text-sm text-gray-900 max-w-xs truncate" title="@applicant.Summary">
+                                       @(applicant.Summary ?? "Chưa có giới thiệu")
+                                    </div>
+                                 </td>
+                                 <td class="px-6 py-4">
+                                    <select class="status-select text-sm rounded-full px-3 py-1 font-medium border-0 focus:ring-2"
+                                            data-application-id="@applicant.ApplicationID"
+                                            style="background-color: @GetStatusColor(applicant.Status); color: white;">
+                                       <option value="Submitted" selected="@(applicant.Status == ApplicationStatus.Submitted)">Đã nộp
+                                       </option>
+                                       <option value="UnderReview" selected="@(applicant.Status == ApplicationStatus.UnderReview)">Đang
+                                          xem xét</option>
+                                          <option value="Interviewing" selected="@(applicant.Status == ApplicationStatus.Interviewing)">
+                                             Chờ phỏng vấn</option>
+                                             <option value="Offered" selected="@(applicant.Status == ApplicationStatus.Offered)">Đã mời làm
+                                                việc</option>
+                                                <option value="Rejected" selected="@(applicant.Status == ApplicationStatus.Rejected)">Bị từ chối
+                                                </option>
+                                             </select>
+                                          </td>
+                                          <td class="px-6 py-4">
+                                             <div class="text-sm text-gray-900">@applicant.AppliedAt.ToString("dd/MM/yyyy")</div>
+                                             <div class="text-xs text-gray-500">@applicant.AppliedAt.ToString("HH:mm")</div>
+                                          </td>
+                                          <td class="px-3 py-4">
+                                             <div class="flex items-center space-x-1">
+                                                <button class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-full transition view-detail"
+                                                        data-application-id="@applicant.ApplicationID" data-user-id="@applicant.UserID"
+                                                        title="Xem chi tiết">
+                                                   <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                                      </path>
+                                                   </svg>
+                                                </button>
+                                                @if (!string.IsNullOrEmpty(applicant.CVPath))
+                                                {
+                                                   <a href="@applicant.CVPath" target="_blank"
+                                                      class="p-1.5 text-green-600 hover:bg-green-50 rounded-full transition" title="Xem CV">
+                                                      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                               d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                                         </path>
+                                                      </svg>
+                                                   </a>
+                                                }
+                                             </div>
+                                          </td>
+                                       </tr>
+                                    }
+                                 }
+                            else
+                                 {
+                                    <tr>
+                                       <td colspan="6" class="px-6 py-8 text-center text-gray-500">
+                                          Chưa có ứng viên nào cho bài đăng này
+                                       </td>
+                                    </tr>
+                                 }
+                              </tbody>
+                           </table>
+                        </div>
+                     </div>
+                  }
+               }
+    else
+               {
+                  <div class="bg-white rounded-lg shadow p-12 text-center">
+                     <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                        </path>
+                     </svg>
+                     <h3 class="mt-2 text-sm font-medium text-gray-900">Không có dữ liệu</h3>
+                     <p class="mt-1 text-sm text-gray-500">Chưa có bài đăng nào hoặc không tìm thấy kết quả phù hợp.</p>
+                  </div>
+               }
+
+               <!-- Pagination -->
+               @if (totalPages > 1)
+               {
+                  <div class="bg-white rounded-lg shadow mt-6 px-4 py-3 border-t border-gray-200 sm:px-6">
+                     <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div class="text-sm text-gray-700">
+                           Hiển thị <span class="font-medium">@(((currentPage - 1) * pageSize) + 1)</span>
+                           đến <span class="font-medium">@Math.Min(currentPage * pageSize, totalItems)</span>
+                           trong tổng số <span class="font-medium">@totalItems</span> bài đăng
+                        </div>
+
+                        <div class="flex items-center space-x-2">
+                           <!-- Previous Button -->
+                           <a href="@GetPaginationUrl(currentPage - 1, ViewBag.SearchTerm, ViewBag.JobType, ViewBag.Status)"
+                              class="px-3 py-1.5 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition @(currentPage <= 1 ? "opacity-50 pointer-events-none" : "")">
+                              Trước
+                           </a>
+
+                           <!-- Page Numbers -->
+                           <div class="flex space-x-1">
+                              @for (int i = 1; i <= totalPages; i++)
+                              {
+                                 if (i == currentPage)
+                                 {
+                                    <span
+                                    class="px-3 py-1.5 border border-blue-500 rounded-md text-sm font-medium text-white bg-blue-600">@i</span>
+                                 }
+                                 else if (Math.Abs(i - currentPage) <= 2 || i == 1 || i == totalPages)
+                                 {
+                                    <a href="@GetPaginationUrl(i, ViewBag.SearchTerm, ViewBag.JobType, ViewBag.Status)"
+                                       class="px-3 py-1.5 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition">
+                                       @i
+                                    </a>
+                                 }
+                                 else if (Math.Abs(i - currentPage) == 3)
+                                 {
+                                    <span class="px-2 py-1.5 text-gray-500">...</span>
+                                 }
+                              }
+                           </div>
+
+                           <!-- Next Button -->
+                           <a href="@GetPaginationUrl(currentPage + 1, ViewBag.SearchTerm, ViewBag.JobType, ViewBag.Status)"
+                              class="px-3 py-1.5 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition @(currentPage >= totalPages ? "opacity-50 pointer-events-none" : "")">
+                              Sau
+                           </a>
+                        </div>
+                     </div>
+                  </div>
+               }
+            </div>
+
+@functions {
+   private string GetStatusColor(ApplicationStatus status)
+   {
+      return status switch
+      {
+         ApplicationStatus.Submitted => "#6B7280",
+         ApplicationStatus.UnderReview => "#6B7280",
+         ApplicationStatus.Interviewing => "#6B7280",
+         ApplicationStatus.Offered => "#6B7280",
+         ApplicationStatus.Rejected => "#6B7280",
+         _ => "#6B7280"
+      };
+   }
+
+   private string GetPaginationUrl(int page, string search, string jobType, string status)
+   {
+      var url = $"?page={page}";
+      if (!string.IsNullOrEmpty(search)) url += $"&search={Uri.EscapeDataString(search)}";
+      if (!string.IsNullOrEmpty(jobType)) url += $"&jobType={jobType}";
+      if (!string.IsNullOrEmpty(status)) url += $"&status={status}";
+      return url;
+   }
+}
+
+<script>
+   // Handle status change via AJAX
+   document.querySelectorAll('.status-select').forEach(select => {
+      select.addEventListener('change', async function () {
+         const applicationId = this.dataset.applicationId;
+         const newStatus = this.value;
+
+         try {
+            const response = await fetch(`/api/applications/${applicationId}/status`, {
+               method: 'PUT',
+               headers: {
+                  'Content-Type': 'application/json',
+               },
+               body: JSON.stringify({ status: newStatus })
+            });
+
+            if (response.ok) {
+               // Update status color
+               const statusColors = {
+                  'Submitted': '#F59E0B',
+                  'UnderReview': '#3B82F6',
+                  'Interviewing': '#8B5CF6',
+                  'Offered': '#10B981',
+                  'Rejected': '#EF4444'
+               };
+               this.style.backgroundColor = statusColors[newStatus];
+
+               // Show success message
+               showToast('Cập nhật trạng thái thành công!', 'success');
+            } else {
+               showToast('Cập nhật thất bại, vui lòng thử lại!', 'error');
+            }
+         } catch (error) {
+            console.error('Error:', error);
+            showToast('Đã xảy ra lỗi!', 'error');
+         }
+      });
+   });
+
+   // Handle view detail
+   document.querySelectorAll('.view-detail').forEach(btn => {
+      btn.addEventListener('click', function () {
+         const applicationId = this.dataset.applicationId;
+         const userId = this.dataset.userId;
+         // Open modal or redirect to detail page
+         window.location.href = `/admin/application-detail/${applicationId}`;
+      });
+   });
+
+   function showToast(message, type) {
+      // Simple toast implementation
+      const toast = document.createElement('div');
+      toast.className = `fixed bottom-4 right-4 px-4 py-2 rounded-lg text-white ${type === 'success' ? 'bg-green-500' : 'bg-red-500'} z-50`;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+   }
+</script>

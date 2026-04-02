@@ -53,6 +53,10 @@ public record JobPostDTO
    public DateTime ExpiryDate { get; init; }
 
    public DateTime? CreatedAt { get; init; }
+
+   public int ApprovedCount { get; set; } = 0;
+
+   public int TotalApplications { get; set; } = 0;
 }
 
 public record SaveJobPostRes(

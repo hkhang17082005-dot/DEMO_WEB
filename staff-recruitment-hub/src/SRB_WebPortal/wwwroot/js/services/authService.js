@@ -14,10 +14,7 @@ const authService = {
    },
 
    createProfile: (profileData) => {
-      return apiClient.post('/auth/create-profile', profileData);
-
-      // FormData chứa file/ảnh
-      // return apiClient.postForm('/auth/create-profile', profileData);
+      return apiClient.postForm('/auth/create-profile', profileData);
    },
 
    getUserInfo: () => {

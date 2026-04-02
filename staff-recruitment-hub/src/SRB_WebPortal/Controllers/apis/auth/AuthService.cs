@@ -20,7 +20,7 @@ public interface IAuthService
    Task<BaseResponse> Register(RegisterModelDTO model, DeviceInfo? deviceInfo);
    Task<BaseResponse<AuthResponse>> RefreshSession(DeviceInfo? deviceInfo, string? sessionId, string? refreshToken);
    Task<BaseResponse<UserMeResponse>> GetMe(string userID);
-   Task HandleCreateProfileAsync(CreateProfileDTO formData, string UserID);
+   Task HandleCreateProfileAsync(CreateProfileDTO formData, string userID, Stream? avatarStream, string? avatarName, Stream? cvStream, string? cvName);
 }
 
 public class AuthService(
@@ -32,7 +32,8 @@ public class AuthService(
    IOptions<JwtOptions> jwtOptions,
    TokenFactory tokenFactory,
    Cloudinary cloudinary,
-   IShareRepository shareRepository
+   IShareRepository shareRepository,
+   IBunnyCNDService bunnyCNDService
    ) : IAuthService
 {
    private readonly IRedisService _redisService = redisService;
@@ -44,6 +45,7 @@ public class AuthService(
    private readonly TokenFactory _tokenFactory = tokenFactory;
    private readonly Cloudinary _cloudinary = cloudinary;
    private readonly IShareRepository _shareRepository = shareRepository;
+   private readonly IBunnyCNDService _bunnyCNDService = bunnyCNDService;
 
    public async Task<BaseResponse> Health()
    {
@@ -328,48 +330,33 @@ public class AuthService(
       return BaseResponse<UserMeResponse>.Success(userMe, "Lấy thông tin người dùng thành công");
    }
 
-   public async Task HandleCreateProfileAsync(CreateProfileDTO formData, string UserID)
+   public async Task HandleCreateProfileAsync(CreateProfileDTO formData, string userID, Stream? avatarStream, string? avatarName, Stream? cvStream, string? cvName)
    {
       string? avatarURL = null;
       string? cvURL = null;
 
-      try
+      // Upload Avatar
+      if (avatarStream != null)
       {
-         if (formData.AvatarFile != null && formData.AvatarFile.Length > 0)
+         var uploadParams = new ImageUploadParams()
          {
-            var uploadParams = new ImageUploadParams()
-            {
-               File = new FileDescription(formData.AvatarFile.FileName, formData.AvatarFile.OpenReadStream()),
-               Folder = CloudCNDKey.FOLDER_PROFILE_AVATAR,
-               Transformation = new Transformation().Width(500).Height(500).Crop("fill") // Auto Resize
-            };
-            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
-            avatarURL = uploadResult.SecureUrl.ToString();
-         }
+            File = new FileDescription(avatarName, avatarStream),
+            Folder = CloudCNDKey.FOLDER_PROFILE_AVATAR,
+            Transformation = new Transformation().Width(500).Height(500).Crop("fill")
+         };
+         var result = await _cloudinary.UploadAsync(uploadParams);
 
-         // Xử lý Upload CV (Dạng Raw file/PDF)
-         if (formData.CVFile != null && formData.CVFile.Length > 0)
-         {
-            var uploadParams = new RawUploadParams()
-            {
-               File = new FileDescription(formData.CVFile.FileName, formData.CVFile.OpenReadStream()),
-               Folder = CloudCNDKey.FOLDER_PROFILE_CV
-            };
-
-            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
-
-            cvURL = uploadResult.SecureUrl.ToString();
-         }
-
-         await _authRepository.SaveProfile(formData, UserID, avatarURL, cvURL);
-
-         // Giả lập
-         await Task.Delay(2000);
+         avatarURL = result.SecureUrl.ToString();
       }
-      catch (Exception ex)
+
+      if (cvStream != null)
       {
-         Console.WriteLine("NQHxError: " + ex.Message);
-         throw;
+         var result = await _bunnyCNDService.UploadToBunnyRunBackground(cvStream, cvName!, CloudCNDKey.FOLDER_PROFILE_CV);
+
+         if (result != null && result.IsSuccess) cvURL = result.Data?.ToString();
       }
+
+      await _authRepository.SaveProfile(formData, userID, avatarURL, cvURL);
    }
+
 }

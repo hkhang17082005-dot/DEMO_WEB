@@ -21,6 +21,9 @@ public interface IShareRepository
    Task<CVReviewDetailDTO?> GetApplicationDetailAsync(string applicationID);
    Task<List<MyApplicationDTO>> GetUserApplicationsAsync(string userID);
    Task<CandidateDashboardVM> GetDashboardStatsAsync(string userID);
+   Task<(int ApprovedCount, int TotalApplications)> GetJobApplicationStats(string jobPostId);
+   Task<(int ActivePosts, int NewCVs, int Interviews)> GetBusinessDashboardStats(string businessId);
+   Task<List<ApprovedJobPostDTO>> GetApprovedJobPostsAsync(string? searchTerm = null, string? jobType = null, string? status = null);
 }
 
 public class ShareRepository(
@@ -30,6 +33,155 @@ public class ShareRepository(
 {
    private readonly DatabaseContext _context = context;
    private readonly IRedisService _redisService = redisService;
+
+   public async Task<List<ApprovedJobPostDTO>> GetApprovedJobPostsAsync(
+      string? searchTerm = null,
+      string? jobType = null,
+      string? status = null
+   )
+   {
+      try
+      {
+         var query = _context.JobPosts
+            .Include(j => j.Business)
+            .Include(j => j.Location)
+            .Where(j => j.IsActive == true && j.ExpiryDate >= DateTime.UtcNow)
+            .Select(j => new ApprovedJobPostDTO
+            {
+               JobPostID = j.JobPostID,
+               Title = j.Title,
+               Description = j.Description,
+               Requirements = j.Requirements,
+               Benefits = j.Benefits,
+               SalaryRange = j.SalaryRange,
+               JobType = j.JobType,
+               JobTypeName = JobTypeHelper.GetName((int)j.JobType),
+               IsActive = j.IsActive,
+               ExpiryDate = j.ExpiryDate,
+               CreatedAt = j.CreatedAt,
+               Address = j.Address,
+               BusinessName = j.Business != null ? j.Business.BusinessName : string.Empty,
+               BusinessLogo = j.Business != null ? j.Business.LogoUrl : null,
+               LocationName = j.Location != null ? j.Location.LocationName : string.Empty,
+               TotalApplications = _context.JobApplications.Count(a => a.JobPostID == j.JobPostID)
+            });
+
+         // Apply search filter
+         if (!string.IsNullOrWhiteSpace(searchTerm))
+         {
+            query = query.Where(j => j.Title.Contains(searchTerm) ||
+                                     j.Description.Contains(searchTerm) ||
+                                     j.BusinessName.Contains(searchTerm));
+         }
+
+         // Apply job type filter
+         if (!string.IsNullOrWhiteSpace(jobType) && jobType != "All")
+         {
+            var jobTypeEnum = Enum.Parse<JobType>(jobType);
+            query = query.Where(j => j.JobType == jobTypeEnum);
+         }
+
+         var jobPosts = await query
+             .OrderByDescending(j => j.CreatedAt)
+             .ToListAsync();
+
+         // Lấy danh sách ứng viên cho từng JobPost
+         foreach (var jobPost in jobPosts)
+         {
+            jobPost.Applicants = await GetApplicantsByJobPostAsync(jobPost.JobPostID);
+
+            // Filter theo status nếu có
+            if (!string.IsNullOrWhiteSpace(status) && status != "All")
+            {
+               var statusEnum = Enum.Parse<ApplicationStatus>(status);
+               jobPost.Applicants = jobPost.Applicants
+                   .Where(a => a.Status == statusEnum)
+                   .ToList();
+            }
+         }
+
+         return jobPosts;
+      }
+      catch (Exception ex)
+      {
+         Console.WriteLine($"Error in GetApprovedJobPostsAsync: {ex.Message}");
+         return [];
+      }
+   }
+
+   private async Task<List<ApplicationUserDTO>> GetApplicantsByJobPostAsync(string jobPostID)
+   {
+      try
+      {
+         var applicants = await _context.JobApplications
+             .Include(a => a.User)
+                 .ThenInclude(u => u.UserProfile)
+             .Where(a => a.JobPostID == jobPostID)
+             .Select(a => new ApplicationUserDTO
+             {
+                ApplicationID = a.ApplicationID,
+                UserID = a.UserID,
+                FullName = a.User != null && a.User.UserProfile != null
+                     ? a.User.UserProfile.FullName
+                     : "Không rõ",
+                Email = a.User != null && a.User.UserProfile != null
+                     ? a.User.UserProfile.Email
+                     : "Không rõ",
+                PhoneNumber = a.User != null && a.User.UserProfile != null
+                     ? a.User.UserProfile.PhoneNumber
+                     : null,
+                AvatarURL = a.User != null && a.User.UserProfile != null
+                     ? a.User.UserProfile.AvatarURL
+                     : null,
+                CVPath = a.CVPath,
+                Summary = a.User != null && a.User.UserProfile != null
+                     ? a.User.UserProfile.Summary
+                     : null,
+                Status = a.Status,
+                StatusName = JobTypeHelper.GetApplicationStatusName((int)a.Status),
+                AppliedAt = a.AppliedAt,
+                Feedback = a.Feedback
+             })
+             .OrderByDescending(a => a.AppliedAt)
+             .ToListAsync();
+
+         return applicants;
+      }
+      catch (Exception ex)
+      {
+         Console.WriteLine($"Error in GetApplicantsByJobPostAsync: {ex.Message}");
+
+         return [];
+      }
+   }
+
+   public async Task<(int ActivePosts, int NewCVs, int Interviews)> GetBusinessDashboardStats(string businessId)
+   {
+      var activePostsCount = await _context.JobPosts
+          .CountAsync(p => p.BusinessID == businessId && p.IsActive);
+
+      var newCVCount = await _context.JobApplications
+          .CountAsync(a => a.JobPost.BusinessID == businessId && a.Status == ApplicationStatus.Submitted);
+
+      var interviewCount = await _context.JobApplications
+          .CountAsync(a => a.JobPost.BusinessID == businessId && a.Status == ApplicationStatus.Interviewing);
+
+      return (activePostsCount, newCVCount, interviewCount);
+   }
+
+   public async Task<(int ApprovedCount, int TotalApplications)> GetJobApplicationStats(string jobPostId)
+   {
+      var stats = await _context.JobApplications
+         .Where(a => a.JobPostID == jobPostId)
+         .Select(a => a.Status)
+         .ToListAsync();
+
+      int total = stats.Count;
+
+      int approved = stats.Count(s => s != ApplicationStatus.Submitted);
+
+      return (approved, total);
+   }
 
    public async Task<CandidateDashboardVM> GetDashboardStatsAsync(string userID)
    {

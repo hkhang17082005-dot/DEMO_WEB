@@ -41,6 +41,70 @@ public class UpdateBusinessDTO
    public string? Website { get; set; }
 }
 
+public class ApprovedJobPostDTO
+{
+   public string JobPostID { get; set; } = string.Empty;
+
+   public string Title { get; set; } = string.Empty;
+
+   public string Description { get; set; } = string.Empty;
+
+   public string Requirements { get; set; } = string.Empty;
+
+   public string? Benefits { get; set; }
+
+   public string? SalaryRange { get; set; }
+
+   public JobType JobType { get; set; }
+
+   public string JobTypeName { get; set; } = string.Empty;
+
+   public bool IsActive { get; set; }
+
+   public DateTime ExpiryDate { get; set; }
+
+   public DateTime CreatedAt { get; set; }
+
+   public string? Address { get; set; }
+
+   public string BusinessName { get; set; } = string.Empty;
+
+   public string? BusinessLogo { get; set; }
+
+   public string LocationName { get; set; } = string.Empty;
+
+   public int TotalApplications { get; set; }
+
+   public List<ApplicationUserDTO> Applicants { get; set; } = [];
+}
+
+public class ApplicationUserDTO
+{
+   public string ApplicationID { get; set; } = string.Empty;
+
+   public string UserID { get; set; } = string.Empty;
+
+   public string FullName { get; set; } = string.Empty;
+
+   public string Email { get; set; } = string.Empty;
+
+   public string? PhoneNumber { get; set; }
+
+   public string? AvatarURL { get; set; }
+
+   public string? CVPath { get; set; }
+
+   public string? Summary { get; set; }
+
+   public ApplicationStatus Status { get; set; }
+
+   public string StatusName { get; set; } = string.Empty;
+
+   public DateTime AppliedAt { get; set; }
+
+   public string? Feedback { get; set; }
+}
+
 public class JobPostApprovalDTO
 {
    public required string ApplicationID { get; set; }

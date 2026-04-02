@@ -1,5 +1,6 @@
 @{
    ViewData["Title"] = "Quản lý chiến dịch tuyển dụng";
+
    Layout = "~/Views/Shared/_BusinessLayout.cshtml";
 }
 
@@ -108,7 +109,6 @@
    </div>
 
    <h3 class="text-lg font-bold text-gray-800 hover:text-green-600 transition cursor-pointer mb-2">
-   @* <a href="/business/detail?jobPostId=${job.jobPostID}">${job.title}</a> *@
    <a href="/Business/DetailJobPost?jobPostId=${job.jobPostID}">${job.title}</a>
    </h3>
 
@@ -127,14 +127,14 @@
 
    <div class="flex gap-4">
    <div class="bg-gray-50 border border-gray-100 rounded-lg p-3 text-center min-w-[90px]">
-   <p class="text-2xl font-bold text-gray-700">0</p>
-   <p class="text-[11px] text-gray-500 font-medium mt-1">Lượt Xem</p>
+   <p class="text-2xl font-bold text-gray-700">${job.approvedCount}</p>
+   <p class="text-[11px] text-gray-500 font-medium mt-1">Đã duyệt</p>
    </div>
 
    <a href="/Business/CVList?jobId=${job.jobPostID}"
    class="bg-green-50 border border-green-100 rounded-lg p-3 text-center min-w-[90px] cursor-pointer hover:bg-green-100 transition group">
    <p class="text-2xl font-bold text-green-600 group-hover:scale-110 transition">
-   ${job.totalApplications ?? 0}
+   ${job.totalApplications}
    </p>
    <p class="text-[11px] text-green-700 font-bold mt-1 uppercase">
    CV Ứng tuyển

@@ -21,6 +21,7 @@ public class PostRepository(DatabaseContext context) : IPostRepository
    {
       var query = _context.JobPosts
          .AsNoTracking()
+         .Include(p => p.Business)
          .Where(p => p.IsActive);
 
       // Nếu có lastPostID, chỉ lấy những bài có ID lớn hơn (mới hơn)

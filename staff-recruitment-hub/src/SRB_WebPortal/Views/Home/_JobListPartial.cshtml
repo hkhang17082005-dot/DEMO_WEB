@@ -20,22 +20,20 @@
 </style>
 
 <div class="relative min-h-100">
+   @* Render list Job *@
    <div id="jobListWrapper" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
 
-   <div class="flex justify-center items-center gap-4 mt-10 mb-20">
+   <div id="paginationContainer" class=" flex justify-center items-center gap-4 mt-10 mb-20">
       <button id="btnPrev" onclick="prevPage()" class="group relative w-9 h-9 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500
          transition-all duration-300 ease-out
          hover:border-green-500 hover:text-green-600 hover:shadow-md hover:shadow-green-50/50 hover:-translate-x-0.5
          active:scale-90
          disabled:opacity-30 disabled:pointer-events-none">
-
-         <!-- Lớp nền hover tinh tế -->
          <span
-         class="absolute inset-0 rounded-lg bg-green-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-
-         <!-- Icon size nhỏ hơn -->
-         <i
-         class="fa-solid fa-chevron-left text-sm relative z-10 transition-transform group-hover:-translate-x-0.5"></i>
+            class="absolute inset-0 rounded-lg bg-green-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+         </span>
+         <i class="fa-solid fa-chevron-left text-sm relative z-10 transition-transform group-hover:-translate-x-0.5">
+         </i>
       </button>
 
       <span id="currentPageDisplay" class="font-bold text-green-600">Trang 1</span>
@@ -63,6 +61,8 @@
 
    async function loadJobsApi(lastId = "", direction = "next") {
       const container = document.getElementById("jobListWrapper");
+      const pagination = document.getElementById("paginationContainer");
+
       container.style.opacity = "0.5";
 
       try {
@@ -76,15 +76,29 @@
          if (jobs && jobs.length > 0) {
             renderJobs(jobs);
 
+            pagination.style.display = "flex";
+
             // Cập nhật giao diện trang
             document.getElementById("currentPageDisplay").innerText = `Trang ${currentPage}`;
 
             // Xử lý nút bấm
             document.getElementById("btnPrev").disabled = (currentPage === 1);
-            // Nếu lấy về ít hơn PageSize nghĩa là hết dữ liệu để Next
-            document.getElementById("btnNext").disabled = (data.length < pageSize);
+            document.getElementById("btnNext").disabled = (jobs.length < pageSize);
          } else {
-            if (direction === "next") alert("Đã hết danh sách việc làm");
+            if (currentPage === 1) {
+               container.innerHTML = `
+                  <div class="col-span-full text-center py-10">
+                     <p class="text-gray-500">Hiện không có công việc nào phù hợp</p>
+                  </div>
+               `;
+               pagination.style.display = "none";
+            } else {
+               if (direction === "next") {
+                  alert("Đã hết danh sách việc làm");
+                  currentPage--;
+                  pageHistory.pop();
+               }
+            }
          }
       } catch (err) {
          console.error("Lỗi load API:", err);
@@ -143,14 +157,21 @@
                      onerror="this.src='/images/business-logo.png'" />
                </div>
 
-               <div class="flex-1 min-w-0">
+               <div class="flex-1 min-w-0 flex flex-col justify-start">
                   <a href="/job-post/JobPostID=${job.jobPostID}"
                      class="block font-bold text-gray-800 group-hover:text-green-600 text-base leading-snug line-clamp-2 transition-colors">
                      ${job.title}
                   </a>
-                  <p class="text-gray-500 text-xs mt-1 truncate uppercase tracking-wider font-medium">
-                     ${job.businessName}
-                  </p>
+
+                  <div class="mt-2">
+                     <p class="text-gray-500 text-xs mt-1.5 font-semibold flex items-center gap-1 group/brand">
+                        <i class="fa-regular fa-building text-[10px] text-gray-400 group-hover/brand:text-green-500 transition-colors"></i>
+
+                        <span class="truncate hover:text-gray-700 transition-colors tracking-wide">
+                           ${job.businessName || 'Doanh nghiệp'}
+                        </span>
+                     </p>
+                  </div>
                </div>
             </div>
 

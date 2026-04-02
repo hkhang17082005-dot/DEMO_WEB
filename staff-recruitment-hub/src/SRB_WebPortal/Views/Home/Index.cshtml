@@ -1,7 +1,4 @@
-﻿@using Microsoft.EntityFrameworkCore.Metadata.Internal
-@using SRB_WebPortal.Controllers.apis.post
-@model List<JobPostDTO>
-@{
+﻿@{
    ViewData["Title"] = "Trang chủ";
 
    var savedJobs = ViewBag.SavedJobs as List<int> ?? new List<int>();
@@ -97,29 +94,7 @@
       <partial name="~/Views/Home/Components/_HeaderSection.cshtml" />
    </div>
 
-   <!-- Filter Tags Navigation -->
-   <div class="relative group mb-12">
-      <div class="flex items-center gap-3">
-         <button onclick="scrollFilters(-200)"
-            class="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-white border border-gray-200 shadow-sm text-gray-500 hover:bg-green-500 hover:text-white hover:border-green-500 transition-all duration-300">
-            <i class="fa-solid fa-chevron-left"></i>
-         </button>
-
-         <div id="filterTagsContainer"
-            class="flex-1 flex items-center gap-3 overflow-x-auto no-scrollbar scroll-smooth py-2">
-            <button class="whitespace-nowrap px-5 py-2.5 bg-white border border-gray-200 rounded-full text-sm font-medium text-gray-600 hover:border-green-500 hover:text-green-600 hover:shadow-md hover:shadow-green-500/10 transition-all">Tất cả</button>
-            <button class="whitespace-nowrap px-5 py-2.5 bg-white border border-gray-200 rounded-full text-sm font-medium text-gray-600 hover:border-green-500 hover:text-green-600 transition-all">Hà Nội</button>
-            <button class="whitespace-nowrap px-5 py-2.5 bg-white border border-gray-200 rounded-full text-sm font-medium text-gray-600 hover:border-green-500 hover:text-green-600 transition-all">TP. Hồ Chí Minh</button>
-         </div>
-
-         <button onclick="scrollFilters(200)"
-            class="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-white border border-gray-200 shadow-sm text-gray-500 hover:bg-green-500 hover:text-white hover:border-green-500 transition-all duration-300">
-            <i class="fa-solid fa-chevron-right"></i>
-         </button>
-      </div>
-      <div class="absolute inset-y-0 left-12 w-8 bg-linear-to-r from-gray-50/50 to-transparent pointer-events-none"></div>
-      <div class="absolute inset-y-0 right-12 w-8 bg-linear-to-l from-gray-50/50 to-transparent pointer-events-none"></div>
-   </div>
+   <partial name="~/Views/Home/Components/_FilterTags.cshtml" />
 
    <!-- Job List -->
    <div id="jobListContainer" class="grid grid-cols-1 gap-6 transition-all duration-500">
@@ -160,27 +135,6 @@
             { id: '30+', name: 'Trên 30 triệu' },
          ]
       };
-
-      // 2. RENDER VÀ ĐIỀU HƯỚNG FILTER
-      function updateFilterTags() {
-         const type = document.getElementById("filterType").value;
-         const container = document.getElementById("filterTagsContainer");
-         const items = filterData[type];
-
-         if (!items) return;
-
-         container.innerHTML = items.map(item => `
-            <button type="button"
-                    onclick="applyQuickFilter('${item.id}', '${type}', this)"
-                    class="filter-pill px-4 py-2 rounded-full border border-gray-100 bg-gray-50 text-gray-600 text-sm font-medium whitespace-nowrap hover:border-green-500 hover:text-green-600 transition-all">
-                ${item.name}
-            </button>
-         `).join('');
-      }
-
-      function scrollFilters(distance) {
-          document.getElementById('filterTagsContainer').scrollBy({ left: distance, behavior: 'smooth' });
-      }
 
       // 3. LOGIC LỌC CHÍNH (Hợp nhất xử lý)
       async function applyQuickFilter(id, type, element) {
