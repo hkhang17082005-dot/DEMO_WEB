@@ -16,6 +16,16 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddExtensionServices();
 
+builder.Services.AddCors(options =>
+{
+   options.AddDefaultPolicy(policy =>
+   {
+      policy.WithOrigins("http://localhost:8000", "http://localhost:8080")
+             .AllowAnyHeader()
+             .AllowAnyMethod();
+   });
+});
+
 // Global Filter
 builder.Services.AddControllers(options =>
 {
@@ -56,5 +66,7 @@ app.MapControllerRoute(
 );
 
 app.MapControllers();
+
+app.UseCors();
 
 app.Run();

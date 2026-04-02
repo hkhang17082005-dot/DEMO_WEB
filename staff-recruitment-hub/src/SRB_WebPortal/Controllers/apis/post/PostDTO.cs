@@ -106,3 +106,25 @@ public class UploadCVModel
 public record DeleteFileRequest(
    [Required(ErrorMessage = "FileName không được để trống")] string FileName
 );
+
+public class MyApplicationDTO
+{
+   public required string JobTitle { get; set; }
+   public required string CompanyName { get; set; }
+   public string? CompanyLogo { get; set; }
+   public DateTime AppliedAt { get; set; }
+   public string? CVFileName { get; set; }
+   public ApplicationStatus Status { get; set; }
+   public DateTime? UpdatedAt { get; set; }
+}
+
+public class CandidateDashboardVM
+{
+   public required string FullName { get; set; }
+   public int ProfileCompletion { get; set; }
+   public int TotalApplied { get; set; }
+   public int TotalSaved { get; set; }
+   public int TotalViews { get; set; }
+   public int TotalInterviews { get; set; }
+   public int SuitableJobsCount { get; set; }
+}

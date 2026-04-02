@@ -1,5 +1,6 @@
 MAIN_PROJECT = src/SRB_WebPortal
 MODEL_PROJECT = src/SRB_ViewModel
+PADDLE_PROJECT = src/SRB_Paddle
 
 RAW_ARGS = $(filter-out $@,$(MAKECMDGOALS))
 ARGS = $(if $(RAW_ARGS), $(RAW_ARGS), InitialEntity)
@@ -12,6 +13,8 @@ run:
 	dotnet run --project $(MAIN_PROJECT) --no-https
 dev:
 	dotnet watch run --project $(MAIN_PROJECT) --no-https
+mo:
+	py ${PADDLE_PROJECT}/main
 # dev:
 # 	dotnet watch run --project $(MAIN_PROJECT) --no-https --no-hot-reload
 devUI:

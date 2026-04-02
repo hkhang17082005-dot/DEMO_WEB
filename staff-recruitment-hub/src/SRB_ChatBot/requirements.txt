@@ -1,0 +1,25 @@
+# Thư viện core AI
+torch
+torchvision
+torchaudio
+
+# Thư viện xử lý Model & Tokenizer
+transformers
+accelerate
+sentencepiece
+huggingface_hub
+sentence-transformers
+scikit-learn
+
+# Thư viện chạy Model GGUF tối ưu cho Mac M1
+llama-cpp-python
+
+# Tiện ích
+python-dotenv
+huggingface_hub
+pyodbc
+pandas
+chromadb
+
+fastapi
+uvicorn

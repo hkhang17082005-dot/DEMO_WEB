@@ -157,8 +157,6 @@ public class BusinessController(IShareRepository shareRepository) : Controller
 
    public async Task<IActionResult> ReviewCV([FromQuery] string applicationID)
    {
-      Console.WriteLine($"NQHxLog: {applicationID}");
-
       if (string.IsNullOrEmpty(applicationID)) return NotFound();
 
       var cvDetail = await _shareRepository.GetApplicationDetailAsync(applicationID);

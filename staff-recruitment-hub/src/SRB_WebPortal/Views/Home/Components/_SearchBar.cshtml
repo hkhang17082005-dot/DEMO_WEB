@@ -1,37 +1,126 @@
-<div
-   class="bg-white rounded-2xl p-2 shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex flex-col md:flex-row gap-2 max-w-5xl mx-auto">
-   <!--Input-->
-   <div class="flex-[1.5] flex items-center px-5 py-3 border-b md:border-b-0 md:border-r border-gray-100 group">
-      <i
-      class="fa-solid fa-magnifying-glass text-emerald-500 mr-3 group-focus-within:scale-110 transition-transform"></i>
-      <input type="text" id="jobSearch" value="@ViewBag.Keyword" placeholder="Vị trí tuyển dụng, tên công ty..."
-             class="w-full text-gray-700 outline-none placeholder-gray-400 font-medium text-base">
+<div class="max-w-5xl mx-auto group relative">
+   <div
+      class="absolute -inset-1 bg-linear-to-r from-green-400 via-emerald-500 to-teal-500 rounded-4xl blur-xl opacity-0 group-hover:opacity-40 transition duration-700">
    </div>
-   <!--Location-->
-   <div class="flex-1 flex items-center px-5 py-3 group">
-      <i class="fa-solid fa-location-dot text-emerald-500 mr-3 group-focus-within:bounce transition-transform"></i>
-      <div class="relative w-full">
-         <select id="locationFilter"
-                 class="w-full text-gray-700 outline-none appearance-none font-medium bg-transparent cursor-pointer pr-8">
-            <option value="">Tất cả địa điểm</option>
-            @foreach (var location in ViewBag.Locations)
-            {
-               <option value="@location.LocationID" selected="@(ViewBag.CurrentLocation == location.LocationID)">
-                  @location.LocationName
-               </option>
-            }
-         </select>
-         <i
-         class="fa-solid fa-chevron-down absolute right-0 top-1/2 -translate-y-1/2 text-[10px] text-gray-400 pointer-events-none"></i>
+
+   <div
+      class="relative bg-white/80 backdrop-blur-sm rounded-2xl p-2 shadow-2xl shadow-gray-200/50 border border-gray-100/80 flex flex-col md:flex-row items-stretch gap-2 hover:shadow-3xl transition-all duration-300">
+      <div class="flex-[1.5] group/input relative">
+         <div
+            class="absolute inset-0 bg-linear-to-r from-green-50 to-emerald-50 rounded-xl opacity-0 group-focus-within/input:opacity-100 transition-opacity duration-300">
+         </div>
+         <div class="relative flex items-center gap-3 px-5 py-3.5 rounded-xl transition-all duration-300">
+            <div
+               class="w-11 h-11 rounded-xl bg-linear-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white shadow-lg shadow-green-500/25 group-focus-within/input:shadow-green-500/40 transition-all duration-300">
+               <i class="fa-solid fa-magnifying-glass text-base"></i>
+            </div>
+            <div class="flex-1">
+               <span
+                  class="block text-[11px] font-bold text-green-600 uppercase tracking-wider mb-1.5 items-center gap-1">
+                  <i class="fa-solid fa-fire-flame-curved text-[10px]"></i>
+                  Từ khóa tìm kiếm
+               </span>
+               <input type="text" id="jobSearch" value="@ViewBag.Keyword" placeholder="Ví dụ: React Developer..."
+                      class="w-full bg-transparent text-gray-800 outline-none placeholder:text-gray-400 placeholder:text-sm font-semibold text-[15px] border-none p-0 focus:ring-0">
+            </div>
+            <button onclick="clearSearch()" class="text-gray-400 hover:text-gray-600 transition-colors hidden"
+                    id="clearSearchBtn">
+               <i class="fa-solid fa-circle-xmark text-lg"></i>
+            </button>
+         </div>
+      </div>
+
+      <div class="hidden md:block w-px h-10 bg-linear-to-b from-transparent via-gray-200 to-transparent my-auto"></div>
+
+      <div class="flex-1 group/location relative">
+         <div
+            class="absolute inset-0 bg-linear-to-r from-gray-50 to-gray-100/50 rounded-xl opacity-0 group-focus-within/location:opacity-100 transition-opacity duration-300">
+         </div>
+         <div class="relative flex items-center gap-3 px-5 py-3.5 rounded-xl transition-all duration-300">
+            <div
+               class="w-11 h-11 rounded-xl bg-linear-to-br from-blue-500 to-cyan-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/25 group-focus-within/location:shadow-blue-500/40 transition-all duration-300">
+               <i class="fa-solid fa-location-dot text-base"></i>
+            </div>
+            <div class="flex-1 relative">
+               <span
+                  class="text-[11px] font-bold text-blue-600 uppercase tracking-wider mb-1.5 flex items-center gap-1">
+                  <i class="fa-solid fa-map-pin text-[10px]"></i>
+                  Khu vực làm việc
+               </span>
+               <div class="relative">
+                  <select id="locationFilter"
+                          class="w-full bg-transparent text-gray-800 outline-none appearance-none font-semibold text-[15px] cursor-pointer border-none p-0 focus:ring-0 peer">
+                     <option value="">Tất cả địa điểm</option>
+                     @foreach (var location in ViewBag.Locations)
+                     {
+                        <option value="@location.LocationID" selected="@(ViewBag.CurrentLocation == location.LocationID)">
+                           @location.LocationName
+                        </option>
+                     }
+                  </select>
+                  <div class="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none">
+                     <i
+                     class="fa-solid fa-chevron-down text-xs text-gray-400 group-hover/location:text-blue-500 transition-colors duration-300"></i>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <div class="md:w-auto">
+         <button onclick="searchJobs()"
+                 class="group/btn w-full h-full px-8 py-3.5 bg-linear-to-r from-green-600 via-emerald-600 to-teal-600 hover:from-green-700 hover:via-emerald-700 hover:to-teal-700 text-white font-bold rounded-xl transition-all duration-300 shadow-lg shadow-green-500/30 hover:shadow-xl hover:shadow-green-500/40 active:scale-[0.98] flex items-center justify-center gap-3 whitespace-nowrap">
+            <span class="tracking-wider text-sm font-bold">TÌM KIẾM NGAY</span>
+            <i
+            class="fa-solid fa-arrow-right-long text-xs group-hover/btn:translate-x-1 transition-transform duration-300"></i>
+         </button>
       </div>
    </div>
-   <!--button tim kiem -->
-   <button onclick="searchJobs()"
-           class="bg-orange-500 hover:bg-orange-600 px-12 py-4 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-orange-200 active:scale-95 flex items-center justify-center gap-2">
-      <i class="fa-solid fa-paper-plane"></i>
-      <span>TÌM KIẾM</span>
-   </button>
 </div>
+
+<style>
+   .rounded-xl {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+   }
+
+   select {
+      background: transparent;
+      cursor: pointer;
+   }
+
+   select option {
+      background: white;
+      color: #1f2937;
+      padding: 8px;
+   }
+
+   button {
+      position: relative;
+      overflow: hidden;
+   }
+
+   button::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+   }
+
+   button:active::after {
+      width: 300px;
+      height: 300px;
+   }
+
+   #resultCount {
+      transition: all 0.3s ease;
+   }
+</style>
 
 <script>
    function searchJobs() {

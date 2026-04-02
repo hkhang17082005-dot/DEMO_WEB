@@ -1,12 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 
 using SRB_ViewModel;
+using SRB_ViewModel.Data;
 using SRB_WebPortal.Consts;
 using SRB_ViewModel.Entities;
 using SRB_WebPortal.Services;
 
+using SRB_WebPortal.Controllers.apis.post;
 using SRB_WebPortal.Controllers.apis.business;
-using SRB_ViewModel.Data;
 
 namespace SRB_WebPortal.Shared;
 
@@ -18,6 +19,8 @@ public interface IShareRepository
    Task<JobPost?> GetJobPost(string jobPostID);
    Task<IEnumerable<JobPostApprovalDTO>> GetPendingJobPostsAsync(string jobPostID);
    Task<CVReviewDetailDTO?> GetApplicationDetailAsync(string applicationID);
+   Task<List<MyApplicationDTO>> GetUserApplicationsAsync(string userID);
+   Task<CandidateDashboardVM> GetDashboardStatsAsync(string userID);
 }
 
 public class ShareRepository(
@@ -27,6 +30,43 @@ public class ShareRepository(
 {
    private readonly DatabaseContext _context = context;
    private readonly IRedisService _redisService = redisService;
+
+   public async Task<CandidateDashboardVM> GetDashboardStatsAsync(string userID)
+   {
+      var userProfile = await _context.UserProfiles
+         .Where(u => u.UserID == userID)
+         .FirstOrDefaultAsync();
+
+      var stats = new CandidateDashboardVM
+      {
+         FullName = userProfile?.FullName ?? "Không rõ",
+         ProfileCompletion = 75,
+         TotalApplied = await _context.JobApplications.CountAsync(a => a.UserID == userID),
+         TotalInterviews = await _context.JobApplications.CountAsync(a => a.UserID == userID && a.Status == ApplicationStatus.Interviewing),
+         TotalSaved = await _context.SavedJobs.CountAsync(s => s.UserId == userID),
+         TotalViews = 0,
+      };
+
+      return stats;
+   }
+
+   public async Task<List<MyApplicationDTO>> GetUserApplicationsAsync(string userID)
+   {
+      return await _context.JobApplications
+         .Where(a => a.UserID == userID)
+         .OrderByDescending(a => a.AppliedAt)
+         .Select(a => new MyApplicationDTO
+         {
+            JobTitle = a.JobPost.Title,
+            CompanyName = a.JobPost.Business.BusinessName,
+            CompanyLogo = a.JobPost.Business.LogoUrl,
+            AppliedAt = a.AppliedAt,
+            CVFileName = a.CVPath,
+            Status = a.Status,
+            UpdatedAt = a.UpdatedAt
+         })
+         .ToListAsync();
+   }
 
    public async Task<CVReviewDetailDTO?> GetApplicationDetailAsync(string applicationID)
    {

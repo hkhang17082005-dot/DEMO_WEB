@@ -1,91 +1,162 @@
-@{
-    ViewData["Title"] = "Chi tiết bài viết";
-}
-
 <div id="progressBar" class="fixed top-0 left-0 h-1 bg-green-500 z-50 transition-all duration-150" style="width: 0%"></div>
 
-<article class="pt-28 pb-20 bg-white">
-    <div class="max-w-4xl mx-auto px-4">
-        <nav class="flex items-center gap-2 text-sm text-gray-500 mb-8">
-            <a href="/" class="hover:text-green-600">Trang chủ</a>
-            <i class="fa-solid fa-chevron-right text-[10px]"></i>
-            <a href="/Blog" class="hover:text-green-600">Cẩm nang</a>
-            <i class="fa-solid fa-chevron-right text-[10px]"></i>
-            <span class="text-gray-900 font-medium">Chi tiết bài viết</span>
-        </nav>
+<div class="max-w-7xl mx-auto px-4 pt-28 pb-20">
+    <div class="flex flex-col lg:flex-row gap-12">
+        
+        <article class="flex-1 min-w-0">
+            <nav class="flex items-center gap-2 text-sm text-gray-500 mb-8">
+                <a href="/" class="hover:text-green-600 transition-colors">Trang chủ</a>
+                <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                <a href="/Blog" class="hover:text-green-600 transition-colors">Cẩm nang</a>
+                <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                <span class="text-gray-900 font-medium">Chi tiết bài viết</span>
+            </nav>
 
-        <header class="mb-12">
-            <span class="inline-block px-4 py-1.5 bg-green-100 text-green-700 text-xs font-bold rounded-full mb-6 uppercase">Mẹo tuyển dụng</span>
-            <h1 class="text-4xl md:text-5xl font-black text-gray-900 leading-tight mb-6">
-                5 Mẹo viết CV "chinh phục" mọi nhà tuyển dụng khó tính
-            </h1>
-            
-            <div class="flex items-center justify-between py-6 border-y border-gray-100">
-                <div class="flex items-center gap-4">
-                    <img src="https://ui-avatars.com/api/?name=Admin&background=10b981&color=fff" class="w-12 h-12 rounded-full" alt="Author">
-                    <div>
-                        <div class="font-bold text-gray-900">Ban Biên Tập SRB</div>
-                        <div class="text-sm text-gray-500">Cập nhật: 31 Tháng 3, 2026 • 5 phút đọc</div>
+            <header class="mb-12">
+                <span class="inline-block px-4 py-1.5 bg-green-100 text-green-700 text-xs font-bold rounded-full mb-6 uppercase">Mẹo tuyển dụng</span>
+                <h1 class="text-4xl md:text-5xl font-black text-gray-900 leading-tight mb-6">
+                    5 Mẹo viết CV "chinh phục" mọi nhà tuyển dụng khó tính
+                </h1>
+                
+                <div class="flex items-center justify-between py-6 border-y border-gray-100">
+                    <div class="flex items-center gap-4">
+                        <img src="https://ui-avatars.com/api/?name=Admin&background=10b981&color=fff" class="w-12 h-12 rounded-full" alt="Author">
+                        <div>
+                            <div class="font-bold text-gray-900">Ban Biên Tập SRB</div>
+                            <div class="text-sm text-gray-500">Cập nhật: 31 Tháng 3, 2026 • 5 phút đọc</div>
+                        </div>
+                    </div>
+                    <div class="flex gap-2 text-gray-400 font-medium text-sm">
+                        Chia sẻ: 
+                        <button class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center hover:bg-blue-50 hover:text-blue-600 transition-all"><i class="fa-brands fa-facebook-f"></i></button>
+                        <button class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-900 hover:text-white transition-all"><i class="fa-brands fa-x-twitter"></i></button>
+                        <button class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-all" onclick="copyLink()"><i class="fa-solid fa-link"></i></button>
                     </div>
                 </div>
-                <div class="flex gap-2">
-                    <button class="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:bg-blue-50 hover:text-blue-600 transition-all"><i class="fa-brands fa-facebook-f"></i></button>
-                    <button class="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-all"><i class="fa-solid fa-link"></i></button>
+            </header>
+
+            <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed italic-quotes" id="blogContent">
+                <p class="text-xl text-gray-500 font-medium mb-8 leading-relaxed">
+                    Trong thị trường lao động cạnh tranh hiện nay, bản CV của bạn chỉ có khoảng 6 giây để gây ấn tượng với HR. Làm sao để nổi bật? Hãy cùng khám phá...
+                </p>
+
+                <h2 id="section1">1. Tập trung vào kết quả (Results-Oriented)</h2>
+                <p>Thay vì viết "Chịu trách nhiệm quản lý dự án", hãy viết "Đã tối ưu hóa quy trình giúp giảm 20% chi phí vận hành trong 6 tháng". Con số luôn có sức nặng hơn lời nói.</p>
+
+                <div class="my-10 rounded-3xl overflow-hidden shadow-2xl relative group">
+                    <img src="https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=2070" class="w-full transition-transform duration-500 group-hover:scale-105" alt="CV Tip">
+                    <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </div>
+
+                <h2 id="section2">2. Tối ưu hóa từ khóa (ATS Optimization)</h2>
+                <p>Nhiều công ty lớn sử dụng hệ thống ATS. Nếu CV của bạn thiếu các từ khóa kỹ năng cốt lõi (như "Project Management", "Agile", "Tailwind CSS"), nó sẽ bị loại trước khi đến tay HR.</p>
+                
+                <blockquote class="border-l-4 border-green-500 bg-green-50 p-8 rounded-r-2xl my-8 italic font-medium text-gray-800 text-lg">
+                    "Một bản CV tốt không phải là bản CV dài nhất, mà là bản CV phù hợp nhất với mô tả công việc."
+                </blockquote>
+
+                <h2 id="section3">3. Thiết kế tối giản và phân cấp thông tin</h2>
+                <p>Sử dụng các khoảng trắng (white-space) hợp lý. HR cần tìm thấy Email, Số điện thoại và Kỹ năng của bạn trong tích tắc.</p>
+            </div>
+
+            <div class="mt-12 pt-8 border-t border-gray-100 flex flex-wrap gap-2">
+                <span class="px-4 py-2 bg-gray-50 rounded-lg text-sm font-medium text-gray-500">#CareerTips</span>
+                <span class="px-4 py-2 bg-gray-50 rounded-lg text-sm font-medium text-gray-500">#WritingCV</span>
+            </div>
+        </article>
+
+        <aside class="w-full lg:w-80 space-y-10">
+            <div class="bg-white border border-gray-100 rounded-3xl p-6 sticky top-24">
+                <h4 class="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-list-ul text-green-500"></i> Nội dung chính
+                </h4>
+                <ul class="space-y-3 text-sm" id="toc">
+                    <li><a href="#section1" class="text-gray-600 hover:text-green-600 transition-colors">1. Tập trung vào kết quả</a></li>
+                    <li><a href="#section2" class="text-gray-600 hover:text-green-600 transition-colors">2. Tối ưu hóa từ khóa</a></li>
+                    <li><a href="#section3" class="text-gray-600 hover:text-green-600 transition-colors">3. Thiết kế tối giản</a></li>
+                </ul>
+
+                <hr class="my-6">
+
+                <div class="bg-green-50 p-4 rounded-2xl">
+                    <h5 class="font-bold text-green-900 text-sm mb-2">Nhận mẹo sự nghiệp</h5>
+                    <p class="text-xs text-green-700 mb-3">Chúng tôi gửi những bản tin chất lượng nhất vào Thứ 2 hàng tuần.</p>
+                    <input type="email" placeholder="Email của bạn..." class="w-full px-4 py-2 rounded-xl text-xs border border-green-200 focus:outline-none focus:ring-2 focus:ring-green-500/20 mb-2">
+                    <button class="w-full py-2 bg-green-600 text-white text-xs font-bold rounded-xl hover:bg-green-700 transition-all">Đăng ký ngay</button>
                 </div>
             </div>
-        </header>
-
-        <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed italic-quotes">
-            <p class="text-xl text-gray-500 font-medium mb-8 leading-relaxed">
-                Trong thị trường lao động cạnh tranh hiện nay, bản CV của bạn chỉ có khoảng 6 giây để gây ấn tượng với HR. Làm sao để nổi bật? Hãy cùng khám phá...
-            </p>
-
-            <h2 class="text-2xl font-bold text-gray-900 mt-10 mb-4">1. Tập trung vào kết quả, không chỉ là mô tả công việc</h2>
-            <p>Thay vì viết "Chịu trách nhiệm quản lý dự án", hãy viết "Đã tối ưu hóa quy trình giúp giảm 20% chi phí vận hành trong 6 tháng". Con số luôn có sức nặng hơn lời nói.</p>
-
-            <div class="my-10 rounded-3xl overflow-hidden shadow-2xl">
-                <img src="https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=2070" class="w-full" alt="CV Tip">
-            </div>
-
-            <h2 class="text-2xl font-bold text-gray-900 mt-10 mb-4">2. Tối ưu hóa từ khóa (Keywords)</h2>
-            <p>Nhiều công ty lớn hiện nay sử dụng hệ thống ATS (Applicant Tracking System). Nếu CV của bạn thiếu các từ khóa kỹ năng cốt lõi, nó sẽ bị loại trước khi đến tay con người.</p>
             
-            <blockquote class="border-l-4 border-green-500 bg-green-50 p-6 rounded-r-2xl my-8 italic font-medium text-gray-800">
-                "Một bản CV tốt không phải là bản CV dài nhất, mà là bản CV phù hợp nhất với mô tả công việc."
-            </blockquote>
-
-            <h2 class="text-2xl font-bold text-gray-900 mt-10 mb-4">3. Thiết kế tối giản và chuyên nghiệp</h2>
-            <p>Đừng sử dụng quá nhiều màu sắc hay font chữ cầu kỳ. Một bố cục thoáng đạt với Tailwind CSS sẽ giúp HR dễ dàng quét thông tin quan trọng nhất.</p>
-        </div>
-
-        <div class="mt-12 pt-8 border-t border-gray-100 flex flex-wrap gap-2">
-            <span class="px-4 py-2 bg-gray-100 rounded-lg text-sm font-medium text-gray-600 hover:bg-green-100 hover:text-green-600 cursor-pointer">#CareerTips</span>
-            <span class="px-4 py-2 bg-gray-100 rounded-lg text-sm font-medium text-gray-600 hover:bg-green-100 hover:text-green-600 cursor-pointer">#WritingCV</span>
-            <span class="px-4 py-2 bg-gray-100 rounded-lg text-sm font-medium text-gray-600 hover:bg-green-100 hover:text-green-600 cursor-pointer">#JobSearch</span>
-        </div>
-    </div>
-</article>
-
-<section class="bg-gray-50 py-20 px-4">
-    <div class="max-w-7xl mx-auto">
-        <h3 class="text-2xl font-bold text-gray-900 mb-10">Bài viết bạn có thể thích</h3>
-        <div class="grid md:grid-cols-3 gap-8">
+            <div class="space-y-4">
+                <h4 class="font-bold text-gray-900">Việc làm liên quan</h4>
+                <div class="p-4 bg-white border border-gray-100 rounded-2xl hover:border-green-200 transition-all cursor-pointer shadow-sm">
+                    <h5 class="font-bold text-gray-900 text-sm mb-1 line-clamp-1">UI/UX Designer (Senior)</h5>
+                    <p class="text-xs text-gray-500 mb-2">FPT Software • Đà Nẵng</p>
+                    <div class="text-green-600 font-bold text-xs">25 - 40 triệu</div>
+                </div>
             </div>
+        </aside>
+
     </div>
-</section>
+</div>
+
+<style>
+    /* Làm mượt việc cuộn trang khi bấm vào mục lục */
+    html { scroll-behavior: smooth; }
+
+    /* Custom nội dung bài viết */
+    .prose h2 { 
+        color: #111827; 
+        font-weight: 800; 
+        margin-top: 3rem; 
+        margin-bottom: 1.5rem; 
+        font-style: italic;
+        letter-spacing: -0.025em;
+    }
+    
+    .prose p { 
+        margin-bottom: 1.75rem; 
+        line-height: 1.85; 
+        color: #374151; 
+        font-size: 1.1rem;
+    }
+
+    /* Hiệu ứng trích dẫn */
+    .prose blockquote {
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Tối ưu mobile */
+    @@media (max-width: 1024px) {
+        aside { display: none; } /* Ẩn sidebar trên mobile để tập trung đọc */
+    }
+</style>
 
 <script>
-    // Hiệu ứng Progress Bar khi cuộn
+    // Copy link bài viết
+    function copyLink() {
+        navigator.clipboard.writeText(window.location.href);
+        alert("Đã sao chép đường dẫn bài viết!");
+    }
+
+    // Scroll Progress & Active TOC
     window.onscroll = function() {
         let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
         let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
         let scrolled = (winScroll / height) * 100;
         document.getElementById("progressBar").style.width = scrolled + "%";
+        
+        // Làm nổi bật mục lục khi cuộn đến phần tương ứng
+        const sections = document.querySelectorAll('h2');
+        const navLinks = document.querySelectorAll('#toc a');
+        
+        sections.forEach((section, i) => {
+            const top = section.offsetTop - 100;
+            if (winScroll >= top) {
+                navLinks.forEach(link => link.classList.remove('text-green-600', 'font-bold'));
+                navLinks[i].classList.add('text-green-600', 'font-bold');
+            }
+        });
     };
 </script>
 
-<style>
-    /* Custom Typography cho bài viết */
-    .prose h2 { color: #111827; font-weight: 800; margin-top: 2.5rem; margin-bottom: 1.25rem; }
-    .prose p { margin-bottom: 1.5rem; line-height: 1.8; color: #4b5563; }
-</style>

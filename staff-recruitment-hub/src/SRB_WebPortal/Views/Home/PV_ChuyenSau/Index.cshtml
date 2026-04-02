@@ -2,54 +2,120 @@
     ViewData["Title"] = "Kỹ năng phỏng vấn chuyên sâu";
 }
 
-<article class="pt-24 pb-20 bg-white">
+<div id="progressBar" class="fixed top-0 left-0 h-1 bg-green-500 z-50 transition-all duration-150" style="width: 0%"></div>
+
+<article class="pt-28 pb-20 bg-white">
     <div class="max-w-4xl mx-auto px-4">
-        <div class="text-sm text-gray-500 mb-6">
-            <a href="/" class="hover:text-green-600">Trang chủ</a> / <a href="/Blog" class="hover:text-green-600">Cẩm nang</a> / <span class="font-bold text-gray-900">Kỹ năng phỏng vấn</span>
-        </div>
+        <nav class="flex items-center gap-2 text-sm text-gray-500 mb-8">
+            <a href="/" class="hover:text-green-600 transition-colors">Trang chủ</a>
+            <i class="fa-solid fa-chevron-right text-[10px]"></i>
+            <a href="/Blog" class="hover:text-green-600 transition-colors">Cẩm nang</a>
+            <i class="fa-solid fa-chevron-right text-[10px]"></i>
+            <span class="text-gray-900 font-medium italic">Kỹ năng phỏng vấn</span>
+        </nav>
 
-        <h1 class="text-4xl md:text-5xl font-black text-gray-900 leading-tight mb-8">
-            Nghệ thuật phỏng vấn: Từ ứng viên tiềm năng đến nhân sự chính thức
-        </h1>
+        <header class="mb-12">
+            <h1 class="text-4xl md:text-5xl font-black text-gray-900 leading-tight mb-6">
+                Nghệ thuật phỏng vấn: Từ ứng viên tiềm năng đến nhân sự chính thức
+            </h1>
+            <div class="flex items-center gap-4 py-6 border-y border-gray-100">
+                <img src="https://ui-avatars.com/api/?name=Admin&background=064e3b&color=fff" class="w-10 h-10 rounded-full" alt="Author">
+                <div class="text-sm">
+                    <span class="font-bold text-gray-900">Ban Biên Tập SRB</span>
+                    <span class="text-gray-400 mx-2">•</span>
+                    <span class="text-gray-500">7 phút đọc</span>
+                </div>
+            </div>
+        </header>
 
-        <div class="bg-gray-50 p-8 rounded-3xl mb-12 border-l-4 border-green-500">
-            <p class="text-lg text-gray-700 italic font-medium leading-relaxed">
-                Phỏng vấn không phải là một bài kiểm tra, mà là một cuộc hội thoại kinh doanh nơi bạn là sản phẩm, còn nhà tuyển dụng là khách hàng. Hãy biến mình thành sự lựa chọn không thể thay thế.
-            </p>
-        </div>
+        <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed">
+            <div class="bg-gradient-to-r from-green-50 to-emerald-50 p-8 rounded-[2rem] mb-12 border-l-8 border-green-600 shadow-sm">
+                <p class="text-xl text-green-900 italic font-medium m-0">
+                    "Đừng phỏng vấn để xin một công việc. Hãy phỏng vấn để trình bày một giải pháp."
+                </p>
+            </div>
 
-        <div class="prose prose-lg max-w-none text-gray-700">
+            <h2 class="text-3xl font-black text-gray-900 mt-12 mb-6">1. Phương pháp STAR: Vũ khí bí mật</h2>
+            <p>Khi gặp các câu hỏi hành vi như <i>"Hãy kể về một lần bạn thất bại"</i>, đừng hoảng loạn. Hãy áp dụng công thức STAR:</p>
             
-            <h2 class="text-2xl font-bold text-gray-900 mt-10">1. Giai đoạn "Trước giờ G": Chuẩn bị là sức mạnh</h2>
-            <ul class="space-y-4">
-                <li><strong>Nghiên cứu sâu (Deep Research):</strong> Đừng chỉ đọc trang chủ. Hãy tìm hiểu về đối thủ cạnh tranh, các dự án gần nhất của công ty trên LinkedIn.</li>
-                <li><strong>Phương pháp STAR:</strong> Chuẩn bị câu chuyện theo cấu trúc: <strong>S</strong>ituation (Tình huống), <strong>T</strong>ask (Nhiệm vụ), <strong>A</strong>ction (Hành động bạn làm), <strong>R</strong>esult (Kết quả).</li>
+            
+
+            <div class="grid sm:grid-cols-2 gap-4 my-8">
+                <div class="p-5 bg-white border-2 border-gray-100 rounded-2xl">
+                    <b class="text-green-600 text-xl">S - Situation</b>
+                    <p class="text-sm mt-2">Mô tả bối cảnh cụ thể của tình huống bạn gặp phải.</p>
+                </div>
+                <div class="p-5 bg-white border-2 border-gray-100 rounded-2xl">
+                    <b class="text-green-600 text-xl">T - Task</b>
+                    <p class="text-sm mt-2">Nhiệm vụ hoặc mục tiêu bạn cần đạt được lúc đó là gì?</p>
+                </div>
+                <div class="p-5 bg-white border-2 border-gray-100 rounded-2xl">
+                    <b class="text-green-600 text-xl">A - Action</b>
+                    <p class="text-sm mt-2">Hành động cụ thể bạn đã thực hiện (Tập trung vào bạn, không phải nhóm).</p>
+                </div>
+                <div class="p-5 bg-white border-2 border-gray-100 rounded-2xl">
+                    <b class="text-green-600 text-xl">R - Result</b>
+                    <p class="text-sm mt-2">Kết quả định lượng được (Doanh số tăng, thời gian giảm...).</p>
+                </div>
+            </div>
+
+            <h2 class="text-3xl font-black text-gray-900 mt-12 mb-6">2. Tâm lý chiến trong phòng phỏng vấn</h2>
+            <p>Nhà tuyển dụng không chỉ đánh giá kiến thức, họ đánh giá <b>văn hóa</b>. Hãy chú ý:</p>
+            <ul class="space-y-4 shadow-sm bg-gray-50 p-8 rounded-3xl list-none">
+                <li class="flex gap-3">
+                    <i class="fa-solid fa-check-circle text-green-500 mt-1"></i>
+                    <span><b>Nguyên tắc 2 phút:</b> Đừng trả lời quá ngắn nhưng cũng đừng nói dài quá 2 phút cho một câu hỏi.</span>
+                </li>
+                <li class="flex gap-3">
+                    <i class="fa-solid fa-check-circle text-green-500 mt-1"></i>
+                    <span><b>Kỹ thuật Mirroring:</b> Khéo léo bắt chước tông giọng hoặc nhịp độ nói của người phỏng vấn để tạo sự đồng điệu.</span>
+                </li>
             </ul>
 
-            <h2 class="text-2xl font-bold text-gray-900 mt-10">2. Giai đoạn "Trong cuộc hội thoại": Tư duy phản biện</h2>
-            <div class="grid md:grid-cols-2 gap-6 my-8">
-                <div class="p-6 bg-white border border-gray-100 rounded-2xl shadow-sm">
-                    <h3 class="font-bold text-green-600 mb-2">Lắng nghe chủ động</h3>
-                    <p class="text-sm">Hãy lắng nghe để hiểu, đừng lắng nghe chỉ để đợi đến lượt trả lời. Hãy đặt câu hỏi ngược lại cho người phỏng vấn.</p>
-                </div>
-                <div class="p-6 bg-white border border-gray-100 rounded-2xl shadow-sm">
-                    <h3 class="font-bold text-green-600 mb-2">Ngôn ngữ cơ thể</h3>
-                    <p class="text-sm">Ánh mắt (Eye contact) và tư thế ngồi thẳng lưng thể hiện sự tự tin và tôn trọng người đối diện.</p>
-                </div>
-            </div>
-
-            <h2 class="text-2xl font-bold text-gray-900 mt-10">3. Câu hỏi "đắt giá" để hỏi ngược nhà tuyển dụng</h2>
-            <p>Kết thúc phỏng vấn, đừng bao giờ nói "Tôi không có câu hỏi nào". Hãy thử các câu hỏi này:</p>
-            <div class="space-y-3 mt-4 bg-green-50 p-6 rounded-2xl text-gray-800 italic">
-                <p>"Thách thức lớn nhất mà bộ phận này đang đối mặt trong 6 tháng tới là gì?"</p>
-                <p>"Công ty định nghĩa thế nào là một nhân sự thành công ở vị trí này sau 1 năm?"</p>
+            <h2 class="text-3xl font-black text-gray-900 mt-12 mb-6">3. Checklist 24h trước khi phỏng vấn</h2>
+            <div class="border-2 border-dashed border-gray-200 p-8 rounded-3xl">
+                <label class="flex items-center gap-3 mb-4 cursor-pointer">
+                    <input type="checkbox" class="w-5 h-5 accent-green-600"> <span>In sẵn 3 bản CV bản cứng.</span>
+                </label>
+                <label class="flex items-center gap-3 mb-4 cursor-pointer">
+                    <input type="checkbox" class="w-5 h-5 accent-green-600"> <span>Kiểm tra lại trang phục (Lịch sự, sạch sẽ).</span>
+                </label>
+                <label class="flex items-center gap-3 mb-4 cursor-pointer">
+                    <input type="checkbox" class="w-5 h-5 accent-green-600"> <span>Tra cứu đường đi (Tránh tắc đường giờ cao điểm).</span>
+                </label>
+                <label class="flex items-center gap-3 cursor-pointer">
+                    <input type="checkbox" class="w-5 h-5 accent-green-600"> <span>Chuẩn bị ít nhất 3 câu hỏi cho nhà tuyển dụng.</span>
+                </label>
             </div>
         </div>
 
-        <div class="mt-16 p-8 bg-green-900 rounded-3xl text-center text-white">
-            <h3 class="text-2xl font-bold mb-4">Bạn đã sẵn sàng ứng tuyển?</h3>
-            <p class="text-green-100/70 mb-8">Hàng ngàn cơ hội tại các tập đoàn lớn đang chờ bạn. Hãy cập nhật CV và ứng tuyển ngay!</p>
-            <a href="/Jobs" class="inline-block px-10 py-4 bg-green-500 hover:bg-green-400 font-black rounded-xl transition-all">TÌM VIỆC NGAY</a>
+        <div class="mt-20 bg-gray-900 rounded-[3rem] p-10 md:p-16 text-center text-white relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-green-500/10 rounded-full blur-3xl"></div>
+            <h3 class="text-3xl font-bold mb-6 italic">Sẵn sàng tỏa sáng?</h3>
+            <p class="text-gray-400 mb-10 max-w-xl mx-auto">Áp dụng ngay những kỹ năng này vào các vị trí tuyển dụng mới nhất trên hệ thống của chúng tôi.</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="/Home" class="px-8 py-4 bg-green-500 hover:bg-green-400 text-black font-black rounded-2xl transition-all hover:scale-105">XEM VIỆC LÀM MỚI NHẤT</a>
+                <a href="/Create_CV/Create" class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-2xl backdrop-blur-md transition-all">TỐI ƯU CV NGAY</a>
+            </div>
         </div>
     </div>
 </article>
+
+<script>
+    window.onscroll = function() {
+        let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        let scrolled = (winScroll / height) * 100;
+        document.getElementById("progressBar").style.width = scrolled + "%";
+    };
+</script>
+
+<style>
+    .prose h2 { scroll-margin-top: 100px; }
+    .prose p { font-size: 1.125rem; color: #4b5563; }
+    .prose strong { color: #111827; }
+    /* Checkbox custom style */
+    input[type="checkbox"] {
+        cursor: pointer;
+    }
+</style>

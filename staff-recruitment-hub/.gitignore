@@ -9,6 +9,11 @@ _/
 src/SRB_WebPortal/wwwroot/css/output.css
 net10.0/
 
+*_env/
+
+__pycache__
+chroma_db/
+
 # Production
 appsettings.Development.json
 .env
@@ -17,5 +22,3 @@ appsettings.Development.json
 analyst.md
 *.dev.md
 .DS_Store
-
-*.dev.md

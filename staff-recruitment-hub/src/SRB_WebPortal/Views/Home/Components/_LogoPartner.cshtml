@@ -1,0 +1,202 @@
+<style>
+   .marquee-container {
+      overflow: hidden;
+      user-select: none;
+      display: flex;
+      gap: 20px;
+   }
+
+   .marquee-content {
+      display: flex;
+      flex-shrink: 0;
+      gap: 20px;
+      min-width: 100%;
+      animation: scroll-left 30s linear infinite;
+   }
+
+   .marquee-reverse {
+      animation: scroll-right 30s linear infinite;
+   }
+
+   .company-card {
+      width: 160px;
+      height: 80px;
+      padding: 15px;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+   }
+
+   .company-card img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      display: block;
+   }
+
+   .company-card:hover {
+      transform: translateY(-5px) scale(1.05);
+      border-color: #22c55e;
+      box-shadow: 0 20px 25px -5px rgba(34, 197, 94, 0.1);
+   }
+
+   @@keyframes scroll-left {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+   }
+
+   @@keyframes scroll-right {
+      from { transform: translateX(-50%); }
+      to { transform: translateX(0); }
+   }
+
+   .marquee-container:hover .marquee-content {
+      animation-play-state: paused;
+   }
+</style>
+
+<div class="max-w-7xl mx-auto px-4 mb-12 text-center">
+   <h2 class="text-3xl font-black text-gray-900 italic tracking-tight">Đối tác chiến lược</h2>
+   <p class="text-gray-500 mt-2 font-medium">Kết nối với những doanh nghiệp hàng đầu trong và ngoài nước</p>
+</div>
+
+<div class="flex mb-8 marquee-container">
+   <div class="flex marquee-content">
+      <div class="company-card">
+         <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/01/Logo-FPT.png" alt="FPT">
+      </div>
+      <div class="company-card">
+         <img
+         src="https://upload.wikimedia.org/wikipedia/vi/thumb/9/98/Vingroup_logo.svg/1280px-Vingroup_logo.svg.png"
+         alt="Vingroup">
+      </div>
+      <div class="company-card">
+         <img
+         src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Viettel_logo_2021.svg/960px-Viettel_logo_2021.svg.png"
+         alt="Viettel">
+      </div>
+      <div class="company-card">
+         <img
+         src="https://corp.vcdn.vn/products/upload/vng/source/Gallery/LOGO%20VNG/MasterArtwork-OrangeVNG%20Master.png"
+         alt="VNG">
+      </div>
+      <div class="company-card">
+         <img
+         src="https://upload.wikimedia.org/wikipedia/vi/thumb/9/9d/Vietcombank_Logo.svg/3840px-Vietcombank_Logo.svg.png"
+         alt="Vietcombank">
+      </div>
+      <div class="company-card">
+         <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/01/Logo-Zalo.png" alt="Zalo">
+      </div>
+      <div class="company-card">
+         <img
+         src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Shopee.svg/960px-Shopee.svg.png"
+         alt="Shopee">
+      </div>
+      <div class="company-card">
+         <img
+         src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/960px-Amazon_logo.svg.png"
+         alt="Amazon">
+      </div>
+
+      <div class="company-card">
+         <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/01/Logo-FPT.png" alt="FPT">
+      </div>
+      <div class="company-card">
+         <img src="https://upload.wikimedia.org/wikipedia/vi/thumb/9/98/Vingroup_logo.svg/1280px-Vingroup_logo.svg.png"
+              alt="Vingroup">
+      </div>
+      <div class="company-card">
+         <img
+         src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Viettel_logo_2021.svg/960px-Viettel_logo_2021.svg.png"
+         alt="Viettel">
+      </div>
+      <div class="company-card">
+         <img
+         src="https://corp.vcdn.vn/products/upload/vng/source/Gallery/LOGO%20VNG/MasterArtwork-OrangeVNG%20Master.png"
+         alt="VNG">
+      </div>
+      <div class="company-card">
+         <img
+         src="https://upload.wikimedia.org/wikipedia/vi/thumb/9/9d/Vietcombank_Logo.svg/3840px-Vietcombank_Logo.svg.png"
+         alt="Vietcombank">
+      </div>
+      <div class="company-card">
+         <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/01/Logo-Zalo.png" alt="Zalo">
+      </div>
+      <div class="company-card">
+         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Shopee.svg/960px-Shopee.svg.png"
+              alt="Shopee">
+      </div>
+      <div class="company-card">
+         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/960px-Amazon_logo.svg.png"
+              alt="Amazon">
+      </div>
+   </div>
+</div>
+
+<div class="flex marquee-container">
+   <div class="flex marquee-content marquee-reverse">
+      <div class="company-card">
+         <img
+         src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/1280px-Google_2015_logo.svg.png"
+         alt="Google">
+      </div>
+      <div class="company-card">
+         <img src="https://pngimg.com/d/microsoft_PNG16.png" alt="Microsoft">
+      </div>
+      <div class="company-card">
+         <img
+         src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Facebook_logo_%282023%29.svg/1280px-Facebook_logo_%282023%29.svg.png"
+         alt="Facebook">
+      </div>
+      <div class="company-card">
+         <img
+         src="https://upload.wikimedia.org/wikipedia/commons/0/00/Samsung_Orig_Wordmark_BLACK_RGB.png"
+         alt="Samsung">
+      </div>
+      <div class="company-card">
+         <img src="https://companieslogo.com/img/orig/8454.TW_BIG-a47f09b2.png?t=1744727854" alt="Momo">
+      </div>
+      <div class="company-card">
+         <img
+         src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Grab_Logo.svg/1280px-Grab_Logo.svg.png"
+         alt="Grab">
+      </div>
+      <div class="company-card">
+         <img src="https://media.loveitopcdn.com/3807/logo-lazada-1.png" alt="Lazada">
+      </div>
+
+      <div class="company-card">
+         <img
+         src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/1280px-Google_2015_logo.svg.png"
+         alt="Google">
+      </div>
+      <div class="company-card">
+         <img src="https://pngimg.com/d/microsoft_PNG16.png" alt="Microsoft">
+      </div>
+      <div class="company-card">
+         <img
+         src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Facebook_logo_%282023%29.svg/1280px-Facebook_logo_%282023%29.svg.png"
+         alt="Facebook">
+      </div>
+      <div class="company-card">
+         <img
+         src="https://upload.wikimedia.org/wikipedia/commons/0/00/Samsung_Orig_Wordmark_BLACK_RGB.png"
+         alt="Samsung">
+      </div>
+      <div class="company-card">
+         <img src="https://companieslogo.com/img/orig/8454.TW_BIG-a47f09b2.png?t=1744727854" alt="Momo">
+      </div>
+      <div class="company-card">
+         <img
+         src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Grab_Logo.svg/1280px-Grab_Logo.svg.png"
+         alt="Grab">
+      </div>
+      <div class="company-card">
+         <img src="https://media.loveitopcdn.com/3807/logo-lazada-1.png" alt="Lazada">
+      </div>
+   </div>
+</div>

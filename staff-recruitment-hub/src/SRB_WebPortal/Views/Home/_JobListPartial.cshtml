@@ -4,6 +4,21 @@
    var savedJobs = ViewBag.SavedJobs as List<string> ?? new List<string>();
 }
 
+<style>
+   .address-truncate {
+      max-width: 200px;
+      display: inline-flex;
+      align-items: center;
+   }
+
+   .truncate-text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+   }
+</style>
+
 <div class="relative min-h-100">
    <div id="jobListWrapper" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
 
@@ -155,8 +170,9 @@
             </div>
 
             <div class="flex flex-wrap items-center gap-2 mt-4">
-               <span class="bg-gray-100 text-gray-600 px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5">
-                  <i class="fa-solid fa-location-dot"></i> ${job.address || 'Nghiệp vụ'}
+               <span class="bg-gray-100 text-gray-600 px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 address-truncate">
+                  <i class="fa-solid fa-location-dot"></i>
+                  <span class="truncate-text">${job.address || 'Nghiệp vụ'}</span>
                </span>
 
                <button onclick="toggleSave(event, this, ${job.jobPostID})"
