@@ -2,9 +2,331 @@
    Layout = "_DashboardLayout";
 }
 
-<div class="mb-8">
-   <h1 class="text-3xl font-extrabold text-slate-800">Nguyen Quang Hung Ne</h1>
-   <p class="text-slate-500 mt-1">Dưới đây là báo cáo nhanh về tình hình hệ thống hôm nay.</p>
-</div>
+@* Dashboard ADMIN - Hệ thống tuyển dụng *@
 
-@await Html.PartialAsync("./_StatsCards.cshtml")
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet">
+
+<style>
+   * {
+   font-family: 'Plus Jakarta Sans', sans-serif;
+   }
+
+   .glass-card {
+   background: rgba(255, 255, 255, 0.05);
+   backdrop-filter: blur(10px);
+   border: 1px solid rgba(255, 255, 255, 0.1);
+   }
+</style>
+
+<div class="space-y-6">
+   <!-- Hero Banner -->
+   <div
+      class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 p-8 shadow-2xl">
+      <div
+         class="absolute top-0 right-0 w-96 h-96 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse">
+      </div>
+      <div
+         class="absolute bottom-0 left-0 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse delay-1000">
+      </div>
+
+      <div class="relative flex justify-between items-center">
+         <div>
+            <div class="flex items-center gap-3 mb-4">
+               <div class="px-4 py-2 bg-white/10 rounded-full backdrop-blur-sm">
+                  <span class="text-yellow-400 text-sm font-bold">
+                     <i class="fas fa-crown mr-2"></i>ADMIN RECRUITMENT
+                  </span>
+               </div>
+               <div class="px-4 py-2 bg-green-500/20 rounded-full backdrop-blur-sm border border-green-500/50">
+                  <span class="text-green-400 text-sm font-bold">
+                     <i class="fas fa-circle text-[8px] mr-2 animate-pulse"></i>HỆ THỐNG TUYỂN DỤNG
+                  </span>
+               </div>
+            </div>
+            <h1 class="text-5xl font-black text-white mb-3">
+               Chào mừng,
+               <span class="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                  Admin Tuyển Dụng!
+               </span>
+            </h1>
+            <p class="text-slate-300 text-lg mb-6">Tổng quan thị trường lao động & kết nối việc làm hôm nay</p>
+            <div class="flex gap-4">
+               <button
+                  class="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl text-white font-bold hover:shadow-2xl transform hover:scale-105 transition-all">
+                  <i class="fas fa-chart-line mr-2"></i>Báo cáo tuyển dụng
+               </button>
+               <button class="px-6 py-3 glass-card rounded-xl text-white font-bold hover:bg-white/20 transition-all">
+                  <i class="fas fa-file-export mr-2"></i>Xuất dữ liệu
+               </button>
+            </div>
+         </div>
+         <div class="hidden lg:block">
+            <i class="fas fa-briefcase text-9xl text-white/10 relative z-10"></i>
+            <i class="fas fa-user-graduate text-7xl text-indigo-400/40 absolute -top-8 -right-8"></i>
+            <i class="fas fa-building text-6xl text-purple-400/40 absolute -bottom-8 left-8"></i>
+         </div>
+      </div>
+   </div>
+
+   <!-- Stats Cards - Recruitment Focus -->
+   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Tổng ứng viên -->
+      <div
+         class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+         <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl"></div>
+         <div class="relative">
+            <div class="flex justify-between items-start mb-4">
+               <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
+                  <i class="fas fa-user-graduate text-2xl text-blue-400"></i>
+               </div>
+               <span class="text-3xl font-black text-white/20">01</span>
+            </div>
+            <h3 class="text-slate-400 text-sm font-semibold mb-2">TỔNG ỨNG VIÊN</h3>
+            <p class="text-4xl font-black text-white mb-2">18,245</p>
+            <div class="flex items-center gap-2">
+               <span class="text-green-400 text-sm font-bold"><i class="fas fa-arrow-up"></i> +8.2%</span>
+               <span class="text-slate-500 text-xs">so với tháng trước</span>
+            </div>
+         </div>
+      </div>
+
+      <!-- Tin tuyển dụng -->
+      <div
+         class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+         <div class="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl"></div>
+         <div class="relative">
+            <div class="flex justify-between items-start mb-4">
+               <div class="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center">
+                  <i class="fas fa-bullhorn text-2xl text-purple-400"></i>
+               </div>
+               <span class="text-3xl font-black text-white/20">02</span>
+            </div>
+            <h3 class="text-slate-400 text-sm font-semibold mb-2">TIN TUYỂN DỤNG</h3>
+            <p class="text-4xl font-black text-white mb-2">1,247</p>
+            <div class="flex items-center gap-2">
+               <span class="text-green-400 text-sm font-bold"><i class="fas fa-arrow-up"></i> +15.3%</span>
+               <span class="text-slate-500 text-xs">đang hoạt động</span>
+            </div>
+         </div>
+      </div>
+
+      <!-- Lượt ứng tuyển -->
+      <div
+         class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+         <div class="absolute top-0 right-0 w-32 h-32 bg-green-500/10 rounded-full blur-2xl"></div>
+         <div class="relative">
+            <div class="flex justify-between items-start mb-4">
+               <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
+                  <i class="fas fa-file-signature text-2xl text-green-400"></i>
+               </div>
+               <span class="text-3xl font-black text-white/20">03</span>
+            </div>
+            <h3 class="text-slate-400 text-sm font-semibold mb-2">LƯỢT ỨNG TUYỂN</h3>
+            <p class="text-4xl font-black text-white mb-2">5,892</p>
+            <div class="flex items-center gap-2">
+               <span class="text-green-400 text-sm font-bold"><i class="fas fa-arrow-up"></i> +23.5%</span>
+               <span class="text-slate-500 text-xs">tháng này</span>
+            </div>
+         </div>
+      </div>
+
+      <!-- Nhà tuyển dụng -->
+      <div
+         class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+         <div class="absolute top-0 right-0 w-32 h-32 bg-orange-500/10 rounded-full blur-2xl"></div>
+         <div class="relative">
+            <div class="flex justify-between items-start mb-4">
+               <div class="w-12 h-12 rounded-xl bg-orange-500/20 flex items-center justify-center">
+                  <i class="fas fa-building text-2xl text-orange-400"></i>
+               </div>
+               <span class="text-3xl font-black text-white/20">04</span>
+            </div>
+            <h3 class="text-slate-400 text-sm font-semibold mb-2">NHÀ TUYỂN DỤNG</h3>
+            <p class="text-4xl font-black text-white mb-2">892</p>
+            <div class="flex items-center gap-2">
+               <span class="text-green-400 text-sm font-bold"><i class="fas fa-arrow-up"></i> +5.7%</span>
+               <span class="text-slate-500 text-xs">doanh nghiệp</span>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- Charts - Recruitment Specific -->
+   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Biểu đồ ứng tuyển theo ngành -->
+      <div class="rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 p-6 shadow-xl">
+         <div class="flex justify-between items-center mb-6">
+            <div>
+               <h3 class="text-white text-xl font-bold mb-1">Ứng tuyển theo ngành nghề</h3>
+               <p class="text-slate-400 text-sm">Top ngành hot nhất năm 2024</p>
+            </div>
+            <i class="fas fa-chart-bar text-3xl text-indigo-400/50"></i>
+         </div>
+         <canvas id="industryChart" height="250"></canvas>
+      </div>
+
+      <!-- Biểu đồ tròn - Cấp độ kinh nghiệm -->
+      <div class="rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 p-6 shadow-xl">
+         <div class="flex justify-between items-center mb-6">
+            <div>
+               <h3 class="text-white text-xl font-bold mb-1">Cấp độ kinh nghiệm</h3>
+               <p class="text-slate-400 text-sm">Phân bổ ứng viên theo năm KN</p>
+            </div>
+            <i class="fas fa-chart-pie text-3xl text-purple-400/50"></i>
+         </div>
+         <canvas id="experienceChart" height="250"></canvas>
+      </div>
+   </div>
+
+   <!-- Recent Applications & Top Jobs -->
+   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Đơn ứng tuyển gần đây -->
+      <div class="rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 p-6 shadow-xl">
+         <div class="flex justify-between items-center mb-6">
+            <div>
+               <h3 class="text-white text-xl font-bold mb-1">Ứng tuyển mới nhất</h3>
+               <p class="text-slate-400 text-sm">Cập nhật từ hệ thống</p>
+            </div>
+            <button class="text-indigo-400 text-sm font-semibold hover:text-indigo-300 transition-colors">
+               Xem tất cả <i class="fas fa-arrow-right ml-1"></i>
+            </button>
+         </div>
+         <div class="space-y-4">
+            <div class="flex items-center gap-4 p-3 rounded-xl hover:bg-white/5 transition-all">
+               <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
+                  <i class="fas fa-user-circle text-blue-400 text-xl"></i>
+               </div>
+               <div class="flex-1">
+                  <p class="text-white font-semibold">Nguyễn Thị Minh</p>
+                  <p class="text-slate-400 text-sm">Ứng tuyển: <span class="text-indigo-400">Frontend Developer</span>
+                     tại FPT Software</p>
+                  </div>
+                  <span class="text-slate-500 text-xs">5 phút trước</span>
+               </div>
+               <div class="flex items-center gap-4 p-3 rounded-xl hover:bg-white/5 transition-all">
+                  <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
+                     <i class="fas fa-user-circle text-green-400 text-xl"></i>
+                  </div>
+                  <div class="flex-1">
+                     <p class="text-white font-semibold">Trần Văn Hoàng</p>
+                     <p class="text-slate-400 text-sm">Ứng tuyển: <span class="text-indigo-400">Data Analyst</span> tại
+                        Viettel</p>
+                     </div>
+                     <span class="text-slate-500 text-xs">15 phút trước</span>
+                  </div>
+                  <div class="flex items-center gap-4 p-3 rounded-xl hover:bg-white/5 transition-all">
+                     <div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center">
+                        <i class="fas fa-user-circle text-purple-400 text-xl"></i>
+                     </div>
+                     <div class="flex-1">
+                        <p class="text-white font-semibold">Lê Thị Hương</p>
+                        <p class="text-slate-400 text-sm">Ứng tuyển: <span class="text-indigo-400">Marketing Manager</span>
+                           tại VinGroup</p>
+                        </div>
+                        <span class="text-slate-500 text-xs">1 giờ trước</span>
+                     </div>
+                  </div>
+               </div>
+
+               <!-- Top công việc hot -->
+               <div class="rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 p-6 shadow-xl">
+                  <div class="flex justify-between items-center mb-6">
+                     <div>
+                        <h3 class="text-white text-xl font-bold mb-1">Việc làm HOT nhất</h3>
+                        <p class="text-slate-400 text-sm">Top 5 công việc nhiều ứng viên nhất</p>
+                     </div>
+                     <i class="fas fa-fire-flame text-2xl text-orange-500"></i>
+                  </div>
+                  <div class="space-y-3">
+                     <div class="flex items-center gap-4 p-3 rounded-xl bg-white/5">
+                        <div
+                           class="w-8 h-8 rounded-full bg-gradient-to-r from-orange-500 to-red-500 flex items-center justify-center font-bold text-white">
+                           1</div>
+                           <div class="flex-1">
+                              <p class="text-white font-semibold">Fullstack Developer</p>
+                              <p class="text-slate-400 text-sm">Techcombank - 35+ ứng viên</p>
+                           </div>
+                           <div class="text-right">
+                              <span class="px-2 py-1 bg-red-500/20 text-red-400 text-xs rounded-full">🔥 35</span>
+                           </div>
+                        </div>
+                        <div class="flex items-center gap-4 p-3 rounded-xl hover:bg-white/5 transition-all">
+                           <div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center font-bold text-white">2
+                           </div>
+                           <div class="flex-1">
+                              <p class="text-white font-semibold">AI Engineer</p>
+                              <p class="text-slate-400 text-sm">VNG - 28+ ứng viên</p>
+                           </div>
+                           <div class="text-right">
+                              <span class="px-2 py-1 bg-orange-500/20 text-orange-400 text-xs rounded-full">28</span>
+                           </div>
+                        </div>
+                        <div class="flex items-center gap-4 p-3 rounded-xl hover:bg-white/5 transition-all">
+                           <div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center font-bold text-white">3
+                           </div>
+                           <div class="flex-1">
+                              <p class="text-white font-semibold">Product Manager</p>
+                              <p class="text-slate-400 text-sm">Shopee - 22+ ứng viên</p>
+                           </div>
+                           <div class="text-right">
+                              <span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-xs rounded-full">22</span>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+
+            <script>
+               // Biểu đồ ứng tuyển theo ngành
+               const ctx1 = document.getElementById('industryChart').getContext('2d');
+               new Chart(ctx1, {
+               type: 'bar',
+               data: {
+               labels: ['CNTT', 'Marketing', 'Kế toán', 'Kinh doanh', 'Nhân sự', 'Kỹ thuật'],
+               datasets: [{
+               label: 'Số lượng ứng tuyển',
+               data: [1245, 892, 634, 1123, 456, 789],
+               backgroundColor: 'rgba(99, 102, 241, 0.6)',
+               borderColor: 'rgba(99, 102, 241, 1)',
+               borderWidth: 2,
+               borderRadius: 10
+               }]
+               },
+               options: {
+               responsive: true,
+               maintainAspectRatio: true,
+               plugins: {
+               legend: { labels: { color: '#cbd5e1' } }
+               },
+               scales: {
+               y: { ticks: { color: '#cbd5e1' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+               x: { ticks: { color: '#cbd5e1' }, grid: { display: false } }
+               }
+               }
+               });
+
+               // Biểu đồ cấp độ kinh nghiệm
+               const ctx2 = document.getElementById('experienceChart').getContext('2d');
+               new Chart(ctx2, {
+               type: 'doughnut',
+               data: {
+               labels: ['Dưới 1 năm', '1-3 năm', '3-5 năm', '5-10 năm', 'Trên 10 năm'],
+               datasets: [{
+               data: [35, 40, 15, 8, 2],
+               backgroundColor: ['#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981'],
+               borderWidth: 0
+               }]
+               },
+               options: {
+               responsive: true,
+               maintainAspectRatio: true,
+               plugins: {
+               legend: { position: 'bottom', labels: { color: '#cbd5e1', font: { size: 12 } } }
+               }
+               }
+               });
+            </script>

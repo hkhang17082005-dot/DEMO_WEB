@@ -1,8 +1,9 @@
+@using System.Security.Claims
 @{
    ViewData["Title"] = "Quản lý CV";
    Layout = "~/Views/Shared/_Layout.cshtml";
 
-   var userName = ViewBag.UserName ?? "Nguyễn Việt Quang";
+   var userName = ViewBag.Fullname ?? User.FindFirstValue(ClaimTypes.Name) ?? "Người dùng";
    var isVerified = ViewBag.IsVerified ?? true;
    var cvCount = ViewBag.CVCount ?? 0;
    var openToWork = ViewBag.OpenToWork ?? false;
@@ -14,7 +15,7 @@
    tailwind.config = {
       theme: {
          extend: {
-            colors: {
+            colors: {  
                brand: '#00b14f',
                brandDark: '#009643',
                brandSoft: '#e8fff1',

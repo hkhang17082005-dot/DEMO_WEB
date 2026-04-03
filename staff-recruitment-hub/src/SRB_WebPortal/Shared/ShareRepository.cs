@@ -23,7 +23,7 @@ public interface IShareRepository
    Task<CandidateDashboardVM> GetDashboardStatsAsync(string userID);
    Task<(int ApprovedCount, int TotalApplications)> GetJobApplicationStats(string jobPostId);
    Task<(int ActivePosts, int NewCVs, int Interviews)> GetBusinessDashboardStats(string businessId);
-   Task<List<ApprovedJobPostDTO>> GetApprovedJobPostsAsync(string? searchTerm = null, string? jobType = null, string? status = null);
+   Task<List<ApprovedJobPostDTO>> GetApprovedJobPostsAsync(string businessID, string? searchTerm = null, string? jobType = null, string? status = null);
 }
 
 public class ShareRepository(
@@ -35,6 +35,7 @@ public class ShareRepository(
    private readonly IRedisService _redisService = redisService;
 
    public async Task<List<ApprovedJobPostDTO>> GetApprovedJobPostsAsync(
+      string businessID,
       string? searchTerm = null,
       string? jobType = null,
       string? status = null
@@ -45,7 +46,7 @@ public class ShareRepository(
          var query = _context.JobPosts
             .Include(j => j.Business)
             .Include(j => j.Location)
-            .Where(j => j.IsActive == true && j.ExpiryDate >= DateTime.UtcNow)
+            .Where(j => j.IsActive == true && j.BusinessID == businessID && j.ExpiryDate >= DateTime.UtcNow)
             .Select(j => new ApprovedJobPostDTO
             {
                JobPostID = j.JobPostID,
@@ -326,21 +327,21 @@ public class ShareRepository(
          string roleKey = RedisCacheKeys.RoleIDBySlug(roleSlug);
          var cacheRoleID = await _redisService.GetAsync<int?>(roleKey);
 
-         int finalRoleID;
-         if (cacheRoleID == null)
+         int? finalRoleID;
+         if (cacheRoleID == null || cacheRoleID == 0)
          {
             finalRoleID = await _context.Roles
                .AsNoTracking()
                .Where(r => r.RoleSlug == roleSlug)
-               .Select(r => r.RoleID)
+               .Select(r => (int?)r.RoleID)
                .FirstOrDefaultAsync();
 
-            if (finalRoleID == -1)
+            if (finalRoleID == null || finalRoleID == 0)
             {
                return null;
             }
 
-            await _redisService.SetAsync(roleKey, finalRoleID);
+            await _redisService.SetAsync(roleKey, finalRoleID.Value);
          }
          else
          {

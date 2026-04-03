@@ -1,11 +1,12 @@
 MAIN_PROJECT = src/SRB_WebPortal
 MODEL_PROJECT = src/SRB_ViewModel
 PADDLE_PROJECT = src/SRB_Paddle
+CHATBOT_PROJECT = src/SRB_ChatBot
 
 RAW_ARGS = $(filter-out $@,$(MAKECMDGOALS))
 ARGS = $(if $(RAW_ARGS), $(RAW_ARGS), InitialEntity)
 
-.PHONY: run dev build migrate updateDB clean restore
+.PHONY: run dev mo chatbot build migrate updateDB clean restore
 
 all: run
 
@@ -15,6 +16,10 @@ dev:
 	dotnet watch run --project $(MAIN_PROJECT) --no-https
 mo:
 	py ${PADDLE_PROJECT}/main
+chatbot:
+	cd ${CHATBOT_PROJECT} && \
+	. chatbot_env/bin/activate && \
+	python apis.py
 # dev:
 # 	dotnet watch run --project $(MAIN_PROJECT) --no-https --no-hot-reload
 devUI:

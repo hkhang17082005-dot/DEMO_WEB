@@ -26,12 +26,28 @@ public interface IAuthRepository
    Task<UserMeResponse?> GetMe(string userID);
 
    Task<string[]> GetUserRoleSlugs(string userID);
+
+   Task UpdateUserStatus(string userID, string status);
 }
 
 public class AuthRepository(DatabaseContext context) : IAuthRepository
 {
    private readonly DatabaseContext _context = context;
 
+   public async Task UpdateUserStatus(string userID, string status)
+{
+    var user = await _context.Users.FindAsync(userID);
+    if (user != null)
+    {
+        // Ép kiểu nếu Status là Enum (UserStatus)
+        if (Enum.TryParse<UserStatus>(status, true, out var result))
+        {
+            user.Status = result;
+        }
+        user.UpdatedAt = DateTime.UtcNow;
+        await _context.SaveChangesAsync();
+    }
+}
    public async Task<string[]> GetUserRoleSlugs(string userID)
    {
       try
@@ -124,30 +140,23 @@ public class AuthRepository(DatabaseContext context) : IAuthRepository
 
    public async Task CreateNewUser(string userID, string username, string hashedPassword, int roleDefaultID)
    {
-      try
+      var newUser = new User
       {
-         var newUser = new User
-         {
-            UserID = userID,
-            Username = username,
-            HashPassword = hashedPassword,
-            UserRoles =
-            [
-               new UserRoles
-               {
-                  UserID = userID,
-                  RoleID = roleDefaultID
-               }
-            ]
-         };
+         UserID = userID,
+         Username = username,
+         HashPassword = hashedPassword,
+         UserRoles =
+         [
+            new UserRoles
+            {
+               UserID = userID,
+               RoleID = roleDefaultID
+            }
+         ]
+      };
 
-         await _context.Users.AddAsync(newUser);
-         await _context.SaveChangesAsync();
-      }
-      catch (Exception ex)
-      {
-         Console.Error.WriteLine($"Error in Create New User: {ex.Message}");
-      }
+      await _context.Users.AddAsync(newUser);
+      await _context.SaveChangesAsync();
    }
 
    public async Task<User?> GetUserByUserID(string userID)

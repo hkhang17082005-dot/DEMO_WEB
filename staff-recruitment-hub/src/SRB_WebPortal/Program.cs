@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using SRB_WebPortal.Shared;
 using SRB_WebPortal.Extensions;
 using SRB_WebPortal.Controllers.apis.auth;
+using SRB_WebPortal.Controllers.apis.Job;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,9 @@ builder.Services.AddAppOptions(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddExtensionServices();
+// Trong Program.cs
+builder.Services.AddScoped<IJobPostRepository, JobPostRepository>();
+builder.Services.AddScoped<IJobPostService, JobPostService>();
 
 builder.Services.AddCors(options =>
 {

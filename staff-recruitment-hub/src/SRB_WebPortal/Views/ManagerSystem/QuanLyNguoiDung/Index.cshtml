@@ -1,0 +1,197 @@
+@using SRB_WebPortal.Controllers.apis.user
+@model List<UserResponseDto>
+
+@{
+   Layout = "_DashboardLayout";
+}
+
+<div class="mb-8 flex items-center justify-between">
+   <div>
+      <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Quản lý Người dùng</h1>
+      <p class="text-slate-500 mt-1">Quản trị viên có thể kiểm soát trạng thái hoạt động của các tài khoản hệ thống.</p>
+   </div>
+   <div class="flex bg-white p-1 rounded-lg shadow-sm border border-slate-200">
+      <span class="px-3 py-1 text-xs font-semibold text-slate-500 uppercase tracking-wider">Tổng: @(Model?.Count(u =>
+                  u.RoleName != "admin" && u.RoleName != "Business Manager") ?? 0)</span>
+      </div>
+   </div>
+
+   <div class="bg-white shadow-xl shadow-slate-200/50 rounded-2xl border border-slate-200 overflow-hidden">
+      <div class="overflow-x-auto">
+         <table class="min-w-full border-separate border-spacing-0">
+            <thead>
+               <tr class="bg-slate-50/50">
+                  <th
+                     class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200">
+                     Người dùng</th>
+                     <th
+                        class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200">
+                        Vai trò</th>
+                        <th
+                           class="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200">
+                           Trạng thái</th>
+                           <th
+                              class="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200">
+                              Hành động</th>
+                           </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                           @if (Model?.Any() == true)
+                           {
+                              foreach (var user in Model)
+                              {
+                                 if (user.RoleName == "admin" || user.RoleName == "Business Manager") continue;
+
+                                 <tr class="hover:bg-slate-50/80 transition-colors duration-200">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                       <div class="flex items-center">
+                                          <div
+                                             class="h-10 w-10 shrink-0 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 border border-slate-200">
+                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                                  stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                             </svg>
+                                          </div>
+                                          <div class="ml-4">
+                                             <div class="text-sm font-semibold text-slate-900">@user.Username</div>
+                                             <div class="text-xs text-slate-400">ID: #@user.UserID.Substring(0, 8)</div>
+                                          </div>
+                                       </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
+                                       <span
+                                          class="bg-slate-100 text-slate-700 px-2.5 py-0.5 rounded-md font-medium text-xs border border-slate-200">
+                                          @user.RoleName
+                                       </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                       @if (string.Equals(user.Status, "active", StringComparison.OrdinalIgnoreCase))
+                                       {
+                                          <span
+                                             class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                             <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-2"></span>
+                                             Hoạt động
+                                          </span>
+                                       }
+                                       else if (string.Equals(user.Status, "locked", StringComparison.OrdinalIgnoreCase))
+                                       {
+                                          <span
+                                             class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200">
+                                             <span class="h-1.5 w-1.5 rounded-full bg-rose-500 mr-2"></span>
+                                             Đã khóa
+                                          </span>
+                                       }
+                                       else
+                                       {
+                                          <span
+                                             class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-50 text-slate-600 border border-slate-200">
+                                             @user.Status
+                                          </span>
+                                       }
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                       @if (string.Equals(user.Status, "locked", StringComparison.OrdinalIgnoreCase))
+                                       {
+                                          <button
+                                             class="btn-lock inline-flex items-center text-emerald-600 hover:text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-lg transition-all duration-200"
+                                             data-id="@user.UserID" data-username="@user.Username" data-action="mở khóa">
+                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24"
+                                                  stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                      d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                                             </svg>
+                                             Mở khóa
+                                          </button>
+                                       }
+                                       else
+                                       {
+                                          <button
+                                             class="btn-lock inline-flex items-center text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 px-3 py-1.5 rounded-lg transition-all duration-200"
+                                             data-id="@user.UserID" data-username="@user.Username" data-action="khóa">
+                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24"
+                                                  stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                             </svg>
+                                             Khóa
+                                          </button>
+                                       }
+                                    </td>
+                                 </tr>
+                              }
+                           }
+                           else
+                           {
+                              <tr>
+                                 <td colspan="4" class="px-6 py-12 text-center">
+                                    <div class="flex flex-col items-center">
+                                       <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-slate-200 mb-4" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 005.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                       </svg>
+                                       <span class="text-slate-400 font-medium">Không tìm thấy người dùng nào trong hệ thống</span>
+                                    </div>
+                                 </td>
+                              </tr>
+                           }
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+               <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+               <script>
+                  document.querySelectorAll('.btn-lock').forEach(button => {
+                     button.addEventListener('click', async () => {
+                        const userId = button.getAttribute('data-id');
+                        const username = button.getAttribute('data-username');
+                        const action = button.getAttribute('data-action');
+                        const isLockAction = action === "khóa";
+
+                        // Sử dụng SweetAlert2 để thay thế confirm mặc định
+                        const result = await Swal.fire({
+                           title: 'Xác nhận thao tác?',
+                           text: `Bạn có chắc chắn muốn ${action} tài khoản "${username}" không?`,
+                           icon: isLockAction ? 'warning' : 'info',
+                           showCancelButton: true,
+                           confirmButtonColor: isLockAction ? '#e11d48' : '#059669',
+                           cancelButtonColor: '#64748b',
+                           confirmButtonText: 'Đồng ý',
+                           cancelButtonText: 'Hủy',
+                           borderRounded: '12px'
+                        });
+
+                        if (result.isConfirmed) {
+                           // Thêm hiệu ứng loading cho button
+                           const originalContent = button.innerHTML;
+                           button.disabled = true;
+                           button.innerHTML = '<svg class="animate-spin h-4 w-4" viewBox="0 0 24 24">...</svg> Đang xử lý...';
+
+                           try {
+                              const response = await fetch(`/api/users/${userId}/lock`, {
+                                 method: 'POST',
+                                 headers: { 'Content-Type': 'application/json' }
+                              });
+
+                              if (response.ok) {
+                                 await Swal.fire({
+                                    title: 'Thành công!',
+                                    text: `Đã ${action} tài khoản thành công.`,
+                                    icon: 'success',
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                 });
+                                 location.reload();
+                              } else {
+                                 throw new Error();
+                              }
+                           } catch (error) {
+                              Swal.fire('Lỗi!', 'Không thể thực hiện thao tác vào lúc này.', 'error');
+                              button.disabled = false;
+                              button.innerHTML = originalContent;
+                           }
+                        }
+                     });
+                  });
+               </script>

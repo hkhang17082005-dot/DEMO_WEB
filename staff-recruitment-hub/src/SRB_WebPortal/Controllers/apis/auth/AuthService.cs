@@ -9,6 +9,7 @@ using SRB_WebPortal.Consts;
 using SRB_WebPortal.Shared;
 using SRB_WebPortal.Configs;
 using SRB_WebPortal.Services;
+using SRB_ViewModel.Entities;
 
 namespace SRB_WebPortal.Controllers.apis.auth;
 
@@ -55,6 +56,7 @@ public class AuthService(
    public async Task<BaseResponse<AuthResponse>> Login(LoginModelDTO model, DeviceInfo? deviceInfo)
    {
       var userLogin = await _authRepository.GetUserByUsername(model.Username);
+      // Kiểm tra nếu user không tồn tại hoặc mật khẩu không khớp
       if (userLogin is null || !_hashingService.VerifyHashValue(model.Password, userLogin.HashPassword))
       {
          return BaseResponse<AuthResponse>.Failure(
@@ -62,6 +64,18 @@ public class AuthService(
             HttpStatusCode.BadRequest
          );
       }
+
+      // Kiểm tra trạng thái người dùng
+      if(userLogin.Status == UserStatus.locked){
+         return BaseResponse<AuthResponse>.Failure(
+            "Tai khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên để biết thêm chi tiết.",
+            HttpStatusCode.BadRequest
+         );
+      }
+
+      //Cập nhật trạng thái khi đăng nhập
+      await _authRepository.UpdateUserStatus(userLogin.UserID, "active");
+
       var roleSlugs = userLogin.UserRoles.Select(ur => ur.Role.RoleSlug).ToArray();
       if (roleSlugs is null)
       {
@@ -100,6 +114,9 @@ public class AuthService(
          var refreshInfo = await _redisService.GetAsync<SessionCacheInfo>(RefreshTokenKey);
          if (refreshInfo is not null)
          {
+            // Cập nhật trạng thái người dùng thành "inactive" khi đăng xuất
+            await _authRepository.UpdateUserStatus(refreshInfo.UserID, "inactive");
+
             await _redisService.RemoveAsync(RefreshTokenKey);
 
             var SessionInfoKey = RedisCacheKeys.SessionInfo(refreshInfo.UserID, sessionId);
@@ -120,7 +137,7 @@ public class AuthService(
 
       string roleSlugDefault = Roles.CANDIDATE;
       var roleDefaultID = await _shareRepository.GetRoleIDBySlug(roleSlugDefault);
-      if (roleDefaultID is null)
+      if (roleDefaultID is null || roleDefaultID <= 0)
       {
          Console.WriteLine("NQHxLog: Không tìm thấy Role ID");
 

@@ -20,27 +20,31 @@
       </div>
 
       <nav class="flex-1 mt-4 px-2 space-y-1">
-         <a href="/manager/system/ManagerSystem/Index" class="sidebar-item sidebar-active flex items-center px-4 py-3 rounded-lg">
-               <i class="fa-solid fa-chart-line w-6"></i> <span>Tổng quan</span>
-         </a>
-         <a href="/manager/business/list" class="sidebar-item flex items-center px-4 py-3 rounded-lg">
-               <i class="fa-solid fa-building w-6"></i> <span>Quản lý Doanh nghiệp</span>
-         </a>
-         <a href="/manager/users" class="sidebar-item flex items-center px-4 py-3 rounded-lg">
-               <i class="fa-solid fa-users w-6"></i> <span>Quản lý Người dùng</span>
-         </a>
-         <a href="/manager/jobs" class="sidebar-item flex items-center px-4 py-3 rounded-lg">
-               <i class="fa-solid fa-briefcase w-6"></i> <span>Quản lý Tin tuyển dụng</span>
-         </a>
-         <div class="pt-4 pb-2 px-4 text-xs font-semibold text-slate-500 uppercase">Cài đặt hệ thống</div>
-         <a href="/manager/settings" class="sidebar-item flex items-center px-4 py-3 rounded-lg">
-               <i class="fa-solid fa-gear w-6"></i> <span>Cấu hình</span>
-         </a>
+         <a href="/manager/system/ManagerSystem"
+   class="sidebar-item @(ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "sidebar-active" : "") flex items-center px-4 py-3 rounded-lg">
+   <i class="fa-solid fa-chart-line w-6"></i> <span>Tổng quan</span>
+</a>
+
+<a href="/manager/system/ManagerSystem/QuanLyDoanhNghiep"
+   class="sidebar-item @(ViewContext.RouteData.Values["action"]?.ToString() == "QuanLyDoanhNghiep" ? "sidebar-active" : "") flex items-center px-4 py-3 rounded-lg">
+   <i class="fa-solid fa-building w-6"></i> <span>Quản lý Doanh nghiệp</span>
+</a>
+
+<a href="/manager/system/ManagerSystem/QuanLyNguoiDung"
+   class="sidebar-item @(ViewContext.RouteData.Values["action"]?.ToString() == "QuanLyNguoiDung" ? "sidebar-active" : "") flex items-center px-4 py-3 rounded-lg">
+   <i class="fa-solid fa-users w-6"></i> <span>Quản lý Người dùng</span>
+</a>
+
+<a href="/manager/system/ManagerSystem/QuanLyTinTuyenDung"
+   class="sidebar-item @(ViewContext.RouteData.Values["action"]?.ToString() == "QuanLyTinTuyenDung" ? "sidebar-active" : "") flex items-center px-4 py-3 rounded-lg">
+   <i class="fa-solid fa-briefcase w-6"></i> <span>Quản lý Tin tuyển dụng</span>
+</a>
+
       </nav>
 
       <div class="p-4 border-t border-slate-700">
-         <a href="/auth/logout" class="flex items-center gap-2 text-rose-400 hover:text-rose-300 p-2">
-               <i class="fa-solid fa-right-from-bracket"></i> Thoát hệ thống
+         <a href="/" class="flex items-center gap-2 text-rose-400 hover:text-rose-300 p-2">
+               <i class="fa-solid fa-right-from-bracket"></i> Về trang chủ
          </a>
       </div>
    </aside>

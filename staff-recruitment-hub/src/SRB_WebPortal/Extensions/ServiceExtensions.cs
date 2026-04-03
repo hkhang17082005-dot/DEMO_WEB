@@ -3,6 +3,7 @@ using SRB_WebPortal.Services;
 using SRB_WebPortal.Shared;
 
 using SRB_WebPortal.Controllers.payments;
+using SRB_WebPortal.Controllers.apis.user;
 using SRB_WebPortal.Controllers.apis.auth;
 using SRB_WebPortal.Controllers.apis.post;
 using SRB_WebPortal.Controllers.apis.business;
@@ -25,6 +26,7 @@ public static class ServiceExtensions
 
       services.AddPaymentModule();
       services.AddAuthModule();
+      services.AddUserModule();
       services.AddPostModule();
       services.AddBusinessModule();
       services.AddSystemManagerModule();

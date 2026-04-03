@@ -29,10 +29,9 @@
          </div>
 
          @{
-            var currentAction = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+            string? currentAction = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
             string GetActiveClass(params string[] actions)
             {
-               // Đổi class active từ green sang blue
                return actions.Contains(currentAction)
                      ? "bg-blue-50 text-blue-700"
                      : "text-gray-600 hover:bg-gray-50 hover:text-blue-600";
@@ -47,12 +46,12 @@
             </a>
 
             <a href="/Business/MyJobPost"
-               class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium transition @GetActiveClass("MyJobs", "PostJob")">
+               class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium transition @GetActiveClass("MyJobPost")">
                <i class="fa-solid fa-briefcase w-5 text-center"></i> Chiến dịch
             </a>
 
             <a href="/Business/ApprovedUsers"
-               class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium transition @GetActiveClass("MyJobs", "PostJob")">
+               class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium transition @GetActiveClass("ApprovedUsers")">
                <i class="fa-solid fa-circle-check w-5 text-center"></i> Tổng quan
             </a>
 

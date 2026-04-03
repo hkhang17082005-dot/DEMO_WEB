@@ -59,7 +59,14 @@ public class BusinessController(IShareRepository shareRepository) : Controller
 
    public async Task<IActionResult> ApprovedUsers(string? search, string? jobType, string? status)
    {
-      var users = await _shareRepository.GetApprovedJobPostsAsync(search, jobType, status);
+      var tokenPayload = HttpContext.GetItem<TokenPayload>(ServerKey.CONTEXT_ITEM_TOKEN_INFO);
+
+      if (tokenPayload is null || string.IsNullOrEmpty(tokenPayload.User.BusinessID))
+      {
+         return RedirectToAction("Index");
+      }
+
+      var users = await _shareRepository.GetApprovedJobPostsAsync(tokenPayload.User.BusinessID, search, jobType, status);
 
       return View(users);
    }

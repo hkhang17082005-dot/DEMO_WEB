@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,9 +24,24 @@ public class Create_CVController(DatabaseContext context) : Controller
 
    public async Task<IActionResult> CV_Management()
    {
+      var userID = User.FindFirstValue(ClaimTypes.NameIdentifier);
+      if (!string.IsNullOrEmpty(userID))
+      {
+         var user = await _context.Users.Include(u => u.UserProfile)
+                                        .FirstOrDefaultAsync(u => u.UserID == userID);
+         if (user != null)
+         {
+            ViewBag.Fullname = user.UserProfile?.FullName;
+            ViewBag.IsVerified = true;
+         }
+      }
+      else
+      {
+         ViewBag.Fullname = "Khách";
+         ViewBag.IsVerified = false;
+      }
+
       ViewBag.CVCount = 5;
-      ViewBag.UserName = "Nguyễn Việt Quang";
-      ViewBag.IsVerified = true;
       ViewBag.OpenToWork = false;
       ViewBag.AllowSearch = false;
 
@@ -36,7 +52,7 @@ public class Create_CVController(DatabaseContext context) : Controller
    {
       return View("Preview/Index");
    }
-    public async Task<IActionResult> All_CV_Style()
+   public async Task<IActionResult> All_CV_Style()
    {
       return View("All_CV_Style/Index");
    }
@@ -85,5 +101,5 @@ public class Create_CVController(DatabaseContext context) : Controller
       return RedirectToAction("CV_Management");
    }
 
-  
+
 }
