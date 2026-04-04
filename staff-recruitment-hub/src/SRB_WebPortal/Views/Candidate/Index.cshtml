@@ -2,65 +2,78 @@
 @model CandidateDashboardVM
 @{
    Layout = "~/Views/Shared/_CandidateLayout.cshtml";
-
    ViewData["Title"] = "Bảng điều khiển";
 }
 
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
    <div class="lg:col-span-4 space-y-6">
 
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-         <div class="flex items-center gap-4">
-            <img src="https://ui-avatars.com/api/?name=HHK&background=00b14f&color=fff&bold=true" alt="Avatar"
-                 class="h-16 w-16 rounded-full border-2 border-topcv" />
-            <div>
-               <h2 class="text-lg font-bold text-gray-800">Xin chào, @Model.FullName!</h2>
-               <p class="text-sm text-gray-500 mt-1">Tài khoản ứng viên</p>
-            </div>
-         </div>
+      <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 relative overflow-hidden text-center group">
+         <div class="absolute inset-0 bg-gradient-to-b from-green-50 to-transparent opacity-70 -z-10"></div>
+         <div class="absolute -top-10 -right-10 w-32 h-32 bg-green-100 rounded-full blur-3xl opacity-50"></div>
+         <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-blue-100 rounded-full blur-3xl opacity-50"></div>
 
-         <div class="mt-6 pt-6 border-t border-gray-100">
-            <p class="text-sm font-medium text-gray-700 mb-2">Mức độ hoàn thiện hồ sơ:</p>
-            <div class="w-full bg-gray-200 rounded-full h-2.5">
-               <div class="bg-topcv h-2.5 rounded-full" style="width: 75%"></div>
-            </div>
-            <p class="text-xs text-right text-gray-500 mt-1">75% - Khá tốt</p>
-            <a href="/Candidate/Profile"
-               class="mt-4 block w-full text-center text-sm font-semibold text-topcv bg-green-50 py-2 rounded-lg hover:bg-green-100 transition">
-               Cập nhật hồ sơ
-            </a>
+         <div class="relative inline-block mb-4">
+            <img src="https://ui-avatars.com/api/?name=HHK&background=00b14f&color=fff&bold=true" alt="Avatar"
+                 class="h-24 w-24 rounded-full border-4 border-white shadow-lg object-cover mx-auto group-hover:scale-105 transition-transform duration-500" />
+            <div class="absolute bottom-1 right-1 h-5 w-5 bg-green-500 border-[3px] border-white rounded-full"></div>
          </div>
+         
+         <h2 class="text-2xl font-black text-gray-800 tracking-tight">@Model.FullName</h2>
+         <p class="text-sm font-semibold text-green-600 mt-1 mb-8">Tài khoản ứng viên</p>
+         
+         <a href="/Candidate/Profile"
+            class="inline-flex items-center justify-center gap-2 w-full text-sm font-bold text-white bg-gray-900 py-3.5 rounded-2xl hover:bg-green-600 shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+            <i class="fa-regular fa-pen-to-square"></i> Cập nhật hồ sơ cá nhân
+         </a>
       </div>
 
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-         <div class="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
-            <h3 class="font-bold text-gray-800">Quản lý hồ sơ</h3>
-         </div>
-         <div class="p-2">
+      <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+         <div class="p-3 space-y-1.5">
             <a href="/Candidate/MyApplications"
-               class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-gray-700 transition">
-               <i class="fa-solid fa-paper-plane text-gray-400 w-5"></i>
-               <span class="font-medium text-sm">Việc làm đã nộp</span>
+               class="group flex items-center gap-4 px-3 py-3 rounded-2xl text-gray-600 hover:bg-green-50 hover:text-green-700 transition-all">
+               <div
+                  class="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-green-100 group-hover:text-green-600 transition-colors shadow-sm">
+                  <i class="fa-solid fa-paper-plane"></i>
+               </div>
+               <span class="font-bold text-sm">Việc làm đã nộp</span>
                <span
-               class="ml-auto bg-gray-100 text-gray-600 text-xs py-0.5 px-2 rounded-full font-bold">@Model.TotalApplied</span>
+               class="ml-auto bg-gray-100 text-gray-600 group-hover:bg-green-200 group-hover:text-green-800 text-xs py-1.5 px-3 rounded-xl font-black transition-colors">@Model.TotalApplied</span>
             </a>
+            
             <a href="/SavedJob"
-               class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-gray-700 transition">
-               <i class="fa-solid fa-heart text-gray-400 w-5"></i>
-               <span class="font-medium text-sm">Việc làm đã lưu</span>
+               class="group flex items-center gap-4 px-3 py-3 rounded-2xl text-gray-600 hover:bg-red-50 hover:text-red-600 transition-all">
+               <div
+                  class="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-red-100 group-hover:text-red-500 transition-colors shadow-sm">
+                  <i class="fa-solid fa-heart"></i>
+               </div>
+               <span class="font-bold text-sm">Việc làm đã lưu</span>
                <span
-               class="ml-auto bg-gray-100 text-gray-600 text-xs py-0.5 px-2 rounded-full font-bold">@Model.TotalSaved</span>
+               class="ml-auto bg-gray-100 text-gray-600 group-hover:bg-red-100 group-hover:text-red-600 text-xs py-1.5 px-3 rounded-xl font-black transition-colors">@Model.TotalSaved</span>
             </a>
+            
             <a href="/Create_CV/CV_Management"
-               class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-gray-700 transition">
-               <i class="fa-solid fa-file-pdf text-gray-400 w-5"></i>
-               <span class="font-medium text-sm">Quản lý CV</span>
+               class="group flex items-center gap-4 px-3 py-3 rounded-2xl text-gray-600 hover:bg-orange-50 hover:text-orange-600 transition-all">
+               <div
+                  class="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-orange-100 group-hover:text-orange-500 transition-colors shadow-sm">
+                  <i class="fa-solid fa-file-pdf text-lg"></i>
+               </div>
+               <span class="font-bold text-sm">Quản lý CV</span>
             </a>
+
+            <div class="h-px w-full bg-gray-100 my-2"></div>
+
             <button id="openChatbot"
-                    class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-lg text-gray-700 transition">
-               <i class="fa-solid fa-robot text-gray-400 w-5"></i>
-               <span class="font-medium text-sm">ChatBot Online</span>
+                    class="w-full group flex items-center gap-4 px-3 py-3 rounded-2xl text-gray-600 hover:bg-blue-50 hover:text-blue-700 transition-all">
+               <div
+                  class="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-blue-100 group-hover:text-blue-600 transition-colors shadow-sm relative overflow-hidden">
+                  <div class="absolute inset-0 bg-blue-400 opacity-0 group-hover:animate-pulse"></div>
+                  <i class="fa-solid fa-robot relative z-10 text-lg"></i>
+               </div>
+               <span class="font-bold text-sm">Trợ lý AI (Chatbot)</span>
+               <i
+               class="fa-solid fa-chevron-right ml-auto text-xs text-gray-300 group-hover:text-blue-400 transition-colors"></i>
             </button>
          </div>
       </div>
@@ -68,75 +81,145 @@
 
    <div class="lg:col-span-8 space-y-6">
 
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col justify-center">
-            <div class="flex items-center gap-3 mb-2">
-               <div class="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-500">
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-5">
+         <div
+            class="bg-gradient-to-br from-white to-blue-50/50 rounded-3xl shadow-sm border border-blue-100/50 p-6 hover:shadow-md transition-all hover:-translate-y-1 relative overflow-hidden group">
+            <div
+               class="absolute -right-6 -bottom-6 opacity-5 group-hover:scale-110 transition-transform duration-500 group-hover:text-blue-600">
+               <i class="fa-solid fa-chart-line text-8xl"></i>
+            </div>
+            <div class="flex items-center gap-4 mb-4">
+               <div
+                  class="h-14 w-14 rounded-2xl bg-blue-100 flex items-center justify-center text-blue-600 text-2xl shadow-inner">
                   <i class="fa-solid fa-eye"></i>
                </div>
-               <h4 class="text-2xl font-bold text-gray-800">@Model.TotalViews</h4>
-            </div>
-            <p class="text-sm font-medium text-gray-500">NTD xem hồ sơ</p>
-         </div>
-         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col justify-center">
-            <div class="flex items-center gap-3 mb-2">
-               <div class="h-10 w-10 rounded-full bg-green-50 flex items-center justify-center text-topcv">
-                  <i class="fa-solid fa-check-circle"></i>
+               <div>
+                  <h4 class="text-3xl font-black text-gray-800 leading-none">@Model.TotalViews</h4>
                </div>
-               <h4 class="text-2xl font-bold text-gray-800">@Model.TotalInterviews</h4>
             </div>
-            <p class="text-sm font-medium text-gray-500">Lời mời phỏng vấn</p>
+            <p class="text-sm font-bold text-gray-500 group-hover:text-blue-600 transition-colors">NTD xem hồ sơ</p>
          </div>
-         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex flex-col justify-center md:flex">
-            <div class="flex items-center gap-3 mb-2">
-               <div class="h-10 w-10 rounded-full bg-purple-50 flex items-center justify-center text-purple-500">
+
+         <div
+            class="bg-gradient-to-br from-white to-green-50/50 rounded-3xl shadow-sm border border-green-100/50 p-6 hover:shadow-md transition-all hover:-translate-y-1 relative overflow-hidden group">
+            <div
+               class="absolute -right-6 -bottom-6 opacity-5 group-hover:scale-110 transition-transform duration-500 group-hover:text-green-600">
+               <i class="fa-regular fa-handshake text-8xl"></i>
+            </div>
+            <div class="flex items-center gap-4 mb-4">
+               <div
+                  class="h-14 w-14 rounded-2xl bg-green-100 flex items-center justify-center text-green-600 text-2xl shadow-inner">
+                  <i class="fa-solid fa-handshake"></i>
+               </div>
+               <div>
+                  <h4 class="text-3xl font-black text-gray-800 leading-none">@Model.TotalInterviews</h4>
+               </div>
+            </div>
+            <p class="text-sm font-bold text-gray-500 group-hover:text-green-600 transition-colors">Lời mời phỏng vấn
+            </p>
+         </div>
+
+         <div
+            class="bg-gradient-to-br from-white to-teal-50/50 rounded-3xl shadow-sm border border-teal-100/50 p-6 hover:shadow-md transition-all hover:-translate-y-1 relative overflow-hidden group col-span-2 md:col-span-1 md:flex flex-col justify-center">
+            <div
+               class="absolute -right-6 -bottom-6 opacity-5 group-hover:scale-110 transition-transform duration-500 group-hover:text-teal-600">
+               <i class="fa-solid fa-briefcase text-8xl"></i>
+            </div>
+            <div class="flex items-center gap-4 mb-4">
+               <div
+                  class="h-14 w-14 rounded-2xl bg-teal-100 flex items-center justify-center text-teal-600 text-2xl shadow-inner">
                   <i class="fa-solid fa-briefcase"></i>
                </div>
-               <h4 class="text-2xl font-bold text-gray-800">@Model.SuitableJobsCount</h4>
+               <div>
+                  <h4 class="text-3xl font-black text-gray-800 leading-none">@Model.SuitableJobsCount</h4>
+               </div>
             </div>
-            <p class="text-sm font-medium text-gray-500">Việc làm phù hợp</p>
+            <p class="text-sm font-bold text-gray-500 group-hover:text-teal-600 transition-colors">Việc làm phù hợp</p>
          </div>
       </div>
 
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-         <div class="px-6 py-5 border-b border-gray-100 flex justify-between items-center">
-            <h3 class="font-bold text-lg text-gray-800">Gợi ý việc làm phù hợp</h3>
-            <a href="/FindJobByID/Search" class="text-sm font-medium text-topcv hover:underline">Xem tất cả</a>
+      <div class="bg-white rounded-3xl shadow-sm border border-gray-100 flex flex-col overflow-hidden"
+           style="min-height: 480px;">
+         <div class="px-6 py-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+            <h3 class="font-black text-lg text-gray-800 flex items-center gap-2">
+               <div class="bg-amber-100 text-amber-500 p-2 rounded-lg">
+                  <i class="fa-solid fa-wand-magic-sparkles text-sm"></i>
+               </div>
+               Gợi ý việc làm bằng AI
+            </h3>
+            <a href="/FindJobByID/Search"
+               class="text-sm font-bold text-gray-400 hover:text-green-600 transition-colors flex items-center gap-1">
+               Xem tất cả việc làm <i class="fa-solid fa-arrow-right text-xs"></i>
+            </a>
          </div>
 
-         <div class="p-6">
-            <!-- EMPTY STATE -->
-            <div id="emptyState" class="text-center py-10">
-               <img src="https://cdn-icons-png.flaticon.com/512/3050/3050525.png"
-                    class="h-20 w-20 mx-auto opacity-50 mb-4" />
-               <h4 class="text-gray-800 font-semibold mb-1">Cập nhật CV để nhận gợi ý!</h4>
-               <p class="text-sm text-gray-500">
-                  Chúng tôi cần biết thêm về kỹ năng của bạn để tìm việc chính xác hơn.
+         <div class="p-6 flex-1 flex flex-col relative bg-gray-50/20">
+            <div id="emptyState" class="m-auto text-center py-10 transition-all">
+               <div class="relative w-28 h-28 mx-auto mb-6">
+                  <div class="absolute inset-0 bg-green-100 rounded-full animate-ping opacity-20"></div>
+                  <div
+                     class="w-full h-full bg-green-50 rounded-full flex items-center justify-center shadow-inner relative z-10 border-4 border-white">
+                     <img src="https://cdn-icons-png.flaticon.com/512/3050/3050525.png" class="h-14 w-14 opacity-70" />
+                  </div>
+               </div>
+               <h4 class="text-gray-900 font-black text-xl mb-3">Tìm việc thông minh cùng AI</h4>
+               <p class="text-sm text-gray-500 max-w-sm mx-auto leading-relaxed font-medium">
+                  Trợ lý AI của chúng tôi sẽ phân tích kỹ năng và gợi ý cho bạn những cơ hội việc làm tuyệt vời nhất.
                </p>
+               <button onclick="document.getElementById('openChatbot').click()"
+                       class="mt-8 px-8 py-3.5 bg-green-600 text-white font-bold rounded-2xl hover:bg-green-700 hover:shadow-lg hover:shadow-green-200 transition-all duration-300 hover:-translate-y-1">
+                  Trò chuyện với AI ngay <i class="fa-solid fa-paper-plane ml-2"></i>
+               </button>
             </div>
 
-            <!-- CHAT UI -->
-            <div id="chatContainer" class="hidden flex-col h-100">
-
-               <!-- Messages -->
-               <div id="chatMessages" class="flex-1 overflow-y-auto space-y-3 mb-4"></div>
-
-               <!-- Input -->
-               <div class="flex gap-2">
-                  <input id="chatInput" type="text"
-                         class="flex-1 border rounded-lg px-3 py-2 text-sm focus:outline-none"
-                         placeholder="Nhập tin nhắn..." />
-                  <button id="sendBtn" class="bg-topcv text-white px-4 py-2 rounded-lg text-sm font-semibold">
-                     Gửi
-                  </button>
+            <div id="chatContainer" class="hidden flex-col h-full absolute inset-0 p-6 bg-white z-20">
+               
+               <div id="chatMessages"
+                    class="flex-1 overflow-y-auto space-y-5 mb-4 pr-3 scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent">
+                  <div class="flex justify-start">
+                     <div class="flex items-end gap-3">
+                        <div
+                           class="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white flex-shrink-0 shadow-md">
+                           <i class="fa-solid fa-robot text-sm"></i>
+                        </div>
+                        <div
+                           class="max-w-[85%] px-5 py-3.5 rounded-3xl rounded-bl-sm text-sm shadow-sm bg-gray-50 text-gray-700 border border-gray-100 font-medium leading-relaxed">
+                           Chào <b>@Model.FullName</b>! 👋 Tôi là trợ lý AI thông minh của hệ thống. Tôi có thể giúp bạn
+                           tìm kiếm việc làm phù hợp hoặc tối ưu CV. Bạn muốn tôi giúp gì hôm nay?
+                        </div>
+                     </div>
+                  </div>
                </div>
 
-               <!-- Thinking -->
-               <p id="loadingText" class="text-xs text-gray-500 mt-2 hidden">
-                  Đang suy nghĩ...
-               </p>
-            </div>
+               <div id="loadingText" class="text-xs font-bold text-gray-400 mb-3 ml-14 hidden flex items-center gap-2">
+                  <div class="flex gap-1">
+                     <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-bounce"></span>
+                     <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-bounce"
+                           style="animation-delay: 0.2s"></span>
+                     <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-bounce"
+                           style="animation-delay: 0.4s"></span>
+                  </div>
+                  AI đang gõ...
+               </div>
 
+               <div class="mt-auto relative bg-white">
+                  <div
+                     class="flex gap-2 items-center bg-gray-50 p-2 rounded-2xl border border-gray-200 focus-within:border-green-400 focus-within:ring-4 focus-within:ring-green-100/50 transition-all duration-300">
+                     <button
+                        class="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-green-600 transition-colors">
+                        <i class="fa-solid fa-paperclip"></i>
+                     </button>
+                     <input id="chatInput" type="text"
+                            class="flex-1 bg-transparent px-2 py-2 text-sm text-gray-800 font-medium focus:outline-none placeholder-gray-400"
+                            placeholder="Nhập câu hỏi của bạn..." autocomplete="off" />
+                     <button id="sendBtn"
+                             class="bg-gray-900 text-white w-10 h-10 rounded-xl flex items-center justify-center hover:bg-green-600 transition-colors disabled:opacity-50 hover:shadow-md">
+                        <i class="fa-solid fa-paper-plane text-sm"></i>
+                     </button>
+                  </div>
+               </div>
+
+            </div>
          </div>
       </div>
    </div>
@@ -156,33 +239,43 @@
 
    // Mở chat
    openBtn.addEventListener("click", () => {
-      emptyState.classList.add("hidden");
-      chatContainer.classList.add("flex");
-      chatContainer.classList.remove("hidden");
-
-      loadChat();
+      emptyState.classList.add("opacity-0", "scale-95", "pointer-events-none");
+      setTimeout(() => {
+         emptyState.classList.add("hidden");
+         chatContainer.classList.add("flex");
+         chatContainer.classList.remove("hidden");
+         loadChat();
+      }, 300);
    });
 
-   // Render message
+   // Hàm thêm Message
    function addMessage(content, isUser = true) {
       const div = document.createElement("div");
-
       const formatted = content.replace(/\n/g, "<br>");
 
-      div.className = `flex ${isUser ? "justify-end" : "justify-start"} mb-2`;
-
-      div.innerHTML = `
-         <div class="max-w-[70%] px-4 py-2 rounded-2xl text-sm shadow
-            ${isUser
-            ? "bg-gray-200 text-black rounded-br-none"
-            : "bg-blue-100 text-gray-800 rounded-bl-none"}">
-            ${formatted}
-         </div>
-      `;
+      div.className = `flex ${isUser ? "justify-end" : "justify-start"} animate-fade-in-up`;
+      
+      if (isUser) {
+         div.innerHTML = `
+            <div class="max-w-[85%] px-5 py-3.5 rounded-3xl rounded-br-sm text-sm shadow-sm bg-gray-900 text-white font-medium leading-relaxed">
+               ${formatted}
+            </div>
+         `;
+      } else {
+         div.innerHTML = `
+            <div class="flex items-end gap-3">
+               <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white flex-shrink-0 shadow-md">
+                  <i class="fa-solid fa-robot text-sm"></i>
+               </div>
+               <div class="max-w-[85%] px-5 py-3.5 rounded-3xl rounded-bl-sm text-sm shadow-sm bg-gray-50 text-gray-700 border border-gray-100 font-medium leading-relaxed">
+                  ${formatted}
+               </div>
+            </div>
+         `;
+      }
 
       chatMessages.appendChild(div);
       chatMessages.scrollTop = chatMessages.scrollHeight;
-
       saveChat();
    }
 
@@ -197,25 +290,23 @@
       isLoading = true;
       sendBtn.disabled = true;
       loadingText.classList.remove("hidden");
-
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      
       try {
          const res = await fetch("http://localhost:8080/chat", {
             method: "POST",
-            headers: {
-               "Content-Type": "application/json"
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ message })
          });
-
+         
          const data = await res.json();
-
          if (data.status === "success") {
             addMessage(data.reply, false);
          } else {
-            addMessage("Có lỗi xảy ra!", false);
+            addMessage("Có lỗi xảy ra trong quá trình phản hồi!", false);
          }
       } catch (err) {
-         addMessage("Không kết nối được server!", false);
+         addMessage("Không thể kết nối được máy chủ AI hiện tại!", false);
       }
 
       isLoading = false;
@@ -229,14 +320,15 @@
 
    function loadChat() {
       const history = localStorage.getItem("chat_history");
-      if (history) {
+      if (history && history.trim() !== "") {
          chatMessages.innerHTML = history;
+         chatMessages.scrollTop = chatMessages.scrollHeight;
       }
    }
 
    // Click gửi
    sendBtn.addEventListener("click", sendMessage);
-
+   
    // Enter gửi luôn
    chatInput.addEventListener("keypress", function (e) {
       if (e.key === "Enter") {
@@ -244,3 +336,21 @@
       }
    });
 </script>
+
+<style>
+   .animate-fade-in-up {
+      animation: fadeInUp 0.4s ease-out forwards;
+   }
+
+   @@keyframes fadeInUp {
+      from {
+         opacity: 0;
+         transform: translateY(10px);
+      }
+
+      to {
+         opacity: 1;
+         transform: translateY(0);
+      }
+   }
+</style>

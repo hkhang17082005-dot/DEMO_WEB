@@ -11,5 +11,6 @@ public interface IUserService
    Task<bool> DeleteUserAsync(string id);
 
    Task<UserResponseDto?> LockUserAsync(string id);
+   Task <List<UserResponseDto>> GetCandidatesAsync();
 }
 

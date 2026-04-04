@@ -66,4 +66,20 @@ public class UserService(IUserRepository repo) : IUserService
    {
       throw new NotImplementedException();
    }
+   // Lấy tất cả candidates (roleID 50 là Candidate)
+   public async Task<List<UserResponseDto>> GetCandidatesAsync()
+   {
+      var users = await _repo.GetAllAsync();
+
+      var candidates = users.Where(u => u.UserRoles.Any(ur => ur.RoleID == 50));
+      
+      return candidates.Select(u => new UserResponseDto
+      {
+         UserID = u.UserID,
+         Username = u.Username,
+         Status = u.Status.ToString(),
+         Email = u.UserProfile?.Email,
+         RoleName = "Candidate"
+      }).ToList();
+   }
 }

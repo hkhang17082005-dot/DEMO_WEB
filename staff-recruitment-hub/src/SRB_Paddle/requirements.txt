@@ -1,3 +1,6 @@
 paddleocr
 opencv-python
 numpy
+
+python-doctr[torch]
+pypdfium2

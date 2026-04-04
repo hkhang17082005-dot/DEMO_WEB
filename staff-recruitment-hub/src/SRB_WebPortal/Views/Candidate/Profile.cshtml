@@ -1,283 +1,344 @@
+@using System.Security.Claims
 @{
    Layout = "~/Views/Shared/_CandidateLayout.cshtml";
-
    ViewData["Title"] = "Hồ sơ cá nhân";
+
+   var userEmail = User.FindFirst(ClaimTypes.Email)?.Value ?? User.FindFirst("Email")?.Value ?? "";
 }
 
 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
    <div>
-      <h1 class="text-2xl font-bold text-gray-800">Cài đặt hồ sơ cá nhân</h1>
-      <p class="text-sm text-gray-500 mt-1">Hoàn thiện hồ sơ để thu hút nhà tuyển dụng</p>
+      <h1 class="text-3xl font-black text-gray-800 tracking-tight">Hồ sơ cá nhân</h1>
+      <p class="text-sm font-medium text-gray-500 mt-1">Cập nhật thông tin để thu hút nhà tuyển dụng và nhận gợi ý việc
+         làm tốt nhất.</p>
+      </div>
+      <button id="btnSaveProfile"
+              class="bg-gray-900 hover:bg-green-600 text-white px-6 py-3 rounded-xl font-bold transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 flex items-center gap-2">
+         <i class="fa-solid fa-floppy-disk"></i> Lưu hồ sơ
+      </button>
    </div>
-   <button id="btnSaveProfile"
-           class="bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-lg font-semibold transition shadow-sm flex items-center gap-2">
-      <i class="fa-solid fa-floppy-disk"></i> Lưu hồ sơ
-   </button>
-</div>
 
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-   <div class="lg:col-span-2 space-y-6">
+   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div class="lg:col-span-8 space-y-8">
 
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-         <h2 class="text-lg font-bold text-gray-800 mb-4 pb-3 border-b border-gray-100">Thông tin cá nhân</h2>
-
-         <div class="flex flex-col sm:flex-row gap-8 mb-4">
-            <div class="flex flex-col items-center gap-3">
-               <div class="relative group cursor-pointer">
-                  <img src="https://ui-avatars.com/api/?name=U&background=00b14f&color=fff&size=120" alt="Avatar"
-                       class="h-28 w-28 rounded-full border-4 border-white shadow-md object-cover" id="imgAvatar" />
+         <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
+            <div
+               class="flex flex-col sm:flex-row justify-between items-center sm:items-end mb-8 gap-4 border-b border-gray-100 pb-6">
+               <div class="relative group cursor-pointer inline-block"
+                    onclick="document.getElementById('fileAvatarUpload').click()">
+                  <input type="file" id="fileAvatarUpload" accept="image/jpeg, image/png, image/webp" class="hidden" />
+                  <div class="p-1.5 bg-white rounded-full shadow-sm border border-gray-100 inline-block relative z-10">
+                     <img src="https://ui-avatars.com/api/?name=U&background=00b14f&color=fff&size=150" alt="Avatar"
+                          class="h-28 w-28 rounded-full object-cover" id="imgAvatar" />
+                  </div>
                   <div
-                     class="absolute inset-0 bg-black bg-opacity-40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-200">
-                     <i class="fa-solid fa-camera text-white text-xl"></i>
+                     class="absolute inset-1.5 bg-black bg-opacity-50 rounded-full flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 backdrop-blur-sm z-20">
+                     <i class="fa-solid fa-camera text-white text-xl mb-1"></i>
+                     <span class="text-white text-xs font-semibold">Thay ảnh</span>
                   </div>
                </div>
-               <span class="text-xs text-gray-400">Cho phép định dạng JPG, PNG</span>
             </div>
 
-            <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-5">
+            <h2 class="text-lg font-black text-gray-800 mb-5">Thông tin cơ bản</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1.5">Họ và tên <span
+                  <label class="block text-sm font-bold text-gray-700 mb-2">Họ và tên <span
                      class="text-red-500">*</span></label>
-                     <input type="text" id="txtFullName" placeholder="Nhập họ và tên..."
-                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 transition" />
-                  </div>
-                  <div>
-                     <label class="block text-sm font-medium text-gray-700 mb-1.5">Vị trí ứng tuyển <span
-                        class="text-red-500">*</span></label>
-                        <input type="text" id="txtJobTitle" placeholder="VD: Backend Developer, Kế toán..."
-                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 transition" />
-                     </div>
-                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Số điện thoại</label>
-                        <input type="tel" id="txtPhone" placeholder="Nhập số điện thoại..."
-                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 transition" />
-                     </div>
-                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Email <span
-                           class="text-red-500">*</span></label>
-                           <input type="email" id="txtEmail" placeholder="Email của bạn..."
-                                  class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm bg-gray-50 text-gray-500 cursor-not-allowed"
-                                  readonly />
-                        </div>
-                     </div>
-                  </div>
-               </div>
-
-               <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                  <h2 class="text-lg font-bold text-gray-800 mb-4 pb-3 border-b border-gray-100">Giới thiệu bản thân</h2>
-                  <textarea rows="5" id="txtSummary"
-                            placeholder="Viết một đoạn ngắn (khoảng 3-4 câu) giới thiệu về định hướng nghề nghiệp, điểm mạnh của bản thân để gây ấn tượng với nhà tuyển dụng..."
-                            class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 transition resize-none"></textarea>
-                  <div class="flex justify-between mt-2">
-                     <span class="text-xs text-green-600 cursor-pointer hover:underline"><i
-                        class="fa-solid fa-wand-magic-sparkles mr-1"></i> Gợi ý bằng AI (Sắp ra mắt)</span>
-                        <span class="text-xs text-gray-400">0 / 1000 ký tự</span>
-                     </div>
-                  </div>
-               </div>
-
-               <div class="lg:col-span-1 space-y-6">
-                  <div class="bg-green-50 rounded-xl shadow-sm border border-green-100 p-6 text-center">
-                     <div
-                        class="inline-flex items-center justify-center w-14 h-14 bg-white rounded-full text-green-600 mb-4 shadow-sm border border-green-100">
-                        <i class="fa-solid fa-satellite-dish text-2xl animate-pulse"></i>
-                     </div>
-                     <h3 class="font-bold text-gray-800 mb-1.5">Trạng thái tìm việc</h3>
-                     <p class="text-sm text-gray-600 mb-5">Bật để nhận được đề xuất từ các công ty</p>
-
-                     <!-- Toggle Switch chuẩn UI -->
-                     <label class="relative inline-flex items-center cursor-pointer group">
-                        <input type="checkbox" class="sr-only peer" checked>
-
-                        <!-- Khung gạt -->
-                        <div class="w-12 h-6 bg-gray-300 rounded-full peer
-                           peer-checked:bg-green-600
-                           peer-focus:ring-4 peer-focus:ring-green-100
-                           transition-all duration-300">
-                        </div>
-
-                        <!-- Viên bi: Dùng div thật để dễ căn chỉnh -->
-                        <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-all duration-300
-                           peer-checked:left-7">
-                        </div>
-                     </label>
-                  </div>
-
-                  <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                     <h2 class="text-base font-bold text-gray-800 mb-4 pb-3 border-b border-gray-100">Mong muốn công việc</h2>
-                     <div class="space-y-4">
-                        <div>
-                           <label class="block text-sm font-medium text-gray-700 mb-1.5">Mức lương mong muốn</label>
-                           <select
-                              class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-green-600 cursor-pointer">
-                              <option>Thỏa thuận</option>
-                              <option>Dưới 10 triệu</option>
-                              <option>10 - 15 triệu</option>
-                              <option>15 - 20 triệu</option>
-                              <option>20 - 30 triệu</option>
-                              <option>Trên 30 triệu</option>
-                           </select>
-                        </div>
-                        <div>
-                           <label class="block text-sm font-medium text-gray-700 mb-1.5">Số năm kinh nghiệm</label>
-                           <select
-                              class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-green-600 cursor-pointer">
-                              <option>Chưa có kinh nghiệm</option>
-                              <option selected>Dưới 1 năm</option>
-                              <option>1 - 2 năm</option>
-                              <option>2 - 5 năm</option>
-                              <option>Trên 5 năm</option>
-                           </select>
-                        </div>
-                        <div>
-                           <label class="block text-sm font-medium text-gray-700 mb-3">Hình thức làm việc</label>
-                           <div class="flex flex-col gap-3">
-                              <label class="flex items-center gap-3 cursor-pointer group">
-                                 <input type="checkbox" checked
-                                        class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
-                                 <span class="text-sm text-gray-700 group-hover:text-green-600 transition">Toàn thời gian</span>
-                              </label>
-                              <label class="flex items-center gap-3 cursor-pointer group">
-                                 <input type="checkbox"
-                                        class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
-                                 <span class="text-sm text-gray-700 group-hover:text-green-600 transition">Bán thời gian</span>
-                              </label>
-                              <label class="flex items-center gap-3 cursor-pointer group">
-                                 <input type="checkbox"
-                                        class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 cursor-pointer" />
-                                 <span class="text-sm text-gray-700 group-hover:text-green-600 transition">Làm từ xa (Remote)</span>
-                              </label>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-
-                  <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                     <h2 class="text-base font-bold text-gray-800 mb-4 pb-3 border-b border-gray-100">Kỹ năng (Skills)</h2>
-                     <p class="text-xs text-gray-500 mb-4">Thêm các từ khóa kỹ năng để hệ thống gợi ý việc làm chính xác hơn.</p>
-                     <div class="flex flex-wrap gap-2 mb-4">
-                        <span
-                           class="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-md text-sm border border-gray-200">
-                           C# <i class="fa-solid fa-xmark text-gray-400 cursor-pointer hover:text-red-500 transition"></i>
-                        </span>
-                        <span
-                           class="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-md text-sm border border-gray-200">
-                           ASP.NET Core <i class="fa-solid fa-xmark text-gray-400 cursor-pointer hover:text-red-500 transition"></i>
-                        </span>
-                        <span
-                           class="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-md text-sm border border-gray-200">
-                           SQL Server <i class="fa-solid fa-xmark text-gray-400 cursor-pointer hover:text-red-500 transition"></i>
-                        </span>
-                     </div>
                      <div class="relative">
-                        <input type="text" placeholder="Gõ kỹ năng (VD: Java) và Enter..."
-                               class="w-full border border-gray-300 rounded-lg pl-4 pr-10 py-2.5 text-sm focus:outline-none focus:border-green-600" />
-                        <button class="absolute right-2 top-2 text-gray-400 hover:text-green-600 p-1 transition">
-                           <i class="fa-solid fa-plus"></i>
-                        </button>
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400"><i
+                           class="fa-regular fa-user"></i></div>
+                           <input type="text" id="txtFullName" placeholder="Nhập họ và tên..."
+                                  class="w-full pl-10 border border-gray-200 bg-gray-50/50 rounded-xl px-4 py-3 text-sm font-medium focus:bg-white focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/10 transition-all" />
+                        </div>
                      </div>
-                  </div>
-               </div>
-            </div>
+                     <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Vị trí ứng tuyển <span
+                           class="text-red-500">*</span></label>
+                           <div class="relative">
+                              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400"><i
+                                 class="fa-solid fa-briefcase"></i></div>
+                                 <input type="text" id="txtJobTitle" placeholder="VD: Backend Developer..."
+                                        class="w-full pl-10 border border-gray-200 bg-gray-50/50 rounded-xl px-4 py-3 text-sm font-medium focus:bg-white focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/10 transition-all" />
+                              </div>
+                           </div>
+                           <div>
+                              <label class="block text-sm font-bold text-gray-700 mb-2">Số điện thoại</label>
+                              <div class="relative">
+                                 <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400"><i
+                                    class="fa-solid fa-phone"></i></div>
+                                    <input type="tel" id="txtPhone" placeholder="Nhập số điện thoại..."
+                                           class="w-full pl-10 border border-gray-200 bg-gray-50/50 rounded-xl px-4 py-3 text-sm font-medium focus:bg-white focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/10 transition-all" />
+                                 </div>
+                              </div>
+                              <div>
+                                 <label class="block text-sm font-bold text-gray-700 mb-2">Email <span
+                                    class="text-red-500">*</span></label>
+                                    <div class="relative">
+                                       <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400"><i
+                                          class="fa-regular fa-envelope"></i></div>
+                                          <input type="email" id="txtEmail" value="@userEmail" readonly
+                                                 class="w-full pl-10 border border-gray-200 bg-gray-100 rounded-xl px-4 py-3 text-sm font-medium text-gray-500 cursor-not-allowed" />
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
 
-            @section Scripts {
-               <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-               <script type="module">
-                  import apiClient from '/js/services/apiClient.js';
+                              <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
+                                 <div class="flex justify-between items-center mb-5">
+                                    <h2 class="text-lg font-black text-gray-800">Giới thiệu bản thân</h2>
+                                 </div>
+                                 <textarea rows="5" id="txtSummary" placeholder="Viết một đoạn ngắn giới thiệu bản thân..."
+                                           class="w-full border border-gray-200 bg-gray-50/50 rounded-2xl px-5 py-4 text-sm font-medium focus:bg-white focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/10 transition-all resize-none leading-relaxed"></textarea>
+                              </div>
+                           </div>
 
-                  const txtFullName = document.getElementById('txtFullName');
-                  const txtPhone = document.getElementById('txtPhone');
-                  const txtEmail = document.getElementById('txtEmail');
-                  const txtSummary = document.getElementById('txtSummary');
-                  const imgAvatar = document.getElementById('imgAvatar');
-                  const btnSaveProfile = document.getElementById('btnSaveProfile');
+                           <div class="lg:col-span-4 space-y-6">
+      
+                              <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 text-center relative overflow-hidden">
+                                 <div class="relative z-10">
+                                    <div
+                                       class="inline-flex items-center justify-center w-16 h-16 bg-green-50 rounded-2xl text-green-600 mb-4 shadow-sm border border-green-100">
+                                       <i class="fa-solid fa-satellite-dish text-3xl animate-pulse"></i>
+                                    </div>
+                                    <h3 class="font-black text-xl text-gray-800 mb-2 tracking-tight">Trạng thái tìm việc</h3>
+                                    <p class="text-sm font-medium text-gray-500 mb-6 px-2">Bật để nhận được ưu tiên hiển thị và lời mời từ các
+                                       HR.</p>
+                                       <label class="relative inline-flex items-center cursor-pointer group">
+                                          <input type="checkbox" class="sr-only peer" checked>
+                                          <div
+                                             class="w-14 h-7 bg-gray-200 rounded-full peer peer-checked:bg-green-500 peer-focus:ring-4 peer-focus:ring-green-100 transition-all shadow-inner">
+                                          </div>
+                                          <div
+                                             class="absolute left-1 top-1 bg-white w-5 h-5 rounded-full transition-all peer-checked:left-8 shadow-sm">
+                                          </div>
+                                       </label>
+                                    </div>
+                                 </div>
 
-                  // Hàm tải thông tin
-                  async function loadProfile() {
-                  try {
-                  const response = await apiClient.get('/CandidateApi/profile');
-                  const result = response?.isSuccess ? response : response?.data;
+                                 <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-7">
+                                    <h2 class="text-base font-black text-gray-800 mb-5">Mong muốn công việc</h2>
+                                    <div class="space-y-5">
+                                       <div>
+                                          <label class="block text-sm font-bold text-gray-700 mb-2">Mức lương mong muốn</label>
+                                          <div class="relative">
+                                             <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400"><i
+                                                class="fa-solid fa-money-bill-wave"></i></div>
+                                                <select id="selSalary"
+                                                        class="w-full pl-10 border border-gray-200 bg-gray-50 rounded-xl px-4 py-3 text-sm font-semibold text-gray-700 focus:border-green-500 focus:ring-4 focus:ring-green-500/10 appearance-none">
+                                                   <option value="Thỏa thuận">Thỏa thuận</option>
+                                                   <option value="Dưới 10 triệu">Dưới 10 triệu</option>
+                                                   <option value="10 - 15 triệu">10 - 15 triệu</option>
+                                                   <option value="15 - 20 triệu">15 - 20 triệu</option>
+                                                   <option value="20 - 30 triệu">20 - 30 triệu</option>
+                                                   <option value="Trên 30 triệu">Trên 30 triệu</option>
+                                                </select>
+                                             </div>
+                                          </div>
+                                          <div>
+                                             <label class="block text-sm font-bold text-gray-700 mb-2">Kinh nghiệm</label>
+                                             <div class="relative">
+                                                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400"><i
+                                                   class="fa-solid fa-star"></i></div>
+                                                   <select id="selExperience"
+                                                           class="w-full pl-10 border border-gray-200 bg-gray-50 rounded-xl px-4 py-3 text-sm font-semibold text-gray-700 focus:border-green-500 focus:ring-4 focus:ring-green-500/10 appearance-none">
+                                                      <option value="Chưa có kinh nghiệm">Chưa có kinh nghiệm</option>
+                                                      <option value="Dưới 1 năm">Dưới 1 năm</option>
+                                                      <option value="1 - 2 năm">1 - 2 năm</option>
+                                                      <option value="2 - 5 năm">2 - 5 năm</option>
+                                                      <option value="Trên 5 năm">Trên 5 năm</option>
+                                                   </select>
+                                                </div>
+                                             </div>
+                                             <div>
+                                                <label class="block text-sm font-bold text-gray-700 mb-3">Hình thức làm việc</label>
+                                                <div class="flex flex-col gap-3">
+                                                   <label class="flex items-center gap-3 cursor-pointer group p-2 hover:bg-gray-50 rounded-xl"><input
+                                                      type="checkbox" id="chkFulltime" class="w-4 h-4 text-green-600 border-gray-300 rounded" /> <span
+                                                      class="text-sm font-medium text-gray-700 group-hover:text-green-600">Toàn thời gian
+                                                      (Full-time)</span></label>
+                                                      <label class="flex items-center gap-3 cursor-pointer group p-2 hover:bg-gray-50 rounded-xl"><input
+                                                         type="checkbox" id="chkParttime" class="w-4 h-4 text-green-600 border-gray-300 rounded" /> <span
+                                                         class="text-sm font-medium text-gray-700 group-hover:text-green-600">Bán thời gian
+                                                         (Part-time)</span></label>
+                                                         <label class="flex items-center gap-3 cursor-pointer group p-2 hover:bg-gray-50 rounded-xl"><input
+                                                            type="checkbox" id="chkRemote" class="w-4 h-4 text-green-600 border-gray-300 rounded" /> <span
+                                                            class="text-sm font-medium text-gray-700 group-hover:text-green-600">Làm từ xa
+                                                            (Remote)</span></label>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
 
-                  if (result?.isSuccess && result.data) {
-                  const data = result.data;
-                  if (txtFullName) txtFullName.value = data.fullName || '';
-                  if (txtPhone) txtPhone.value = data.phoneNumber || '';
-                  if (txtEmail) txtEmail.value = data.email || '';
-                  if (txtSummary) txtSummary.value = data.summary || '';
+                                                <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-7">
+                                                   <h2 class="text-base font-black text-gray-800 mb-2">Kỹ năng chuyên môn</h2>
+                                                   <p class="text-xs font-medium text-gray-500 mb-5">Thêm từ khóa kỹ năng và Enter để AI gợi ý việc làm chuẩn xác
+                                                      hơn.</p>
+         
+                                                      <div class="flex flex-wrap gap-2 mb-4" id="skillTagsContainer"></div>
+         
+                                                      <div class="relative">
+                                                         <input type="text" id="txtSkillInput" placeholder="Gõ kỹ năng (VD: Java) và Enter..."
+                                                                class="w-full border border-gray-200 bg-gray-50 rounded-xl pl-4 pr-12 py-3 text-sm font-medium focus:bg-white focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-500/10 transition-all" />
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </div>
 
-                  // Tự động load chữ cái đầu làm Avatar
-                  if (imgAvatar && data.fullName) {
-                  const nameParts = data.fullName.trim().split(' ');
-                  let initials = "U";
-                  if (nameParts.length > 1) {
-                  initials = nameParts[0][0] + nameParts[nameParts.length - 1][0];
-                  } else if (nameParts.length === 1 && nameParts[0].length > 0) {
-                  initials = nameParts[0][0];
-                  }
-                  imgAvatar.src = `https://ui-avatars.com/api/?name=${initials}&background=00b14f&color=fff&size=120`;
-                  }
-                  }
-                  } catch (error) {
-                  console.error("Lỗi khi tải Profile:", error);
-                  }
-                  }
+                                             @section Scripts {
+                                                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                                                <script type="module">
+                                                   import apiClient from '/js/services/apiClient.js';
+      
+                                                   const txtFullName = document.getElementById('txtFullName');
+                                                   const txtJobTitle = document.getElementById('txtJobTitle');
+                                                   const txtPhone = document.getElementById('txtPhone');
+                                                   const txtEmail = document.getElementById('txtEmail');
+                                                   const txtSummary = document.getElementById('txtSummary');
+                                                   const selSalary = document.getElementById('selSalary');
+                                                   const selExperience = document.getElementById('selExperience');
+                                                   const chkFulltime = document.getElementById('chkFulltime');
+                                                   const chkParttime = document.getElementById('chkParttime');
+                                                   const chkRemote = document.getElementById('chkRemote');
+                                                   const btnSaveProfile = document.getElementById('btnSaveProfile');
+                                                   const imgAvatar = document.getElementById('imgAvatar');
 
-                  // Hàm cập nhật (PUT)
-                  async function saveProfile() {
-                  try {
-                  const originalText = btnSaveProfile.innerHTML;
-                  btnSaveProfile.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
-                  btnSaveProfile.disabled = true;
+                                                   // --- LOGIC XỬ LÝ TAG KỸ NĂNG ---
+                                                   let skillsArray = [];
+                                                   const skillInput = document.getElementById('txtSkillInput');
+                                                   const skillContainer = document.getElementById('skillTagsContainer');
 
-                  const payload = {
-                  fullName: txtFullName?.value || '',
-                  phoneNumber: txtPhone?.value || '',
-                  summary: txtSummary?.value || '',
-                  email: txtEmail?.value || ''
-                  };
+                                                   function renderSkills() {
+                                                   skillContainer.innerHTML = '';
+                                                   skillsArray.forEach((skill, index) => {
+                                                   const span = document.createElement('span');
+                                                   span.className = "inline-flex items-center gap-2 px-3 py-1.5 bg-green-50 text-green-700 rounded-lg text-sm font-bold border border-green-100 shadow-sm";
+                                                   span.innerHTML = `${skill} <i class="fa-solid fa-xmark text-green-400 cursor-pointer hover:text-red-500 transition" onclick="removeSkill(${index})"></i>`;
+                                                   skillContainer.appendChild(span);
+                                                   });
+                                                   }
 
-                  const response = await apiClient.post('/CandidateApi/profile', payload);
-                  const result = response?.isSuccess ? response : response?.data;
+                                                   window.removeSkill = function (index) {
+                                                   skillsArray.splice(index, 1);
+                                                   renderSkills();
+                                                   }
 
-                  if (result?.isSuccess) {
-                  Swal.fire({
-                  icon: 'success',
-                  title: 'Thành công',
-                  text: 'Đã cập nhật hồ sơ cá nhân!',
-                  confirmButtonColor: '#00b14f'
-                  });
+                                                   skillInput.addEventListener('keypress', function (e) {
+                                                   if (e.key === 'Enter') {
+                                                   e.preventDefault();
+                                                   const val = this.value.trim();
+                                                   if (val && !skillsArray.includes(val)) {
+                                                   skillsArray.push(val);
+                                                   renderSkills();
+                                                   }
+                                                   this.value = '';
+                                                   }
+                                                   });
 
-                  if (imgAvatar && payload.fullName) {
-                  const nameParts = payload.fullName.trim().split(' ');
-                  let initials = "U";
-                  if (nameParts.length > 1) {
-                  initials = nameParts[0][0] + nameParts[nameParts.length - 1][0];
-                  } else if (nameParts.length === 1 && nameParts[0].length > 0) {
-                  initials = nameParts[0][0];
-                  }
-                  imgAvatar.src = `https://ui-avatars.com/api/?name=${initials}&background=00b14f&color=fff&size=120`;
-                  }
-                  } else {
-                  throw new Error(result?.message || "Cập nhật thất bại");
-                  }
-                  } catch (error) {
-                  Swal.fire({
-                  icon: 'error',
-                  title: 'Lỗi',
-                  text: error.message,
-                  confirmButtonColor: '#00b14f'
-                  });
-                  } finally {
-                  btnSaveProfile.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Lưu hồ sơ';
-                  btnSaveProfile.disabled = false;
-                  }
-                  }
+                                                   // 1. Hàm tải thông tin Profile
+                                                   async function loadProfile() {
+                                                   try {
+                                                   const response = await apiClient.get('/CandidateApi/profile');
+                                                   const result = response?.isSuccess ? response : response?.data;
 
-                  document.addEventListener('DOMContentLoaded', () => {
-                  loadProfile();
-                  if (btnSaveProfile) {
-                  btnSaveProfile.addEventListener('click', saveProfile);
-                  }
-                  });
-               </script>
-            }
+                                                   if (result?.isSuccess && result.data) {
+                                                   const data = result.data;
+                                                   if (txtFullName) txtFullName.value = data.fullName || '';
+                                                   if (txtJobTitle) txtJobTitle.value = data.jobTitle || '';
+                                                   if (txtPhone) txtPhone.value = data.phoneNumber || '';
+                                                   if (txtEmail && data.email) txtEmail.value = data.email;
+                                                   if (txtSummary) txtSummary.value = data.summary || '';
+               
+                                                   // Load Mức lương & Kinh nghiệm
+                                                   if (selSalary) selSalary.value = data.expectedSalary || 'Thỏa thuận';
+                                                   if (selExperience) selExperience.value = data.experience || 'Chưa có kinh nghiệm';
+               
+                                                   // Load Hình thức làm việc
+                                                   if (data.workType) {
+                                                   if (chkFulltime) chkFulltime.checked = data.workType.includes('Full-time');
+                                                   if (chkParttime) chkParttime.checked = data.workType.includes('Part-time');
+                                                   if (chkRemote) chkRemote.checked = data.workType.includes('Remote');
+                                                   }
+
+                                                   // Load Kỹ năng
+                                                   if (data.skills) {
+                                                   skillsArray = data.skills.split(',').map(s => s.trim()).filter(s => s);
+                                                   renderSkills();
+                                                   }
+
+                                                   // Load Avatar bằng chữ cái đầu
+                                                   if (imgAvatar && data.fullName && imgAvatar.src.includes('ui-avatars.com')) {
+                                                   const nameParts = data.fullName.trim().split(' ');
+                                                   let initials = nameParts.length > 1 ? nameParts[0][0] + nameParts[nameParts.length - 1][0] : nameParts[0][0];
+                                                   imgAvatar.src = `https://ui-avatars.com/api/?name=${initials}&background=00b14f&color=fff&size=150`;
+                                                   }
+                                                   }
+                                                   } catch (error) {
+                                                   console.error("Lỗi khi tải Profile:", error);
+                                                   }
+                                                   }
+
+                                                   // 2. Hàm Gửi toàn bộ form (Cập nhật Profile)
+                                                   async function saveProfile() {
+                                                   try {
+                                                   btnSaveProfile.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang lưu...';
+                                                   btnSaveProfile.disabled = true;
+            
+                                                   // Map loại hình làm việc
+                                                   let workTypes = [];
+                                                   if (chkFulltime && chkFulltime.checked) workTypes.push('Full-time');
+                                                   if (chkParttime && chkParttime.checked) workTypes.push('Part-time');
+                                                   if (chkRemote && chkRemote.checked) workTypes.push('Remote');
+            
+                                                   const payload = {
+                                                   fullName: txtFullName?.value || '',
+                                                   phoneNumber: txtPhone?.value || '',
+                                                   summary: txtSummary?.value || '',
+                                                   email: txtEmail?.value || '',
+                                                   jobTitle: txtJobTitle?.value || '',
+                                                   expectedSalary: selSalary?.value || '',
+                                                   experience: selExperience?.value || '',
+                                                   workType: workTypes.join(', '),
+                                                   skills: skillsArray.join(', ')
+                                                   };
+            
+                                                   const response = await apiClient.post('/CandidateApi/profile', payload);
+                                                   const result = response?.isSuccess ? response : response?.data;
+            
+                                                   if (result?.isSuccess) {
+                                                   Swal.fire({
+                                                   icon: 'success',
+                                                   title: 'Thành công',
+                                                   text: 'Đã lưu toàn bộ thông tin hồ sơ!',
+                                                   confirmButtonColor: '#00b14f',
+                                                   customClass: { popup: 'rounded-3xl' }
+                                                   });
+               
+                                                   // Cập nhật lại Avatar nếu đổi tên
+                                                   if (imgAvatar && payload.fullName && imgAvatar.src.includes('ui-avatars.com')) {
+                                                   const nameParts = payload.fullName.trim().split(' ');
+                                                   let initials = nameParts.length > 1 ? nameParts[0][0] + nameParts[nameParts.length - 1][0] : nameParts[0][0];
+                                                   imgAvatar.src = `https://ui-avatars.com/api/?name=${initials}&background=00b14f&color=fff&size=150`;
+                                                   }
+                                                   } else {
+                                                   throw new Error(result?.message || "Cập nhật thất bại");
+                                                   }
+                                                   } catch (error) {
+                                                   Swal.fire({
+                                                   icon: 'error',
+                                                   title: 'Lỗi',
+                                                   text: error.message,
+                                                   confirmButtonColor: '#00b14f',
+                                                   customClass: { popup: 'rounded-3xl' }
+                                                   });
+                                                   } finally {
+                                                   btnSaveProfile.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Lưu hồ sơ';
+                                                   btnSaveProfile.disabled = false;
+                                                   }
+                                                   }
+
+                                                   document.addEventListener('DOMContentLoaded', () => {
+                                                   loadProfile();
+                                                   if (btnSaveProfile) btnSaveProfile.addEventListener('click', saveProfile);
+                                                   });
+                                                </script>
+                                             }

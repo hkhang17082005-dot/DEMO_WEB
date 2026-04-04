@@ -1,12 +1,17 @@
 using SRB_WebPortal.Shared;
 using SRB_ViewModel.Entities;
 using SRB_WebPortal.Controllers.apis.post;
+using SRB_WebPortal.Services;
+using SRB_WebPortal.Utils;
 
 namespace SRB_WebPortal.Controllers.apis.business;
 
-public class BusinessService(IBusinessRepository businessRepository)
+public class BusinessService(
+   IBusinessRepository businessRepository,
+   IResendService resendService)
 {
    private readonly IBusinessRepository _businessRepo = businessRepository;
+   private readonly IResendService _mailService = resendService;
 
    public async Task<BaseResponse> RegisterBusiness(RegisterBusinessDTO formData, string userID)
    {
@@ -57,11 +62,22 @@ public class BusinessService(IBusinessRepository businessRepository)
    {
       try
       {
-         var result = await _businessRepo.UpdateApplicationStatusAsync(formData.ApplicationID, formData.Status);
+         var application = await _businessRepo.UpdateApplicationStatusAsync(formData.ApplicationID, formData.Status);
 
-         if (!result)
+         if (application == null)
          {
-            return BaseResponse.Failure("Không tìm thấy hồ sơ ứng tuyển hoặc cập nhật thất bại!");
+            return BaseResponse.BadRequest("Không tìm thấy hồ sơ ứng tuyển hoặc cập nhật thất bại!");
+         }
+
+         string fullname = application.User?.UserProfile?.FullName ?? "Bạn";
+         string jobTitle = application.JobPost.Title;
+         string? userEmail = application.User?.UserProfile?.Email;
+
+         var (subject, body) = MailTemplateHelper.GetTemplate(application.Status, fullname, jobTitle);
+
+         if (userEmail is not null && !string.IsNullOrEmpty(userEmail))
+         {
+            await _mailService.SendMailAsync(userEmail, subject, body);
          }
 
          return BaseResponse.Success("Cập nhật trạng thái ứng viên thành công");
@@ -70,7 +86,7 @@ public class BusinessService(IBusinessRepository businessRepository)
       {
          Console.WriteLine($"Error in UpdateStatusApplyJob: {ex.Message}");
 
-         return BaseResponse.Failure("Đã xảy ra lỗi hệ thống khi cập nhật!");
+         return BaseResponse.BadRequest("Đã xảy ra lỗi hệ thống khi cập nhật!");
       }
    }
 

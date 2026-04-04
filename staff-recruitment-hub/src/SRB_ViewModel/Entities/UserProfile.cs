@@ -36,4 +36,10 @@ public class UserProfile
 
    public string? Address { get; set; }
 
+   public string? JobTitle { get; set; }
+   public string? ExpectedSalary { get; set; }
+   public string? Experience { get; set; }
+   public string? WorkType { get; set; }
+   public string? Skills { get; set; }
+
 }

@@ -107,7 +107,6 @@ namespace SRB_WebPortal.Controllers.apis.candidate
          var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("Id")?.Value;
          if (string.IsNullOrEmpty(userId)) return Unauthorized(new BaseResponse<string> { IsSuccess = false, Message = "Chưa đăng nhập" });
 
-         // Tìm UserProfile trong DB
          var profile = await _context.UserProfiles.FirstOrDefaultAsync(p => p.UserID == userId);
 
          if (profile == null)
@@ -120,7 +119,12 @@ namespace SRB_WebPortal.Controllers.apis.candidate
             FullName = profile.FullName,
             Email = profile.Email,
             PhoneNumber = profile.PhoneNumber,
-            Summary = profile.Summary
+            Summary = profile.Summary,
+            JobTitle = profile.JobTitle,
+            ExpectedSalary = profile.ExpectedSalary,
+            Experience = profile.Experience,
+            WorkType = profile.WorkType,
+            Skills = profile.Skills
          };
 
          return Ok(new BaseResponse<CandidateProfileDTO> { IsSuccess = true, Data = dto, Message = "Thành công" });
@@ -137,21 +141,24 @@ namespace SRB_WebPortal.Controllers.apis.candidate
 
          if (profile == null)
          {
-            // Nếu user chưa có profile (mới đăng ký), ta tạo mới
             profile = new UserProfile
             {
                UserID = userId,
-               Email = request.Email, // Thường email không cho sửa, lấy từ User bảng chính
+               Email = request.Email,
                FullName = request.FullName
             };
             _context.UserProfiles.Add(profile);
          }
 
-         // Cập nhật thông tin
+         // Map toàn bộ dữ liệu mới
          profile.FullName = request.FullName;
          profile.PhoneNumber = request.PhoneNumber;
          profile.Summary = request.Summary;
-         // Bỏ qua update Email nếu hệ thống của không cho phép đổi Email
+         profile.JobTitle = request.JobTitle;
+         profile.ExpectedSalary = request.ExpectedSalary;
+         profile.Experience = request.Experience;
+         profile.WorkType = request.WorkType;
+         profile.Skills = request.Skills;
 
          await _context.SaveChangesAsync();
 

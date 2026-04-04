@@ -8,7 +8,6 @@
    var initials = nameParts.Length > 1
                   ? $"{nameParts.First()[0]}{nameParts.Last()[0]}"
                   : (fullName.Length > 0 ? fullName.Substring(0, 1).ToUpper() : "U");
-
    var shortId = userId.Length > 5 ? userId.Substring(0, 5).ToUpper() : userId;
 }
 
@@ -33,40 +32,67 @@
    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gray-50 text-gray-800 antialiased font-sans flex flex-col min-h-screen">
+<body class="bg-green-50 text-gray-800 antialiased font-sans flex flex-col min-h-screen">
 
    <header class="bg-white shadow-sm sticky top-0 z-50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
          <div class="flex justify-between items-center h-20">
+         
             <div class="flex items-center gap-8">
-               <a href="/Home" class="text-2xl font-bold text-blue-600 flex items-center gap-2">
-                  <i class="fa-solid fa-briefcase"></i> Candidate
+            
+               <a href="/Home" class="group flex items-center gap-3 shrink-0">
+                  <div
+                     class="relative w-10 h-10 flex items-center justify-center bg-green-600 rounded-xl shadow-lg shadow-green-100 group-hover:bg-green-500 group-hover:rotate-6 transition-all duration-500">
+                     <span class="text-white text-xl font-black">S</span>
+                     <div
+                        class="absolute inset-0 rounded-xl bg-gradient-to-tr from-green-400 to-emerald-300 blur-md opacity-0 group-hover:opacity-40 group-hover:scale-150 transition-all duration-500 -z-10">
+                     </div>
+                     <div
+                        class="absolute inset-0 rounded-xl border border-green-400/50 scale-100 group-hover:scale-125 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                     </div>
+                  </div>
+
+                  <div class="flex flex-col justify-center">
+                     <div class="flex items-center gap-1">
+                        <span
+                           class="text-2xl font-black tracking-tight text-gray-600 group-hover:text-green-600 transition-colors">
+                           RB
+                        </span>
+                        <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                     </div>
+                     <p
+                        class="text-[8px] font-bold uppercase tracking-[0.25em] text-gray-400 group-hover:text-green-700 transition-colors">
+                        Staff Recruitment Hub
+                     </p>
+                  </div>
                </a>
 
-               <nav class="hidden md:flex space-x-1">
+               <nav class="hidden md:flex space-x-2">
                   <a href="/FindJobByID/Search"
-                     class="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-blue-600 transition-colors">
+                     class="px-4 py-2 text-sm font-semibold text-gray-600 rounded-lg hover:bg-green-50 hover:text-green-600 transition-all">
                      Việc làm
                   </a>
                   <a href="/Candidate/Profile"
-                     class="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-blue-600 transition-colors">
+                     class="px-4 py-2 text-sm font-semibold text-gray-600 rounded-lg hover:bg-green-50 hover:text-green-600 transition-all">
                      Hồ sơ & CV
                   </a>
                   <a href="/Business"
-                     class="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-blue-600 transition-colors">
+                     class="px-4 py-2 text-sm font-semibold text-gray-600 rounded-lg hover:bg-green-50 hover:text-green-600 transition-all">
                      Công ty
                   </a>
                </nav>
             </div>
 
             <div class="flex items-center gap-6">
-               <div class="flex items-center gap-4">
+               <div class="flex items-center gap-3">
+               
                   <button
-                     class="text-gray-500 hover:text-blue-600 relative bg-gray-100 p-2 rounded-full h-10 w-10 flex items-center justify-center transition">
+                     class="text-gray-500 hover:text-green-600 hover:bg-green-50 relative bg-gray-100 p-2 rounded-full h-10 w-10 flex items-center justify-center transition-all">
                      <i class="fa-regular fa-comment-dots text-lg"></i>
                   </button>
+               
                   <button
-                     class="text-gray-500 hover:text-blue-600 relative bg-gray-100 p-2 rounded-full h-10 w-10 flex items-center justify-center transition">
+                     class="text-gray-500 hover:text-green-600 hover:bg-green-50 relative bg-gray-100 p-2 rounded-full h-10 w-10 flex items-center justify-center transition-all">
                      <i class="fa-regular fa-bell text-lg"></i>
                      <span class="absolute top-0 right-0 flex h-3 w-3 mt-1 mr-1">
                         <span
@@ -74,8 +100,10 @@
                         <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500 border-2 border-white"></span>
                      </span>
                   </button>
+
                </div>
             </div>
+
          </div>
       </div>
    </header>
@@ -88,10 +116,10 @@
       <div
          class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
          <p class="text-sm text-gray-500">&copy; @DateTime.Now.Year Staff Recruitment Hub.</p>
-         <div class="flex space-x-4 text-sm text-gray-500">
-            <a href="#" class="hover:text-blue-600">Quy định bảo mật</a>
-            <a href="#" class="hover:text-blue-600">Thỏa thuận sử dụng</a>
-            <a href="#" class="hover:text-blue-600">Quy chế hoạt động</a>
+         <div class="flex space-x-6 text-sm font-medium text-gray-500">
+            <a href="#" class="hover:text-green-600 transition">Quy định bảo mật</a>
+            <a href="#" class="hover:text-green-600 transition">Thỏa thuận sử dụng</a>
+            <a href="#" class="hover:text-green-600 transition">Quy chế hoạt động</a>
          </div>
       </div>
    </footer>

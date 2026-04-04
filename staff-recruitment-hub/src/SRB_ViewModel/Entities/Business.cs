@@ -13,7 +13,7 @@ public class Business
    public string BusinessName { get; set; } = string.Empty;
 
    [StringLength(100)]
-   public string? TaxCode { get; set; }
+   public string? TaxCode { get; set; }// Mã số thuế, có thể null nếu không có hoặc chưa cung cấp
 
    [Url]
    public string? Website { get; set; }

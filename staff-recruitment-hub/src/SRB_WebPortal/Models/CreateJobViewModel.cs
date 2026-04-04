@@ -1,6 +1,3 @@
-// <summary>
-//     ViewModel for creating a new job posting.
-// </summary>
 using System.ComponentModel.DataAnnotations;
 
 namespace SRB_WebPortal.Models;

@@ -1,508 +1,768 @@
+@* Views/Create_CV/Create/Index.cshtml *@
 @{
-    ViewData["Title"] = "Tạo CV";
     Layout = null;
 }
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>CV Builder Pro</title>
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;font-family:'Segoe UI',sans-serif;background:#f0f2f5;color:#1a1a1a}
-#topbar{position:fixed;top:0;left:0;right:0;height:52px;background:#fff;border-bottom:1px solid #e0e0e0;display:flex;align-items:center;justify-content:space-between;padding:0 16px;z-index:200}
-#topbar-left{display:flex;align-items:center;gap:12px}
-.logo{font-size:18px;font-weight:700;color:#00b14f}
-#cvNameInput{border:none;outline:none;font-size:13px;color:#888;width:180px;font-family:inherit}
-#topbar-right{display:flex;gap:8px}
-.tbtn{padding:6px 14px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid #ddd;background:#fff;color:#333;font-family:inherit;transition:all .15s}
-.tbtn:hover{background:#f5f5f5}
-.tbtn.green{background:#00b14f;color:#fff;border-color:#00b14f}
-.tbtn.green:hover{background:#009940}
-.tbtn.blue{background:#1565c0;color:#fff;border-color:#1565c0}
-.tbtn.blue:hover{background:#0d47a1}
-#hintbar{position:fixed;top:52px;left:0;right:0;background:#fff8e1;border-bottom:1px solid #ffe082;padding:6px 16px;font-size:12px;color:#795548;z-index:199}
-#wrap{display:flex;position:fixed;top:80px;bottom:0;left:0;right:0}
-#sidebar{width:200px;background:#fff;border-right:1px solid #e0e0e0;overflow-y:auto;flex-shrink:0}
-.sbi{display:flex;align-items:center;gap:9px;padding:12px 16px;cursor:pointer;font-size:13px;color:#444;border-left:3px solid transparent;transition:all .15s}
-.sbi:hover{background:#f7f7f7;color:#00b14f}
-.sbi.active{background:#e8f7ef;color:#00b14f;font-weight:600;border-left-color:#00b14f}
-#panels{width:0;overflow:hidden;transition:width .2s;flex-shrink:0;background:#fff;border-right:1px solid #e0e0e0;display:flex;flex-direction:column}
-#panels.open{width:270px}
-.panel{display:none;flex-direction:column;height:100%;overflow-y:auto}
-.panel.active{display:flex}
-.ph{padding:14px 14px 10px;border-bottom:1px solid #e8e8e8;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.ph h3{font-size:14px;font-weight:600}
-.xbtn{background:#f0f0f0;border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;font-size:17px;line-height:1;color:#555}
-.xbtn:hover{background:#ddd}
-.psub{font-size:11.5px;color:#999;padding:8px 14px;border-bottom:1px solid #f0f0f0}
-.psec{padding:10px 12px}
-.psec-title{font-size:10.5px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
-.sitem{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:6px;cursor:pointer;font-size:13px;color:#444;border:1px solid transparent;margin-bottom:2px;transition:all .15s}
-.sitem:hover{background:#f0fbf5;border-color:#c0e8d0;color:#00b14f}
-.sitem.used{opacity:.4;cursor:default;pointer-events:none}
-.sitem .drag{margin-left:auto;opacity:.3;font-size:12px}
-.dpanel{padding:14px}
-.dpanel label{font-size:12px;font-weight:600;color:#555;display:block;margin-bottom:5px;margin-top:12px}
-.dpanel select,.dpanel input[type=color],.dpanel input[type=range]{width:100%;border:1px solid #e0e0e0;border-radius:6px;padding:7px 9px;font-size:13px;font-family:inherit;outline:none;cursor:pointer}
-.dpanel input[type=color]{height:36px;padding:3px}
-.dpanel input[type=range]{padding:4px 0}
-#previewArea{flex:1;overflow-y:auto;padding:20px;display:flex;justify-content:center;align-items:flex-start;background:#f0f2f5}
-#cvPaper{background:#fff;width:794px;min-height:1123px;box-shadow:0 4px 24px rgba(0,0,0,.13);flex-shrink:0}
-#cvHeader{padding:26px 32px 20px;border-bottom:2px solid #eee;display:flex;gap:18px;align-items:flex-start}
-#avatarWrap{width:86px;height:86px;border-radius:50%;background:#e8e8e8;flex-shrink:0;overflow:hidden;border:2px solid #ddd;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;font-size:11px;color:#aaa;text-align:center;line-height:1.4}
-#avatarWrap:hover::after{content:'Đổi ảnh';position:absolute;inset:0;background:rgba(0,0,0,.45);color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;border-radius:50%}
-#avatarWrap img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
-#avatarInput{display:none}
-#cvInfoMain{flex:1}
-#cvName{font-size:22px;font-weight:700;color:#1a1a1a;min-height:26px;margin-bottom:3px}
-#cvPosition{font-size:13.5px;color:#555;min-height:18px;margin-bottom:10px}
-#cvContacts{display:grid;grid-template-columns:1fr 1fr;gap:2px 16px}
-.citem{font-size:11.5px;color:#444;display:flex;align-items:center;gap:5px}
-.citem .clbl{color:#999;font-size:10.5px;white-space:nowrap}
-#cvBody{padding:0 32px 32px}
-.cvsec{margin-top:18px}
-.cvsec-title{font-size:12px;font-weight:700;color:#1a1a1a;text-transform:uppercase;letter-spacing:.8px;padding-bottom:5px;border-bottom:2px solid #1a1a1a;margin-bottom:10px}
-.cvsec-text{font-size:12.5px;color:#444;line-height:1.7;min-height:16px}
-.cventry{margin-bottom:10px;display:grid;grid-template-columns:120px 1fr;gap:0 12px;position:relative}
-.cventry-dates{font-size:11px;color:#888;padding-top:2px;line-height:1.5}
-.cventry-detail{border-left:2px solid #e0e0e0;padding-left:11px}
-.cventry-title{font-size:13px;font-weight:600;color:#1a1a1a;margin-bottom:1px}
-.cventry-sub{font-size:12px;color:#555;margin-bottom:2px}
-.cventry-desc{font-size:12px;color:#666;line-height:1.6}
-.skillrow{display:flex;align-items:center;gap:8px;margin-bottom:8px;position:relative}
-.skilllabel{font-size:12px;color:#444;width:130px;flex-shrink:0}
-.skilltrack{flex:1;height:5px;background:#eee;border-radius:3px;overflow:hidden}
-.skillfill{height:100%;background:#00b14f;border-radius:3px;transition:width .3s}
-.skillpct{font-size:11px;color:#888;width:32px;text-align:right;flex-shrink:0}
-.skill-range{flex:1;cursor:pointer;accent-color:#00b14f}
-[contenteditable]{outline:2px dashed transparent;transition:outline .1s;border-radius:3px;cursor:text}
-[contenteditable]:hover{outline-color:#b8e8cf}
-[contenteditable]:focus{outline-color:#00b14f;background:#f6fff9}
-.addbtn{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px dashed #b0d8c0;border-radius:6px;color:#00b14f;font-size:12px;cursor:pointer;background:transparent;font-family:inherit;margin-top:5px;transition:all .15s}
-.addbtn:hover{background:#f0fbf5;border-color:#00b14f}
-.del-entry{position:absolute;top:0;right:0;background:none;border:none;color:#ccc;font-size:13px;cursor:pointer;padding:2px 4px;line-height:1;z-index:1}
-.del-entry:hover{color:#e53935}
-#toast{position:fixed;bottom:24px;right:24px;background:#222;color:#fff;padding:11px 18px;border-radius:8px;font-size:13px;z-index:9999;display:none;font-family:inherit;box-shadow:0 4px 16px rgba(0,0,0,.22)}
-@@media print{
-  #topbar,#hintbar,#sidebar,#panels,.addbtn,.del-entry{display:none!important}
-  #wrap{position:static;top:0}
-  #previewArea{padding:0;overflow:visible}
-  #cvPaper{box-shadow:none;width:100%;min-height:auto}
-  [contenteditable]:hover,[contenteditable]:focus{outline:none!important;background:transparent!important}
-  .skill-range{display:none!important}
-}
-</style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CV Builder — SRB Recruitment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f1f5f9; }
+
+        /* ===== SIDEBAR ===== */
+        #sidebar { width: 220px; min-width: 220px; background: #fff; border-right: 1px solid #e5e7eb; height: 100vh; position: sticky; top: 0; overflow-y: auto; }
+        .sidebar-item { display: flex; align-items: center; gap: 10px; padding: 10px 16px; font-size: 13px; color: #374151; cursor: pointer; border-radius: 8px; margin: 2px 8px; transition: background .15s; }
+        .sidebar-item:hover { background: #f0fdf4; color: #16a34a; }
+        .sidebar-item.active { background: #dcfce7; color: #15803d; font-weight: 600; }
+        .sidebar-item i { font-size: 18px; }
+
+        /* ===== PANEL ===== */
+        #panel { width: 280px; min-width: 280px; background: #fff; border-right: 1px solid #e5e7eb; height: 100vh; position: sticky; top: 0; overflow-y: auto; display: none; }
+        #panel.open { display: block; }
+
+        /* ===== CV PREVIEW ===== */
+        #cv-wrap { flex: 1; display: flex; justify-content: center; padding: 24px; overflow-y: auto; height: 100vh; }
+        #cv-paper { width: 794px; min-height: 1123px; background: #fff; box-shadow: 0 4px 24px rgba(0,0,0,.12); border-radius: 4px; padding: 40px 48px; position: relative; }
+
+        /* ===== CV STYLES ===== */
+        .cv-name { font-size: 28px; font-weight: 700; color: #111; }
+        .cv-position { font-size: 14px; color: #6b7280; margin-top: 2px; }
+        .cv-section-title { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #111; border-bottom: 1.5px solid #111; padding-bottom: 4px; margin: 20px 0 10px; }
+        .cv-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 24px; font-size: 12px; color: #374151; margin-top: 8px; }
+        .cv-info-label { color: #9ca3af; font-size: 11px; }
+        .cv-entry { margin-bottom: 12px; }
+        .cv-entry-header { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; }
+        .cv-entry-sub { font-size: 12px; color: #4b5563; }
+        .cv-entry-desc { font-size: 12px; color: #6b7280; margin-top: 2px; line-height: 1.5; }
+        .cv-skill-bar { height: 6px; background: #e5e7eb; border-radius: 3px; margin-top: 3px; }
+        .cv-skill-fill { height: 100%; background: #16a34a; border-radius: 3px; transition: width .3s; }
+
+        /* ===== EDITABLE ===== */
+        [contenteditable] { outline: none; cursor: text; }
+        [contenteditable]:hover { background: #f0fdf4; border-radius: 3px; }
+        [contenteditable]:focus { background: #dcfce7; border-radius: 3px; outline: 1px dashed #16a34a; }
+
+        /* ===== ENTRY DELETE BTN ===== */
+        .entry-wrap { position: relative; }
+        .entry-wrap:hover .del-btn { display: flex; }
+        .del-btn { display: none; position: absolute; right: -24px; top: 0; width: 20px; height: 20px; background: #fee2e2; border-radius: 4px; align-items: center; justify-content: center; cursor: pointer; font-size: 12px; color: #dc2626; border: none; }
+
+        /* ===== ADD BTN ===== */
+        .add-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #16a34a; background: #f0fdf4; border: 1px dashed #86efac; border-radius: 8px; padding: 6px 14px; cursor: pointer; margin-top: 4px; transition: background .15s; }
+        .add-btn:hover { background: #dcfce7; }
+
+        /* ===== PHOTO ===== */
+        #cv-photo-wrap { width: 90px; height: 90px; border-radius: 50%; overflow: hidden; border: 2px solid #e5e7eb; cursor: pointer; flex-shrink: 0; background: #f3f4f6; display: flex; align-items: center; justify-content: center; }
+        #cv-photo-wrap img { width: 100%; height: 100%; object-fit: cover; }
+        #photo-input { display: none; }
+
+        /* ===== TOPBAR ===== */
+        #topbar { background: #fff; border-bottom: 1px solid #e5e7eb; padding: 0 20px; height: 52px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 50; }
+        .tb-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; padding: 7px 14px; border-radius: 8px; cursor: pointer; border: 1px solid #e5e7eb; background: #fff; color: #374151; transition: all .15s; }
+        .tb-btn:hover { background: #f9fafb; }
+        .tb-btn.green { background: #16a34a; color: #fff; border-color: #16a34a; }
+        .tb-btn.green:hover { background: #15803d; }
+        .tb-btn.blue { background: #1d4ed8; color: #fff; border-color: #1d4ed8; }
+        .tb-btn.blue:hover { background: #1e40af; }
+        .tb-btn i { font-size: 16px; }
+
+        /* ===== TOAST ===== */
+        #toast { position: fixed; bottom: 24px; right: 24px; background: #1a1a1a; color: #fff; padding: 10px 18px; border-radius: 10px; font-size: 13px; opacity: 0; pointer-events: none; transition: opacity .3s; z-index: 9999; }
+        #toast.show { opacity: 1; }
+
+        /* ===== FONT PANEL ===== */
+        .font-opt { padding: 8px 12px; border-radius: 8px; border: 1px solid #e5e7eb; cursor: pointer; font-size: 13px; transition: all .15s; }
+        .font-opt:hover, .font-opt.active { border-color: #16a34a; background: #f0fdf4; color: #15803d; }
+
+        /* ===== LAYOUT OPTS ===== */
+        .layout-opt { border: 2px solid #e5e7eb; border-radius: 10px; padding: 10px; cursor: pointer; transition: all .15s; text-align: center; font-size: 12px; }
+        .layout-opt:hover, .layout-opt.active { border-color: #16a34a; background: #f0fdf4; }
+
+        @@media print { #topbar, #sidebar, #panel { display: none !important; } #cv-wrap { padding: 0; height: auto; } #cv-paper { box-shadow: none; } }
+    </style>
 </head>
-<body>
+<body class="bg-slate-100">
 
+<!-- TOPBAR -->
 <div id="topbar">
-  <div id="topbar-left">
-    <span class="logo">CV Builder</span>
-    <input id="cvNameInput" value="CV chưa đặt tên" />
-  </div>
-  <div id="topbar-right">
-    <button class="tbtn" onclick="doUndo()">↩ Hoàn tác</button>
-    <button class="tbtn" onclick="doPreview()">👁 Xem trước</button>
-    <button class="tbtn green" onclick="doSave()">💾 Lưu CV</button>
-    <button class="tbtn blue" onclick="doPDF()">⬇ Xuất PDF</button>
-  </div>
+    <div class="font-bold text-green-700 text-base mr-2">CV Builder</div>
+    <span id="cv-title-bar" contenteditable class="text-sm text-gray-400 px-2 py-1 rounded hover:bg-gray-100 focus:bg-gray-100 focus:outline-none min-w-[120px]">CV chưa đặt tên</span>
+    <div class="flex-1"></div>
+    <div class="text-xs text-yellow-700 bg-yellow-50 border border-yellow-200 rounded-lg px-3 py-1.5 hidden md:block">
+        💡 Click vào nội dung CV để chỉnh sửa. Dùng sidebar trái để thêm / tuỳ chỉnh mục.
+    </div>
+    <div class="flex-1"></div>
+    <button class="tb-btn" onclick="doUndo()"><i class='bx bx-undo'></i> Hoàn tác</button>
+    <button class="tb-btn" onclick="doPreview()"><i class='bx bx-show'></i> Xem trước</button>
+    <button class="tb-btn green" onclick="doSave()"><i class='bx bx-save'></i> Lưu CV</button>
+    <button class="tb-btn blue" onclick="doExportPDF()"><i class='bx bxs-file-pdf'></i> Xuất PDF</button>
 </div>
 
-<div id="hintbar">💡 Click trực tiếp vào nội dung CV để chỉnh sửa. Dùng sidebar trái để thêm / tuỳ chỉnh mục.</div>
+<div style="display:flex; height: calc(100vh - 52px);">
 
-<div id="wrap">
-  <div id="sidebar">
-    <div class="sbi active" onclick="openPanel('addPanel',this)">➕ Thêm mục</div>
-    <div class="sbi" onclick="openPanel('designPanel',this)">🎨 Thiết kế &amp; Font</div>
-    <div class="sbi" onclick="openPanel('',this)">⊞ Bố cục</div>
-    <div class="sbi" onclick="openPanel('',this)">📄 Đổi mẫu CV</div>
-    <div class="sbi" onclick="openPanel('',this)">💬 Gợi ý viết CV</div>
-    <div class="sbi" onclick="openPanel('',this)">📚 Thư viện CV</div>
-  </div>
-
-  <div id="panels" class="open">
-    <!-- ADD PANEL -->
-    <div class="panel active" id="addPanel">
-      <div class="ph"><h3>Thêm mục</h3><button class="xbtn" onclick="closePanel()">×</button></div>
-      <div class="psub">Nhấn vào mục để thêm vào CV</div>
-      <div class="psec">
-        <div class="psec-title">Chưa sử dụng</div>
-        <div class="sitem" id="si-project" onclick="addSection('project',this)">📁 Dự án <span class="drag">⋮⋮</span></div>
-        <div class="sitem" id="si-lang" onclick="addSection('lang',this)">🌐 Ngoại ngữ <span class="drag">⋮⋮</span></div>
-        <div class="sitem" id="si-extra" onclick="addSection('extra',this)"># Thông tin thêm <span class="drag">⋮⋮</span></div>
-      </div>
-      <div class="psec" style="border-top:1px solid #f0f0f0;margin-top:6px;padding-top:12px">
-        <div class="psec-title">Đã sử dụng</div>
-        <div class="sitem used">🖼 Ảnh đại diện</div>
-        <div class="sitem used">👤 Danh thiếp</div>
-        <div class="sitem used">📞 Thông tin liên hệ</div>
-        <div class="sitem used">🎯 Mục tiêu nghề nghiệp</div>
-        <div class="sitem used">🎓 Học vấn</div>
-        <div class="sitem used">💼 Kinh nghiệm làm việc</div>
-        <div class="sitem used">🏃 Hoạt động</div>
-        <div class="sitem used">📜 Chứng chỉ</div>
-        <div class="sitem used">🏆 Giải thưởng</div>
-        <div class="sitem used">⚡ Kỹ năng</div>
-        <div class="sitem used">👥 Người giới thiệu</div>
-        <div class="sitem used">❤ Sở thích</div>
-      </div>
+    <!-- SIDEBAR -->
+    <div id="sidebar">
+        <div class="px-4 pt-4 pb-2 text-xs font-bold text-gray-400 uppercase tracking-wider">Chức năng</div>
+        <div class="sidebar-item active" onclick="openPanel('them-muc')">
+            <i class='bx bx-plus-circle'></i> Thêm mục
+        </div>
+        <div class="sidebar-item" onclick="openPanel('thiet-ke')">
+            <i class='bx bx-palette'></i> Thiết kế & Font
+        </div>
+        <div class="sidebar-item" onclick="openPanel('bo-cuc')">
+            <i class='bx bx-layout'></i> Bố cục
+        </div>
+        <div class="sidebar-item" onclick="openPanel('goi-y')">
+            <i class='bx bx-edit-alt'></i> Gợi ý viết CV
+        </div>
+        <div class="sidebar-item" onclick="openPanel('thu-vien')">
+            <i class='bx bx-collection'></i> Thư viện CV
+        </div>
+        <div class="px-4 pt-4 pb-2 text-xs font-bold text-gray-400 uppercase tracking-wider">Nhanh</div>
+        <div class="sidebar-item" onclick="doSave()"><i class='bx bx-save'></i> Lưu CV</div>
+        <div class="sidebar-item" onclick="doExportPDF()"><i class='bx bxs-file-pdf'></i> Xuất PDF</div>
+        <div class="sidebar-item" onclick="doClear()"><i class='bx bx-trash'></i> Tạo CV mới</div>
     </div>
 
-    <!-- DESIGN PANEL -->
-    <div class="panel" id="designPanel">
-      <div class="ph"><h3>Thiết kế &amp; Font</h3><button class="xbtn" onclick="closePanel()">×</button></div>
-      <div class="dpanel">
-        <label>Font chữ</label>
-        <select onchange="changeFont(this.value)">
-          <option value="'Segoe UI',sans-serif">Segoe UI (mặc định)</option>
-          <option value="Arial,sans-serif">Arial</option>
-          <option value="'Times New Roman',serif">Times New Roman</option>
-          <option value="Georgia,serif">Georgia</option>
-          <option value="'Courier New',monospace">Courier New</option>
-        </select>
-        <label>Màu tiêu đề mục</label>
-        <input type="color" value="#1a1a1a" onchange="changeTitleColor(this.value)" />
-        <label>Màu thanh kỹ năng</label>
-        <input type="color" value="#00b14f" id="skillColorPicker" onchange="changeSkillColor(this.value)" />
-        <label>Cỡ chữ nội dung: <span id="fontSizeVal">13</span>px</label>
-        <input type="range" min="10" max="18" value="13" oninput="changeFontSize(this.value)" />
-        <label>Khoảng cách dòng: <span id="lineHVal">1.7</span></label>
-        <input type="range" min="1.2" max="2.5" step="0.1" value="1.7" oninput="changeLineH(this.value)" />
-      </div>
-    </div>
-  </div>
+    <!-- PANEL -->
+    <div id="panel">
+        <!-- THÊM MỤC -->
+        <div id="p-them-muc" class="p-4">
+            <div class="flex items-center justify-between mb-3">
+                <div class="font-bold text-gray-800">Thêm mục</div>
+                <button onclick="closePanel()" class="text-gray-400 hover:text-gray-700 text-lg leading-none">×</button>
+            </div>
+            <input type="text" placeholder="Tìm mục..." class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm mb-4 focus:outline-none focus:border-green-400" oninput="filterSections(this.value)">
+            <div class="text-xs font-bold text-gray-400 uppercase mb-2">Chưa sử dụng</div>
+            <div id="unused-sections" class="space-y-1"></div>
+            <div class="text-xs font-bold text-gray-400 uppercase mt-4 mb-2">Đã sử dụng</div>
+            <div id="used-sections" class="space-y-1"></div>
+        </div>
 
-  <div id="previewArea">
-    <div id="cvPaper">
-      <div id="cvHeader">
-        <div id="avatarWrap" onclick="document.getElementById('avatarInput').click()">
-          Ảnh<br>đại diện
-          <img id="avatarImg" alt="" />
+        <!-- THIẾT KẾ -->
+        <div id="p-thiet-ke" class="p-4 hidden">
+            <div class="flex items-center justify-between mb-4">
+                <div class="font-bold text-gray-800">Thiết kế & Font</div>
+                <button onclick="closePanel()" class="text-gray-400 hover:text-gray-700 text-lg">×</button>
+            </div>
+            <div class="text-xs font-bold text-gray-500 mb-2 uppercase">Màu chủ đạo</div>
+            <div class="flex gap-2 mb-5 flex-wrap">
+                <div class="w-7 h-7 rounded-full bg-green-600 cursor-pointer ring-2 ring-offset-1 ring-green-600" onclick="setColor('#16a34a')"></div>
+                <div class="w-7 h-7 rounded-full bg-blue-600 cursor-pointer" onclick="setColor('#2563eb')"></div>
+                <div class="w-7 h-7 rounded-full bg-purple-600 cursor-pointer" onclick="setColor('#7c3aed')"></div>
+                <div class="w-7 h-7 rounded-full bg-red-600 cursor-pointer" onclick="setColor('#dc2626')"></div>
+                <div class="w-7 h-7 rounded-full bg-orange-500 cursor-pointer" onclick="setColor('#ea580c')"></div>
+                <div class="w-7 h-7 rounded-full bg-teal-600 cursor-pointer" onclick="setColor('#0d9488')"></div>
+                <div class="w-7 h-7 rounded-full bg-gray-800 cursor-pointer" onclick="setColor('#1f2937')"></div>
+            </div>
+            <div class="text-xs font-bold text-gray-500 mb-2 uppercase">Font chữ</div>
+            <div class="space-y-2">
+                <div class="font-opt active" style="font-family:'Segoe UI'" onclick="setFont('Segoe UI')">Segoe UI — Mặc định</div>
+                <div class="font-opt" style="font-family:Georgia" onclick="setFont('Georgia')">Georgia — Thanh lịch</div>
+                <div class="font-opt" style="font-family:Arial" onclick="setFont('Arial')">Arial — Đơn giản</div>
+                <div class="font-opt" style="font-family:'Times New Roman'" onclick="setFont('Times New Roman')">Times New Roman — Cổ điển</div>
+            </div>
+            <div class="text-xs font-bold text-gray-500 mt-4 mb-2 uppercase">Cỡ chữ CV</div>
+            <input type="range" min="11" max="16" value="13" class="w-full" oninput="setCVFontSize(this.value)" />
         </div>
-        <input type="file" id="avatarInput" accept="image/*" />
-        <div id="cvInfoMain">
-          <div id="cvName" contenteditable="true" spellcheck="false">Họ và Tên</div>
-          <div id="cvPosition" contenteditable="true" spellcheck="false">Vị trí ứng tuyển</div>
-          <div id="cvContacts">
-            <div class="citem"><span class="clbl">Ngày sinh:</span><span contenteditable="true" spellcheck="false">DD/MM/YYYY</span></div>
-            <div class="citem"><span class="clbl">Giới tính:</span><span contenteditable="true" spellcheck="false">Nam/Nữ</span></div>
-            <div class="citem"><span class="clbl">SĐT:</span><span contenteditable="true" spellcheck="false">0123 456 789</span></div>
-            <div class="citem"><span class="clbl">Email:</span><span contenteditable="true" spellcheck="false">email@example.com</span></div>
-            <div class="citem"><span class="clbl">Website:</span><span contenteditable="true" spellcheck="false">facebook.com/...</span></div>
-            <div class="citem"><span class="clbl">Địa chỉ:</span><span contenteditable="true" spellcheck="false">Quận X, TP.HCM</span></div>
-          </div>
-        </div>
-      </div>
 
-      <div id="cvBody">
-        <div class="cvsec" id="sec-objective">
-          <div class="cvsec-title" contenteditable="true" spellcheck="false">MỤC TIÊU NGHỀ NGHIỆP</div>
-          <div class="cvsec-text" contenteditable="true" spellcheck="false">Mô tả mục tiêu nghề nghiệp của bạn, bao gồm mục tiêu ngắn hạn và dài hạn</div>
+        <!-- BỐ CỤC -->
+        <div id="p-bo-cuc" class="p-4 hidden">
+            <div class="flex items-center justify-between mb-4">
+                <div class="font-bold text-gray-800">Bố cục</div>
+                <button onclick="closePanel()" class="text-gray-400 hover:text-gray-700 text-lg">×</button>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div class="layout-opt active" onclick="setLayout('classic')">
+                    <div class="text-xl mb-1">☰</div>
+                    <div>Cổ điển<br/><span class="text-gray-400">1 cột</span></div>
+                </div>
+                <div class="layout-opt" onclick="setLayout('sidebar')">
+                    <div class="text-xl mb-1">⊟</div>
+                    <div>Sidebar<br/><span class="text-gray-400">2 cột</span></div>
+                </div>
+                <div class="layout-opt" onclick="setLayout('modern')">
+                    <div class="text-xl mb-1">▦</div>
+                    <div>Hiện đại<br/><span class="text-gray-400">Header màu</span></div>
+                </div>
+                <div class="layout-opt" onclick="setLayout('minimal')">
+                    <div class="text-xl mb-1">─</div>
+                    <div>Tối giản<br/><span class="text-gray-400">Minimal</span></div>
+                </div>
+            </div>
         </div>
-        <div class="cvsec" id="sec-education">
-          <div class="cvsec-title" contenteditable="true" spellcheck="false">HỌC VẤN</div>
-          <div id="educationList"></div>
-          <button class="addbtn" onclick="addEntry('educationList','education')">+ Thêm học vấn</button>
+
+        <!-- GỢI Ý -->
+        <div id="p-goi-y" class="p-4 hidden">
+            <div class="flex items-center justify-between mb-4">
+                <div class="font-bold text-gray-800">Gợi ý viết CV</div>
+                <button onclick="closePanel()" class="text-gray-400 hover:text-gray-700 text-lg">×</button>
+            </div>
+            <div class="space-y-3 text-sm text-gray-600">
+                <div class="bg-green-50 border border-green-100 rounded-xl p-3">
+                    <div class="font-semibold text-green-700 mb-1">🎯 Mục tiêu nghề nghiệp</div>
+                    <div class="text-xs leading-relaxed">Viết 2-3 câu ngắn gọn. Nêu rõ vị trí ứng tuyển, thế mạnh của bạn và giá trị bạn mang lại cho công ty.</div>
+                </div>
+                <div class="bg-blue-50 border border-blue-100 rounded-xl p-3">
+                    <div class="font-semibold text-blue-700 mb-1">📊 Kinh nghiệm làm việc</div>
+                    <div class="text-xs leading-relaxed">Dùng động từ hành động. Ưu tiên số liệu cụ thể: "Tăng doanh số 30% trong 6 tháng".</div>
+                </div>
+                <div class="bg-purple-50 border border-purple-100 rounded-xl p-3">
+                    <div class="font-semibold text-purple-700 mb-1">🎓 Học vấn</div>
+                    <div class="text-xs leading-relaxed">Ghi GPA nếu trên 3.2/4.0. Liệt kê các môn học liên quan đến vị trí ứng tuyển.</div>
+                </div>
+                <div class="bg-orange-50 border border-orange-100 rounded-xl p-3">
+                    <div class="font-semibold text-orange-700 mb-1">⚡ Kỹ năng</div>
+                    <div class="text-xs leading-relaxed">Chia kỹ năng cứng và kỹ năng mềm. Chỉ liệt kê kỹ năng thực sự thành thạo.</div>
+                </div>
+            </div>
         </div>
-        <div class="cvsec" id="sec-experience">
-          <div class="cvsec-title" contenteditable="true" spellcheck="false">KINH NGHIỆM LÀM VIỆC</div>
-          <div id="experienceList"></div>
-          <button class="addbtn" onclick="addEntry('experienceList','experience')">+ Thêm kinh nghiệm</button>
+
+        <!-- THƯ VIỆN -->
+        <div id="p-thu-vien" class="p-4 hidden">
+            <div class="flex items-center justify-between mb-4">
+                <div class="font-bold text-gray-800">Thư viện CV</div>
+                <button onclick="closePanel()" class="text-gray-400 hover:text-gray-700 text-lg">×</button>
+            </div>
+            <div id="saved-list" class="space-y-2"></div>
+            <div id="saved-empty" class="text-center text-gray-400 text-sm py-8">Chưa có CV nào được lưu.<br/>Nhấn "Lưu CV" để lưu.</div>
         </div>
-        <div class="cvsec" id="sec-activity">
-          <div class="cvsec-title" contenteditable="true" spellcheck="false">HOẠT ĐỘNG</div>
-          <div id="activityList"></div>
-          <button class="addbtn" onclick="addEntry('activityList','activity')">+ Thêm hoạt động</button>
-        </div>
-        <div class="cvsec" id="sec-cert">
-          <div class="cvsec-title" contenteditable="true" spellcheck="false">CHỨNG CHỈ</div>
-          <div id="certList"></div>
-          <button class="addbtn" onclick="addEntry('certList','cert')">+ Thêm chứng chỉ</button>
-        </div>
-        <div class="cvsec" id="sec-award">
-          <div class="cvsec-title" contenteditable="true" spellcheck="false">DANH HIỆU VÀ GIẢI THƯỞNG</div>
-          <div id="awardList"></div>
-          <button class="addbtn" onclick="addEntry('awardList','award')">+ Thêm giải thưởng</button>
-        </div>
-        <div class="cvsec" id="sec-skill">
-          <div class="cvsec-title" contenteditable="true" spellcheck="false">KỸ NĂNG</div>
-          <div id="skillList"></div>
-          <button class="addbtn" onclick="addEntry('skillList','skill')">+ Thêm kỹ năng</button>
-        </div>
-        <div class="cvsec" id="sec-reference">
-          <div class="cvsec-title" contenteditable="true" spellcheck="false">NGƯỜI GIỚI THIỆU</div>
-          <div id="referenceList"></div>
-          <button class="addbtn" onclick="addEntry('referenceList','reference')">+ Thêm người giới thiệu</button>
-        </div>
-        <div class="cvsec" id="sec-hobby">
-          <div class="cvsec-title" contenteditable="true" spellcheck="false">SỞ THÍCH</div>
-          <div class="cvsec-text" contenteditable="true" spellcheck="false">Điền các sở thích của bạn</div>
-        </div>
-      </div>
     </div>
-  </div>
+
+    <!-- CV PREVIEW AREA -->
+    <div id="cv-wrap">
+        <div id="cv-paper">
+
+            <!-- HEADER -->
+            <div id="cv-header" style="display:flex; gap:20px; align-items:flex-start;">
+                <!-- Photo -->
+                <div id="cv-photo-wrap" onclick="document.getElementById('photo-input').click()" title="Click để đổi ảnh">
+                    <img id="cv-photo" src="" alt="" style="display:none;" />
+                    <span id="photo-placeholder" style="font-size:28px;">👤</span>
+                </div>
+                <input type="file" id="photo-input" accept="image/*" onchange="handlePhoto(this)" />
+
+                <div style="flex:1">
+                    <div class="cv-name" contenteditable id="cv-name-field" data-placeholder="Họ và Tên">Họ và Tên</div>
+                    <div class="cv-position" contenteditable id="cv-pos-field" data-placeholder="Vị trí ứng tuyển">Vị trí ứng tuyển</div>
+
+                    <div class="cv-info-grid" style="margin-top:10px;">
+                        <div><span class="cv-info-label">Ngày sinh: </span><span contenteditable>12/11/2005</span></div>
+                        <div><span class="cv-info-label">Giới tính: </span><span contenteditable>Nam / Nữ</span></div>
+                        <div><span class="cv-info-label">SĐT: </span><span contenteditable>0123 456 789</span></div>
+                        <div><span class="cv-info-label">Email: </span><span contenteditable>email@example.com</span></div>
+                        <div><span class="cv-info-label">Website: </span><span contenteditable>linkedin.com/in/...</span></div>
+                        <div><span class="cv-info-label">Địa chỉ: </span><span contenteditable>Quận X, TP.HCM</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DYNAMIC SECTIONS -->
+            <div id="cv-sections"></div>
+
+        </div>
+    </div>
 </div>
 
+<!-- TOAST -->
 <div id="toast"></div>
 
 <script>
-// Panel
-function openPanel(pid,el){
-  document.querySelectorAll('.sbi').forEach(function(e){e.classList.remove('active')});
-  if(el) el.classList.add('active');
-  if(!pid){document.getElementById('panels').classList.remove('open');return;}
-  document.getElementById('panels').classList.add('open');
-  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active')});
-  var p=document.getElementById(pid);
-  if(p) p.classList.add('active');
-}
-function closePanel(){
-  document.getElementById('panels').classList.remove('open');
-  document.querySelectorAll('.sbi').forEach(function(e){e.classList.remove('active')});
-}
+// ============================================================
+// DATA & STATE
+// ============================================================
+const SECTIONS = [
+    { key: 'objective',  label: 'Mục tiêu nghề nghiệp', icon: 'bx bx-target-lock',   used: true  },
+    { key: 'education',  label: 'Học vấn',               icon: 'bx bx-book-open',     used: true  },
+    { key: 'experience', label: 'Kinh nghiệm làm việc',  icon: 'bx bx-briefcase',     used: true  },
+    { key: 'activity',   label: 'Hoạt động',             icon: 'bx bx-run',           used: true  },
+    { key: 'certificate',label: 'Chứng chỉ',             icon: 'bx bx-certification', used: true  },
+    { key: 'award',      label: 'Giải thưởng',           icon: 'bx bx-trophy',        used: true  },
+    { key: 'skill',      label: 'Kỹ năng',               icon: 'bx bx-brain',         used: true  },
+    { key: 'referee',    label: 'Người giới thiệu',      icon: 'bx bx-group',         used: false },
+    { key: 'hobby',      label: 'Sở thích',              icon: 'bx bx-heart',         used: false },
+    { key: 'language',   label: 'Ngoại ngữ',             icon: 'bx bx-globe',         used: false },
+    { key: 'project',    label: 'Dự án',                 icon: 'bx bx-rocket',        used: false },
+    { key: 'extra',      label: 'Thông tin thêm',        icon: 'bx bx-info-circle',   used: false },
+];
 
-// Avatar
-document.getElementById('avatarInput').addEventListener('change',function(){
-  var f=this.files[0]; if(!f)return;
-  var r=new FileReader();
-  r.onload=function(e){
-    var img=document.getElementById('avatarImg');
-    img.src=e.target.result; img.style.display='block';
-    document.getElementById('avatarWrap').style.fontSize='0';
-  };
-  r.readAsDataURL(f);
+let history = [];
+let accentColor = '#16a34a';
+let cvFont = 'Segoe UI';
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('DOMContentLoaded', () => {
+    loadFromStorage();
+    renderSectionList();
+    renderCVSections();
+    openPanel('them-muc');
 });
 
-// Make entry element
-function makeEntry(type){
-  var d=document.createElement('div');
-  var delbtn='<button class="del-entry" title="Xoá mục này" onclick="this.parentElement.remove()">✕</button>';
-  if(type==='education'||type==='experience'||type==='activity'){
-    var t1=type==='education'?'Tên trường học':type==='experience'?'Tên công ty':'Tên tổ chức';
-    var t2=type==='education'?'Ngành học / Môn học':type==='experience'?'Vị trí công việc':'Vị trí của bạn';
-    var t3=type==='education'?'Mô tả quá trình học tập hoặc thành tích':type==='experience'?'Mô tả kinh nghiệm làm việc':'Mô tả hoạt động';
-    d.className='cventry';
-    d.innerHTML=delbtn
-      +'<div class="cventry-dates" contenteditable="true" spellcheck="false">Bắt đầu – Kết thúc</div>'
-      +'<div class="cventry-detail">'
-        +'<div class="cventry-title" contenteditable="true" spellcheck="false">'+t1+'</div>'
-        +'<div class="cventry-sub" contenteditable="true" spellcheck="false">'+t2+'</div>'
-        +'<div class="cventry-desc" contenteditable="true" spellcheck="false">'+t3+'</div>'
-      +'</div>';
-  } else if(type==='cert'){
-    d.className='cventry';
-    d.innerHTML=delbtn
-      +'<div class="cventry-dates" contenteditable="true" spellcheck="false">Thời gian</div>'
-      +'<div class="cventry-detail">'
-        +'<div class="cventry-title" contenteditable="true" spellcheck="false">Tên chứng chỉ</div>'
-        +'<div class="cventry-sub" contenteditable="true" spellcheck="false">Tổ chức cấp</div>'
-      +'</div>';
-  } else if(type==='award'){
-    d.className='cventry';
-    d.innerHTML=delbtn
-      +'<div class="cventry-dates" contenteditable="true" spellcheck="false">Thời gian</div>'
-      +'<div class="cventry-detail">'
-        +'<div class="cventry-title" contenteditable="true" spellcheck="false">Tên giải thưởng / danh hiệu</div>'
-      +'</div>';
-  } else if(type==='skill'||type==='lang'){
-    var label=type==='lang'?'Tên ngôn ngữ':'Tên kỹ năng';
-    d.className='skillrow';
-    d.innerHTML='<button class="del-entry" title="Xoá" onclick="this.parentElement.remove()" style="position:static;margin-right:2px">✕</button>'
-      +'<div class="skilllabel" contenteditable="true" spellcheck="false">'+label+'</div>'
-      +'<input type="range" class="skill-range" min="0" max="100" value="70" oninput="syncSkill(this)" style="flex:1;accent-color:#00b14f;cursor:pointer" />'
-      +'<div class="skilltrack"><div class="skillfill" style="width:70%"></div></div>'
-      +'<span class="skillpct">70%</span>';
-  } else if(type==='reference'){
-    d.className='cventry';
-    d.innerHTML=delbtn
-      +'<div class="cventry-dates"></div>'
-      +'<div class="cventry-detail">'
-        +'<div class="cventry-title" contenteditable="true" spellcheck="false">Họ và tên người giới thiệu</div>'
-        +'<div class="cventry-sub" contenteditable="true" spellcheck="false">Chức vụ – Công ty</div>'
-        +'<div class="cventry-desc" contenteditable="true" spellcheck="false">SĐT / Email liên hệ</div>'
-      +'</div>';
-  } else if(type==='project'){
-    d.className='cventry';
-    d.innerHTML=delbtn
-      +'<div class="cventry-dates" contenteditable="true" spellcheck="false">Bắt đầu – Kết thúc</div>'
-      +'<div class="cventry-detail">'
-        +'<div class="cventry-title" contenteditable="true" spellcheck="false">Tên dự án</div>'
-        +'<div class="cventry-sub" contenteditable="true" spellcheck="false">Vai trò / Công nghệ</div>'
-        +'<div class="cventry-desc" contenteditable="true" spellcheck="false">Mô tả dự án của bạn</div>'
-      +'</div>';
-  }
-  return d;
+// ============================================================
+// PANEL
+// ============================================================
+function openPanel(id) {
+    document.getElementById('panel').classList.add('open');
+    ['them-muc','thiet-ke','bo-cuc','goi-y','thu-vien'].forEach(k => {
+        const el = document.getElementById('p-' + k);
+        if (el) el.classList.toggle('hidden', k !== id);
+    });
+    document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+    const map = { 'them-muc': 0, 'thiet-ke': 1, 'bo-cuc': 2, 'goi-y': 3, 'thu-vien': 4 };
+    const items = document.querySelectorAll('.sidebar-item');
+    if (map[id] !== undefined) items[map[id]].classList.add('active');
+    if (id === 'thu-vien') renderSavedList();
+}
+function closePanel() {
+    document.getElementById('panel').classList.remove('open');
+    document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
 }
 
-function addEntry(listId,type){
-  var list=document.getElementById(listId);
-  if(!list)return;
-  var el=makeEntry(type);
-  if(el&&el.innerHTML) list.appendChild(el);
+// ============================================================
+// SECTION LIST (panel)
+// ============================================================
+function renderSectionList() {
+    const used = document.getElementById('used-sections');
+    const unused = document.getElementById('unused-sections');
+    used.innerHTML = ''; unused.innerHTML = '';
+    SECTIONS.forEach(s => {
+        const div = document.createElement('div');
+        div.className = 'flex items-center justify-between px-3 py-2 rounded-lg text-sm cursor-pointer hover:bg-gray-50 border border-transparent hover:border-gray-200';
+        div.innerHTML = `<span style="display:flex;align-items:center;gap:7px;"><i class="${s.icon}" style="font-size:17px;color:#6b7280;"></i>${s.label}</span>
+            <span class="text-xs px-2 py-0.5 rounded-full font-medium ${s.used ? 'bg-green-100 text-green-700 cursor-pointer' : 'bg-gray-100 text-gray-500 cursor-pointer'}"
+                onclick="toggleSection('${s.key}')">${s.used ? 'Ẩn' : 'Thêm'}</span>`;
+        (s.used ? used : unused).appendChild(div);
+    });
 }
 
-function syncSkill(range){
-  var v=parseInt(range.value);
-  var row=range.parentElement;
-  var fill=row.querySelector('.skillfill');
-  var pct=row.querySelector('.skillpct');
-  if(fill) fill.style.width=v+'%';
-  if(pct)  pct.textContent=v+'%';
+function toggleSection(key) {
+    const s = SECTIONS.find(x => x.key === key);
+    if (!s) return;
+    s.used = !s.used;
+    renderSectionList();
+    renderCVSections();
+    autoSave();
 }
 
-// Add section
-function addSection(type,sitem){
-  var body=document.getElementById('cvBody');
-  var sec=document.createElement('div');
-  sec.className='cvsec';
-  if(type==='project'){
-    sec.id='sec-project';
-    sec.innerHTML='<div class="cvsec-title" contenteditable="true" spellcheck="false">DỰ ÁN</div>'
-      +'<div id="projectList"></div>'
-      +'<button class="addbtn" onclick="addEntry(\'projectList\',\'project\')">+ Thêm dự án</button>';
-    body.appendChild(sec);
-    addEntry('projectList','project');
-  } else if(type==='lang'){
-    sec.id='sec-lang';
-    sec.innerHTML='<div class="cvsec-title" contenteditable="true" spellcheck="false">NGOẠI NGỮ</div>'
-      +'<div id="langList"></div>'
-      +'<button class="addbtn" onclick="addEntry(\'langList\',\'lang\')">+ Thêm ngoại ngữ</button>';
-    body.appendChild(sec);
-    addEntry('langList','lang');
-  } else if(type==='extra'){
-    sec.innerHTML='<div class="cvsec-title" contenteditable="true" spellcheck="false">THÔNG TIN THÊM</div>'
-      +'<div class="cvsec-text" contenteditable="true" spellcheck="false">Điền thông tin bổ sung tại đây</div>';
-    body.appendChild(sec);
-  }
-  if(sitem){sitem.classList.add('used');sitem.onclick=null;}
+function filterSections(q) {
+    q = q.toLowerCase();
+    document.querySelectorAll('#used-sections > div, #unused-sections > div').forEach(el => {
+        el.style.display = el.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
 }
 
-// Design
-function changeFont(f){document.getElementById('cvPaper').style.fontFamily=f;}
-function changeTitleColor(c){document.querySelectorAll('.cvsec-title').forEach(function(el){el.style.color=c;el.style.borderBottomColor=c;});}
-function changeSkillColor(c){document.querySelectorAll('.skillfill').forEach(function(el){el.style.background=c;});document.querySelectorAll('.skill-range').forEach(function(el){el.style.accentColor=c;});}
-function changeFontSize(v){document.getElementById('cvBody').style.fontSize=v+'px';document.getElementById('fontSizeVal').textContent=v;}
-function changeLineH(v){document.getElementById('cvBody').style.lineHeight=v;document.getElementById('lineHVal').textContent=parseFloat(v).toFixed(1);}
+// ============================================================
+// RENDER CV SECTIONS
+// ============================================================
+function renderCVSections() {
+    const container = document.getElementById('cv-sections');
+    const usedSections = SECTIONS.filter(s => s.used);
+    container.innerHTML = '';
+    usedSections.forEach(s => renderSection(s, container));
+}
 
-// Save/Load
+function renderSection(s, container) {
+    const wrap = document.createElement('div');
+    wrap.id = 'sec-' + s.key;
+    wrap.innerHTML = sectionHTML(s);
+    container.appendChild(wrap);
+}
+
+function sectionHTML(s) {
+    switch (s.key) {
+        case 'objective': return `
+            <div class="cv-section-title">${s.label.toUpperCase()}</div>
+            <div contenteditable class="cv-entry-desc" style="font-size:13px;color:#374151;line-height:1.6;" id="obj-text">
+                Mô tả mục tiêu nghề nghiệp của bạn, bao gồm mục tiêu ngắn hạn và dài hạn
+            </div>`;
+        case 'education': return `
+            <div class="cv-section-title">${s.label.toUpperCase()}</div>
+            <div id="list-education"></div>
+            <button class="add-btn" onclick="addEntry('education')">+ Thêm học vấn</button>`;
+        case 'experience': return `
+            <div class="cv-section-title">${s.label.toUpperCase()}</div>
+            <div id="list-experience"></div>
+            <button class="add-btn" onclick="addEntry('experience')">+ Thêm kinh nghiệm</button>`;
+        case 'activity': return `
+            <div class="cv-section-title">${s.label.toUpperCase()}</div>
+            <div id="list-activity"></div>
+            <button class="add-btn" onclick="addEntry('activity')">+ Thêm hoạt động</button>`;
+        case 'certificate': return `
+            <div class="cv-section-title">${s.label.toUpperCase()}</div>
+            <div id="list-certificate"></div>
+            <button class="add-btn" onclick="addEntry('certificate')">+ Thêm chứng chỉ</button>`;
+        case 'award': return `
+            <div class="cv-section-title">${s.label.toUpperCase()}</div>
+            <div id="list-award"></div>
+            <button class="add-btn" onclick="addEntry('award')">+ Thêm giải thưởng</button>`;
+        case 'skill': return `
+            <div class="cv-section-title">${s.label.toUpperCase()}</div>
+            <div id="list-skill"></div>
+            <button class="add-btn" onclick="addSkill()">+ Thêm kỹ năng</button>`;
+        case 'referee': return `
+            <div class="cv-section-title">${s.label.toUpperCase()}</div>
+            <div id="list-referee"></div>
+            <button class="add-btn" onclick="addEntry('referee')">+ Thêm người giới thiệu</button>`;
+        case 'hobby': return `
+            <div class="cv-section-title">${s.label.toUpperCase()}</div>
+            <div contenteditable class="cv-entry-desc" style="font-size:13px;color:#374151;" id="hobby-text">
+                Đọc sách, du lịch, nhiếp ảnh, thể thao...
+            </div>`;
+        case 'language': return `
+            <div class="cv-section-title">${s.label.toUpperCase()}</div>
+            <div id="list-language"></div>
+            <button class="add-btn" onclick="addLanguage()">+ Thêm ngoại ngữ</button>`;
+        case 'project': return `
+            <div class="cv-section-title">${s.label.toUpperCase()}</div>
+            <div id="list-project"></div>
+            <button class="add-btn" onclick="addEntry('project')">+ Thêm dự án</button>`;
+        case 'extra': return `
+            <div class="cv-section-title">${s.label.toUpperCase()}</div>
+            <div contenteditable class="cv-entry-desc" style="font-size:13px;color:#374151;" id="extra-text">
+                Thêm thông tin bổ sung khác...
+            </div>`;
+        default: return '';
+    }
+}
+
+// ============================================================
+// ADD ENTRY (education, experience, activity, ...)
+// ============================================================
+function addEntry(type) {
+    const list = document.getElementById('list-' + type);
+    if (!list) return;
+    const id = type + '_' + Date.now();
+    const div = document.createElement('div');
+    div.className = 'entry-wrap cv-entry';
+    div.id = id;
+
+    let inner = '';
+    if (type === 'education') {
+        inner = `
+            <div class="cv-entry-header">
+                <span contenteditable class="cv-entry-title">Tên trường học</span>
+                <span contenteditable class="cv-entry-date" style="color:#6b7280;font-weight:400;font-size:12px;">Bắt đầu – Kết thúc</span>
+            </div>
+            <div contenteditable class="cv-entry-sub">Ngành học / Môn học</div>
+            <div contenteditable class="cv-entry-desc">Mô tả quá trình học tập hoặc thành tích</div>`;
+    } else if (type === 'experience') {
+        inner = `
+            <div class="cv-entry-header">
+                <span contenteditable class="cv-entry-title">Tên công ty</span>
+                <span contenteditable class="cv-entry-date" style="color:#6b7280;font-weight:400;font-size:12px;">Bắt đầu – Kết thúc</span>
+            </div>
+            <div contenteditable class="cv-entry-sub">Vị trí công việc</div>
+            <div contenteditable class="cv-entry-desc">Mô tả kinh nghiệm làm việc và thành tích đạt được</div>`;
+    } else if (type === 'activity') {
+        inner = `
+            <div class="cv-entry-header">
+                <span contenteditable class="cv-entry-title">Tên tổ chức</span>
+                <span contenteditable class="cv-entry-date" style="color:#6b7280;font-weight:400;font-size:12px;">Bắt đầu – Kết thúc</span>
+            </div>
+            <div contenteditable class="cv-entry-sub">Vai trò của bạn</div>
+            <div contenteditable class="cv-entry-desc">Mô tả hoạt động</div>`;
+    } else if (type === 'certificate') {
+        inner = `
+            <div class="cv-entry-header">
+                <span contenteditable class="cv-entry-title">Tên chứng chỉ</span>
+                <span contenteditable class="cv-entry-date" style="color:#6b7280;font-weight:400;font-size:12px;">Năm cấp</span>
+            </div>
+            <div contenteditable class="cv-entry-sub">Tổ chức cấp chứng chỉ</div>`;
+    } else if (type === 'award') {
+        inner = `
+            <div class="cv-entry-header">
+                <span contenteditable class="cv-entry-title">Tên giải thưởng</span>
+                <span contenteditable class="cv-entry-date" style="color:#6b7280;font-weight:400;font-size:12px;">Năm</span>
+            </div>
+            <div contenteditable class="cv-entry-desc">Mô tả giải thưởng</div>`;
+    } else if (type === 'referee') {
+        inner = `
+            <div class="cv-entry-header">
+                <span contenteditable class="cv-entry-title">Họ và Tên</span>
+            </div>
+            <div contenteditable class="cv-entry-sub">Chức danh — Công ty</div>
+            <div contenteditable class="cv-entry-desc">📞 SĐT &nbsp;|&nbsp; ✉️ Email</div>`;
+    } else if (type === 'project') {
+        inner = `
+            <div class="cv-entry-header">
+                <span contenteditable class="cv-entry-title">Tên dự án</span>
+                <span contenteditable class="cv-entry-date" style="color:#6b7280;font-weight:400;font-size:12px;">Thời gian</span>
+            </div>
+            <div contenteditable class="cv-entry-sub">Vai trò / Công nghệ sử dụng</div>
+            <div contenteditable class="cv-entry-desc">Mô tả dự án và kết quả đạt được</div>`;
+    }
+
+    div.innerHTML = inner + `<button class="del-btn" onclick="delEntry('${id}')" title="Xóa">✕</button>`;
+    list.appendChild(div);
+    autoSave();
+}
+
+function addSkill() {
+    const list = document.getElementById('list-skill');
+    if (!list) return;
+    const id = 'skill_' + Date.now();
+    const div = document.createElement('div');
+    div.className = 'entry-wrap';
+    div.id = id;
+    div.style.cssText = 'margin-bottom:8px;';
+    div.innerHTML = `
+        <div style="display:flex;align-items:center;gap:8px;">
+            <span contenteditable style="font-size:13px;font-weight:500;min-width:120px;">Tên kỹ năng</span>
+            <div class="cv-skill-bar" style="flex:1;">
+                <div class="cv-skill-fill" style="width:70%;background:${accentColor}"></div>
+            </div>
+            <input type="range" min="0" max="100" value="70" style="width:70px;"
+                oninput="this.previousElementSibling.querySelector('.cv-skill-fill').style.width=this.value+'%'; autoSave();" />
+        </div>
+        <button class="del-btn" onclick="delEntry('${id}')" title="Xóa">✕</button>`;
+    list.appendChild(div);
+    autoSave();
+}
+
+function addLanguage() {
+    const list = document.getElementById('list-language');
+    if (!list) return;
+    const id = 'lang_' + Date.now();
+    const div = document.createElement('div');
+    div.className = 'entry-wrap';
+    div.id = id;
+    div.style.cssText = 'margin-bottom:8px;display:flex;align-items:center;gap:12px;';
+    div.innerHTML = `
+        <span contenteditable style="font-size:13px;font-weight:500;min-width:100px;">Tiếng Anh</span>
+        <select style="font-size:12px;border:1px solid #e5e7eb;border-radius:6px;padding:3px 8px;color:#374151;" onchange="autoSave()">
+            <option>Cơ bản</option><option>Trung cấp</option><option selected>Khá</option>
+            <option>Giỏi</option><option>Thành thạo</option><option>Bản ngữ</option>
+        </select>
+        <button class="del-btn" onclick="delEntry('${id}')" title="Xóa">✕</button>`;
+    list.appendChild(div);
+    autoSave();
+}
+
+function delEntry(id) {
+    const el = document.getElementById(id);
+    if (el) { el.remove(); autoSave(); }
+}
+
+// ============================================================
+// PHOTO
+// ============================================================
+function handlePhoto(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+        const img = document.getElementById('cv-photo');
+        img.src = e.target.result;
+        img.style.display = 'block';
+        document.getElementById('photo-placeholder').style.display = 'none';
+        autoSave();
+    };
+    reader.readAsDataURL(file);
+}
+
+// ============================================================
+// DESIGN
+// ============================================================
+function setColor(color) {
+    accentColor = color;
+    document.querySelectorAll('.cv-section-title').forEach(el => el.style.borderBottomColor = color);
+    document.querySelectorAll('.cv-skill-fill').forEach(el => el.style.background = color);
+    document.querySelectorAll('.add-btn').forEach(el => el.style.color = color);
+    autoSave();
+}
+
+function setFont(font) {
+    cvFont = font;
+    document.getElementById('cv-paper').style.fontFamily = font;
+    document.querySelectorAll('.font-opt').forEach(el => el.classList.toggle('active', el.textContent.startsWith(font)));
+    autoSave();
+}
+
+function setCVFontSize(val) {
+    document.getElementById('cv-paper').style.fontSize = val + 'px';
+    autoSave();
+}
+
+function setLayout(type) {
+    document.querySelectorAll('.layout-opt').forEach(el => el.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+    const paper = document.getElementById('cv-paper');
+    if (type === 'modern') {
+        document.getElementById('cv-header').style.background = accentColor;
+        document.getElementById('cv-header').style.color = '#fff';
+        document.getElementById('cv-header').style.margin = '-40px -48px 20px';
+        document.getElementById('cv-header').style.padding = '30px 48px';
+        document.getElementById('cv-name-field').style.color = '#fff';
+        document.getElementById('cv-pos-field').style.color = 'rgba(255,255,255,.8)';
+    } else {
+        document.getElementById('cv-header').style.cssText = 'display:flex;gap:20px;align-items:flex-start;';
+        document.getElementById('cv-name-field').style.color = '#111';
+        document.getElementById('cv-pos-field').style.color = '#6b7280';
+    }
+    toast('Đã đổi bố cục: ' + type);
+}
+
+// ============================================================
+// SAVE / LOAD
+// ============================================================
+function autoSave() {
+    clearTimeout(window._saveTimer);
+    window._saveTimer = setTimeout(doSave, 1500);
+}
+
 function doSave() {
-  try {
-    var cvTitle = document.getElementById('cvNameInput').value?.trim();
-    if (!cvTitle) cvTitle = 'CV chưa đặt tên';
+    const name = document.getElementById('cv-title-bar').textContent.trim() || 'CV chưa đặt tên';
+    const data = {
+        name,
+        html: document.getElementById('cv-paper').innerHTML,
+        photo: document.getElementById('cv-photo').src,
+        sections: SECTIONS.map(s => ({ key: s.key, used: s.used })),
+        color: accentColor,
+        font: cvFont,
+        savedAt: new Date().toLocaleString('vi-VN')
+    };
+    let list = JSON.parse(localStorage.getItem('srb_cv_list') || '[]');
+    const idx = list.findIndex(x => x.name === name);
+    if (idx >= 0) list[idx] = data; else list.unshift(data);
+    localStorage.setItem('srb_cv_list', JSON.stringify(list));
+    localStorage.setItem('srb_cv_current', JSON.stringify(data));
+    toast('✓ Đã lưu CV: ' + name);
+}
 
-    fetch('/Create_CV/SaveCV', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        title: cvTitle,
-        userId: 'USER_DEMO_01',
-        status: 'Đang dùng'
-      })
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        showToast('✅ Đã lưu CV thành công!');
-        setTimeout(function () {
-          window.location.href = '/Create_CV/CV_Management';
-        }, 800);
-      } else {
-        showToast('❌ Lưu CV thất bại!');
-      }
-    })
-    .catch(error => {
-      console.error(error);
-      showToast('❌ Có lỗi khi lưu CV!');
+function loadFromStorage() {
+    const raw = localStorage.getItem('srb_cv_current');
+    if (!raw) {
+        setTimeout(() => {
+            addEntry('education');
+            addEntry('experience');
+            addEntry('experience');
+            addEntry('activity');
+            addSkill(); addSkill(); addSkill();
+        }, 100);
+        return;
+    }
+    try {
+        const data = JSON.parse(raw);
+        if (data.name) document.getElementById('cv-title-bar').textContent = data.name;
+        if (data.color) accentColor = data.color;
+        if (data.font) { cvFont = data.font; document.getElementById('cv-paper').style.fontFamily = data.font; }
+        if (data.sections) data.sections.forEach(s => { const found = SECTIONS.find(x => x.key === s.key); if (found) found.used = s.used; });
+        setTimeout(() => {
+            if (data.html) {
+                document.getElementById('cv-paper').innerHTML = data.html;
+                if (data.photo && data.photo.length > 5) {
+                    const img = document.getElementById('cv-photo');
+                    if (img) { img.src = data.photo; img.style.display = 'block'; }
+                    const ph = document.getElementById('photo-placeholder');
+                    if (ph) ph.style.display = 'none';
+                }
+            }
+        }, 50);
+    } catch(e) {}
+}
+
+function renderSavedList() {
+    const container = document.getElementById('saved-list');
+    const empty = document.getElementById('saved-empty');
+    const list = JSON.parse(localStorage.getItem('srb_cv_list') || '[]');
+    container.innerHTML = '';
+    if (list.length === 0) { empty.style.display = 'block'; return; }
+    empty.style.display = 'none';
+    list.forEach((cv, i) => {
+        const div = document.createElement('div');
+        div.className = 'border border-gray-200 rounded-xl p-3 hover:border-green-300 transition-colors cursor-pointer';
+        div.innerHTML = `
+            <div class="font-semibold text-sm text-gray-800">${cv.name}</div>
+            <div class="text-xs text-gray-400 mt-0.5">${cv.savedAt}</div>
+            <div class="flex gap-2 mt-2">
+                <button onclick="loadCV(${i})" class="text-xs bg-green-50 text-green-700 border border-green-200 rounded-lg px-3 py-1 hover:bg-green-100">Mở</button>
+                <button onclick="deleteCV(${i})" class="text-xs bg-red-50 text-red-600 border border-red-100 rounded-lg px-3 py-1 hover:bg-red-100">Xóa</button>
+            </div>`;
+        container.appendChild(div);
     });
-  } catch (e) {
-    showToast('❌ Lỗi: ' + e.message);
-  }
 }
 
-function doLoad(){
-  try{
-    var raw=localStorage.getItem('cvb3');
-    if(!raw)return;
-    var o=JSON.parse(raw);
-    if(o.name) document.getElementById('cvNameInput').value=o.name;
-    if(o.headerHTML) document.getElementById('cvHeader').innerHTML=o.headerHTML;
-    if(o.bodyHTML)   document.getElementById('cvBody').innerHTML=o.bodyHTML;
-    if(o.paperFF)    document.getElementById('cvPaper').style.fontFamily=o.paperFF;
-    if(o.bodyFS)     document.getElementById('cvBody').style.fontSize=o.bodyFS;
-    if(o.bodyLH)     document.getElementById('cvBody').style.lineHeight=o.bodyLH;
-    // rebind avatar
-    document.getElementById('avatarInput').addEventListener('change',function(){
-      var f=this.files[0];if(!f)return;
-      var r=new FileReader();
-      r.onload=function(e){
-        var img=document.getElementById('avatarImg');
-        if(img){img.src=e.target.result;img.style.display='block';}
-        document.getElementById('avatarWrap').style.fontSize='0';
-      };r.readAsDataURL(f);
+function loadCV(idx) {
+    const list = JSON.parse(localStorage.getItem('srb_cv_list') || '[]');
+    const data = list[idx];
+    if (!data) return;
+    if (data.color) accentColor = data.color;
+    if (data.font) { cvFont = data.font; document.getElementById('cv-paper').style.fontFamily = data.font; }
+    if (data.sections) data.sections.forEach(s => { const found = SECTIONS.find(x => x.key === s.key); if (found) found.used = s.used; });
+    if (data.name) document.getElementById('cv-title-bar').textContent = data.name;
+    if (data.html) document.getElementById('cv-paper').innerHTML = data.html;
+    renderSectionList();
+    toast('Đã mở CV: ' + data.name);
+}
+
+function deleteCV(idx) {
+    let list = JSON.parse(localStorage.getItem('srb_cv_list') || '[]');
+    list.splice(idx, 1);
+    localStorage.setItem('srb_cv_list', JSON.stringify(list));
+    renderSavedList();
+    toast('Đã xóa CV');
+}
+
+// ============================================================
+// EXPORT PDF
+// ============================================================
+function doExportPDF() {
+    const el = document.getElementById('cv-paper');
+    document.querySelectorAll('.add-btn, .del-btn, input[type=range], input[type=file], #photo-input').forEach(e => e.style.display = 'none');
+    const opt = {
+        margin: 0,
+        filename: (document.getElementById('cv-title-bar').textContent.trim() || 'CV') + '.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+    html2pdf().set(opt).from(el).save().then(() => {
+        document.querySelectorAll('.add-btn').forEach(e => e.style.display = 'inline-flex');
+        toast('✓ Xuất PDF thành công!');
     });
-    // rebind skill ranges
-    document.querySelectorAll('.skill-range').forEach(function(r){r.oninput=function(){syncSkill(this);};});
-  }catch(e){}
 }
 
-function doPreview(){
-  var css='<style>*{box-sizing:border-box;margin:0;padding:0}body{padding:32px;background:#f0f2f5;display:flex;justify-content:center;font-family:Segoe UI,sans-serif}'
-    +'#cvPaper{background:#fff;width:794px;min-height:1123px;box-shadow:0 4px 24px rgba(0,0,0,.13)}'
-    +'#cvHeader{padding:26px 32px 20px;border-bottom:2px solid #eee;display:flex;gap:18px}'
-    +'#avatarWrap{width:86px;height:86px;border-radius:50%;background:#e8e8e8;overflow:hidden;border:2px solid #ddd;flex-shrink:0}'
-    +'#avatarWrap img{width:100%;height:100%;object-fit:cover}'
-    +'#cvInfoMain{flex:1}#cvName{font-size:22px;font-weight:700;margin-bottom:3px}'
-    +'#cvPosition{font-size:13.5px;color:#555;margin-bottom:10px}'
-    +'#cvContacts{display:grid;grid-template-columns:1fr 1fr;gap:2px 16px}'
-    +'.citem{font-size:11.5px;color:#444;display:flex;gap:5px}.citem .clbl{color:#999;font-size:10.5px}'
-    +'#cvBody{padding:0 32px 32px}.cvsec{margin-top:18px}'
-    +'.cvsec-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;padding-bottom:5px;border-bottom:2px solid #1a1a1a;margin-bottom:10px}'
-    +'.cvsec-text{font-size:12.5px;color:#444;line-height:1.7}'
-    +'.cventry{margin-bottom:10px;display:grid;grid-template-columns:120px 1fr;gap:0 12px}'
-    +'.cventry-dates{font-size:11px;color:#888;padding-top:2px}'
-    +'.cventry-detail{border-left:2px solid #e0e0e0;padding-left:11px}'
-    +'.cventry-title{font-size:13px;font-weight:600;margin-bottom:1px}'
-    +'.cventry-sub{font-size:12px;color:#555;margin-bottom:2px}.cventry-desc{font-size:12px;color:#666;line-height:1.6}'
-    +'.skillrow{display:flex;align-items:center;gap:8px;margin-bottom:8px}'
-    +'.skilllabel{font-size:12px;color:#444;width:130px;flex-shrink:0}'
-    +'.skilltrack{flex:1;height:5px;background:#eee;border-radius:3px;overflow:hidden}'
-    +'.skillfill{height:100%;background:#00b14f;border-radius:3px}.skillpct{font-size:11px;color:#888;width:32px}'
-    +'.addbtn,.del-entry,.skill-range{display:none!important}[contenteditable]{outline:none!important}</style>';
-  var w=window.open('','_blank');
-  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8">'+css+'</head><body>');
-  w.document.write('<div id="cvPaper">'+document.getElementById('cvHeader').outerHTML+document.getElementById('cvBody').outerHTML+'</div>');
-  w.document.write('</body></html>');
-  w.document.close();
+// ============================================================
+// UTILS
+// ============================================================
+function doUndo() {
+    if (history.length === 0) { toast('Không có gì để hoàn tác'); return; }
+    document.getElementById('cv-paper').innerHTML = history.pop();
+    toast('Đã hoàn tác');
 }
 
-function doPDF(){window.print();}
-function doUndo(){document.execCommand('undo');}
-
-function showToast(msg){
-  var t=document.getElementById('toast');
-  t.textContent=msg;t.style.display='block';
-  clearTimeout(t._tid);
-  t._tid=setTimeout(function(){t.style.display='none';},2500);
+function doPreview() {
+    const w = window.open('', '_blank', 'width=900,height=1100');
+    w.document.write('<html><body style="margin:0;background:#f3f4f6;display:flex;justify-content:center;padding:24px;">' + document.getElementById('cv-paper').outerHTML + '</body></html>');
+    w.document.close();
 }
 
-// Init
-window.addEventListener('DOMContentLoaded',function(){
-  // seed default entries
-  addEntry('educationList','education');
-  addEntry('experienceList','experience');
-  addEntry('experienceList','experience');
-  addEntry('activityList','activity');
-  addEntry('certList','cert');
-  addEntry('awardList','award');
-  addEntry('skillList','skill');
-  addEntry('skillList','skill');
-  addEntry('referenceList','reference');
-  // load saved
-  doLoad();
+function doClear() {
+    if (!confirm('Tạo CV mới sẽ xóa nội dung hiện tại. Bạn có chắc không?')) return;
+    localStorage.removeItem('srb_cv_current');
+    location.reload();
+}
+
+function toast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+// Auto-save on any edit
+document.addEventListener('input', () => {
+    history.push(document.getElementById('cv-paper').innerHTML);
+    if (history.length > 30) history.shift();
+    autoSave();
 });
 </script>
 </body>

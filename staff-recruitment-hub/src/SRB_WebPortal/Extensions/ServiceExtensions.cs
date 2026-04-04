@@ -16,6 +16,7 @@ public static class ServiceExtensions
    public static IServiceCollection AddExtensionServices(this IServiceCollection services)
    {
       services.AddScoped<IRedisService, RedisService>();
+
       services.AddScoped<IHashingService, HashingService>();
 
       services.AddScoped<IBunnyCNDService, BunnyCNDService>();
@@ -24,12 +25,16 @@ public static class ServiceExtensions
 
       services.AddScoped<IJwtService, JwtService>();
 
+      services.AddSingleton<IResendService, ResendService>();
+
       services.AddPaymentModule();
       services.AddAuthModule();
       services.AddUserModule();
       services.AddPostModule();
       services.AddBusinessModule();
       services.AddSystemManagerModule();
+
+      services.AddHostedService<EmailBackgroundWorker>();
 
       return services;
    }

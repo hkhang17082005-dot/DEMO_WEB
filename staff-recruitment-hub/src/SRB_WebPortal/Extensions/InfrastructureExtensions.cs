@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 using SRB_ViewModel;
+using Resend;
 
 namespace SRB_WebPortal.Extensions
 {
@@ -23,6 +24,14 @@ namespace SRB_WebPortal.Extensions
             options.Configuration = connectionRedisString;
             options.InstanceName = "SampleInstance:";
          });
+
+         var resendSection = configuration.GetSection("ResendSettings:APIKey");
+         services.AddHttpClient<IResend, ResendClient>();
+         services.Configure<ResendClientOptions>(options =>
+         {
+            options.ApiToken = configuration["ResendSettings:ApiToken"] ?? string.Empty;
+         });
+
 
          // Setup JWT Authentication
          services.AddAuthentication(options =>

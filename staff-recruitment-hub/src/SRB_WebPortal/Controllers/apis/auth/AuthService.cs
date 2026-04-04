@@ -34,7 +34,8 @@ public class AuthService(
    TokenFactory tokenFactory,
    Cloudinary cloudinary,
    IShareRepository shareRepository,
-   IBunnyCNDService bunnyCNDService
+   IBunnyCNDService bunnyCNDService,
+   IResendService resendService
    ) : IAuthService
 {
    private readonly IRedisService _redisService = redisService;
@@ -47,15 +48,19 @@ public class AuthService(
    private readonly Cloudinary _cloudinary = cloudinary;
    private readonly IShareRepository _shareRepository = shareRepository;
    private readonly IBunnyCNDService _bunnyCNDService = bunnyCNDService;
+   private readonly IResendService _mailService = resendService;
 
    public async Task<BaseResponse> Health()
    {
+      await _mailService.SendMailAsync("hkhang17082005@gmail.com", "Chào mừng", "Cảm ơn bạn!");
+
       return BaseResponse.Success("API Auth is Running!");
    }
 
    public async Task<BaseResponse<AuthResponse>> Login(LoginModelDTO model, DeviceInfo? deviceInfo)
    {
       var userLogin = await _authRepository.GetUserByUsername(model.Username);
+
       // Kiểm tra nếu user không tồn tại hoặc mật khẩu không khớp
       if (userLogin is null || !_hashingService.VerifyHashValue(model.Password, userLogin.HashPassword))
       {
@@ -66,7 +71,8 @@ public class AuthService(
       }
 
       // Kiểm tra trạng thái người dùng
-      if(userLogin.Status == UserStatus.locked){
+      if (userLogin.Status == UserStatus.locked)
+      {
          return BaseResponse<AuthResponse>.Failure(
             "Tai khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên để biết thêm chi tiết.",
             HttpStatusCode.BadRequest

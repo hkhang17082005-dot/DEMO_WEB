@@ -20,7 +20,7 @@ public interface IBusinessRepository
 
    Task<IEnumerable<JobPostDTO>> GetBusinessJobPosts(string? lastPostID, int postSize, string businessID);
 
-   Task<bool> UpdateApplicationStatusAsync(string applicationId, ApplicationStatus status);
+   Task<JobApplication?> UpdateApplicationStatusAsync(string applicationId, ApplicationStatus status);
 }
 
 public class BusinessRepository(
@@ -31,17 +31,22 @@ public class BusinessRepository(
    private readonly DatabaseContext _context = context;
    private readonly IShareRepository _shareRepository = shareRepository;
 
-   public async Task<bool> UpdateApplicationStatusAsync(string applicationId, ApplicationStatus status)
+   public async Task<JobApplication?> UpdateApplicationStatusAsync(string applicationId, ApplicationStatus status)
    {
       var application = await _context.JobApplications
+         .Include(x => x.User)
+         .Include(x => x.JobPost)
+         .Include(x => x.User.UserProfile)
          .FirstOrDefaultAsync(x => x.ApplicationID == applicationId);
 
-      if (application == null) return false;
+      if (application == null) return null;
 
       application.Status = status;
-      application.UpdatedAt = DateTime.Now;
+      application.UpdatedAt = DateTime.UtcNow;
 
-      return await _context.SaveChangesAsync() > 0;
+      var result = await _context.SaveChangesAsync();
+
+      return result > 0 ? application : null;
    }
 
    public async Task<bool> ExistingUserBusiness(string userID)

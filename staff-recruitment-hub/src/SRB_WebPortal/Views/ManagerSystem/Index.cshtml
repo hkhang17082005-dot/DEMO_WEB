@@ -1,3 +1,5 @@
+@model SRB_WebPortal.Models.DashboardViewModel
+
 @{
    Layout = "_DashboardLayout";
 }
@@ -85,9 +87,9 @@
                <span class="text-3xl font-black text-white/20">01</span>
             </div>
             <h3 class="text-slate-400 text-sm font-semibold mb-2">TỔNG ỨNG VIÊN</h3>
-            <p class="text-4xl font-black text-white mb-2">18,245</p>
+            <p class="text-4xl font-black text-white mb-2">@Model.TotalCandidates.ToString("N0")</p>
             <div class="flex items-center gap-2">
-               <span class="text-green-400 text-sm font-bold"><i class="fas fa-arrow-up"></i> +8.2%</span>
+               <span class="text-green-400 text-sm font-bold"><i class="fas fa-arrow-up"></i> +@Model.CandidatesGrowth%</span>
                <span class="text-slate-500 text-xs">so với tháng trước</span>
             </div>
          </div>
@@ -105,9 +107,9 @@
                <span class="text-3xl font-black text-white/20">02</span>
             </div>
             <h3 class="text-slate-400 text-sm font-semibold mb-2">TIN TUYỂN DỤNG</h3>
-            <p class="text-4xl font-black text-white mb-2">1,247</p>
+            <p class="text-4xl font-black text-white mb-2">@Model.TotalJobPosts.ToString("N0")</p>
             <div class="flex items-center gap-2">
-               <span class="text-green-400 text-sm font-bold"><i class="fas fa-arrow-up"></i> +15.3%</span>
+               <span class="text-green-400 text-sm font-bold"><i class="fas fa-arrow-up"></i> +@Model.JobPostsGrowth%</span>
                <span class="text-slate-500 text-xs">đang hoạt động</span>
             </div>
          </div>
@@ -125,9 +127,9 @@
                <span class="text-3xl font-black text-white/20">03</span>
             </div>
             <h3 class="text-slate-400 text-sm font-semibold mb-2">LƯỢT ỨNG TUYỂN</h3>
-            <p class="text-4xl font-black text-white mb-2">5,892</p>
+            <p class="text-4xl font-black text-white mb-2">@Model.TotalApplications.ToString("N0")</p>
             <div class="flex items-center gap-2">
-               <span class="text-green-400 text-sm font-bold"><i class="fas fa-arrow-up"></i> +23.5%</span>
+               <span class="text-green-400 text-sm font-bold"><i class="fas fa-arrow-up"></i> +@Model.ApplicationsGrowth%</span>
                <span class="text-slate-500 text-xs">tháng này</span>
             </div>
          </div>
@@ -145,9 +147,9 @@
                <span class="text-3xl font-black text-white/20">04</span>
             </div>
             <h3 class="text-slate-400 text-sm font-semibold mb-2">NHÀ TUYỂN DỤNG</h3>
-            <p class="text-4xl font-black text-white mb-2">892</p>
+            <p class="text-4xl font-black text-white mb-2">@Model.TotalBusinesses.ToString("N0")</p>
             <div class="flex items-center gap-2">
-               <span class="text-green-400 text-sm font-bold"><i class="fas fa-arrow-up"></i> +5.7%</span>
+               <span class="text-green-400 text-sm font-bold"><i class="fas fa-arrow-up"></i> +@Model.BusinessesGrowth%</span>
                <span class="text-slate-500 text-xs">doanh nghiệp</span>
             </div>
          </div>

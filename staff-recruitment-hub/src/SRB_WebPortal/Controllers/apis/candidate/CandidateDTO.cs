@@ -24,7 +24,10 @@ namespace SRB_WebPortal.Controllers.apis.candidate
         public string Email { get; set; } = string.Empty;
         public string? PhoneNumber { get; set; }
         public string? Summary { get; set; }
-        // Tạm thời để trống JobTitle, sau này thêm cột vào DB thì hứng ở đây
-        public string? JobTitle { get; set; } 
+        public string? JobTitle { get; set; }
+        public string? ExpectedSalary { get; set; }
+        public string? Experience { get; set; }
+        public string? WorkType { get; set; }
+        public string? Skills { get; set; }
     }
 }
